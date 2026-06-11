@@ -1,5 +1,5 @@
 # Calendula Herbs — Project Context
-Last updated: 2026-06-11 | Current chunk: **3 (Cloudinary Media System — in progress)**
+Last updated: 2026-06-11 | Current chunk: **5 (Products Manager — next up)**
 
 ## Stack
 Next.js 16.2.9 (App Router) + TypeScript + Tailwind CSS v4 + Radix UI
@@ -37,16 +37,18 @@ Seed status: ✅ **Seeded** (`admin@calendulaherbs.com` / `admin123`)
 - [x] Chunk 1 — Auth Foundation (middleware, NextAuth, login IP/UA capture, session invalidation)
 - [x] Chunk 2 — OTP + Account (forgot password, OTP generation via email, admin dashboard wrapper)
 
-## Current chunk
-- [/] Chunk 3 — Cloudinary Media System (IN PROGRESS)
-  - [x] `lib/cloudinary.ts`
-  - [x] `POST /api/admin/media/sign`
-  - [x] `POST /api/admin/media` + `GET /api/admin/media`
-  - [x] `DELETE /api/admin/media/[id]`
-  - [x] `MediaUploader.tsx` + `react-image-crop` dependency installed
-  - [ ] `ImageCropper.tsx`
-  - [ ] `MediaPicker.tsx`
-  - [ ] `/admin/dashboard/media` page
+## Completed chunks (continued)
+- [x] Chunk 3 — Cloudinary Media System
+  - [x] `lib/cloudinary.ts`, `MediaUploader.tsx`, `ImageCropper.tsx`, `MediaPicker.tsx`
+  - [x] `POST /api/admin/media/sign`, `POST /api/admin/media`, `GET /api/admin/media`, `DELETE /api/admin/media/[id]`, `PATCH /api/admin/media/[id]` (rename)
+  - [x] `/admin/dashboard/media` — grid, filter, rename, delete, copy URL, storage bar, pagination
+- [x] Chunk 4 — Gallery & Certificates Managers
+  - [x] `POST/GET/PATCH /api/admin/gallery` + `GET/PATCH/DELETE /api/admin/gallery/[id]`
+  - [x] `POST/PATCH /api/admin/gallery/[id]/items`, `PATCH/DELETE /api/admin/gallery/[id]/items/[itemId]`
+  - [x] `POST/GET/PATCH /api/admin/certificates`, `PATCH/DELETE /api/admin/certificates/[id]`
+  - [x] `/admin/dashboard/galleries` — dnd-kit list, create, rename, delete
+  - [x] `/admin/dashboard/galleries/[id]` — grid items, add (media/YouTube/Drive), drag-reorder
+  - [x] `/admin/dashboard/certificates` — dnd-kit list, create/edit dialog with MediaPicker
 
 ## Key file locations
 - Admin login: `src/app/(admin-auth)/admin/login/page.tsx`
