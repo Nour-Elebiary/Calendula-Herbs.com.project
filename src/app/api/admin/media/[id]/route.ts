@@ -2,6 +2,28 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { v2 as cloudinary } from 'cloudinary'
 
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { name } = await req.json()
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return NextResponse.json({ error: 'Name is required' }, { status: 400 })
+    }
+
+    const media = await db.mediaFile.update({
+      where: { id: params.id },
+      data: { name: name.trim() },
+    })
+
+    return NextResponse.json({ media })
+  } catch (error) {
+    console.error('Media rename error:', error)
+    return NextResponse.json({ error: 'Failed to rename media' }, { status: 500 })
+  }
+}
+
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
