@@ -58,28 +58,31 @@ export function CartDrawer() {
       <div
         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 transition-opacity"
         onClick={() => setIsCartOpen(false)}
+        aria-hidden="true"
       />
-      <div className="fixed inset-y-0 right-0 z-50 w-full md:w-[450px] bg-[var(--color-bg-void)] shadow-2xl flex flex-col transform transition-transform duration-300">
+      <div className="fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-[var(--color-bg-void)] shadow-2xl flex flex-col transform transition-transform duration-300 overflow-hidden">
 
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[var(--color-border-default)]">
-          <h2 className="font-display text-xl font-bold text-[var(--color-text-primary)]">Quote Request</h2>
+        <div className="flex items-center justify-between px-4 sm:px-6 py-5 border-b border-[var(--color-border-default)] flex-shrink-0">
+          <h2 className="font-display text-lg sm:text-xl font-bold text-[var(--color-text-primary)]">Quote Request</h2>
           <button
             onClick={() => setIsCartOpen(false)}
-            className="p-2 -mr-2 rounded-full hover:bg-[var(--color-bg-elevated)] text-[var(--color-text-tertiary)] transition-colors"
+            className="btn-icon"
+            aria-label="Close cart"
+            title="Close quote cart"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {items.length === 0 ? (
-          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-            <div className="w-20 h-20 bg-[var(--color-bg-base)] rounded-full flex items-center justify-center mb-6">
-              <span className="text-4xl text-[var(--color-text-tertiary)]">📋</span>
+          <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 text-center">
+            <div className="w-16 h-16 bg-[var(--color-bg-base)] rounded-full flex items-center justify-center mb-4">
+              <span className="text-3xl">📋</span>
             </div>
-            <h3 className="font-display text-lg text-[var(--color-text-primary)] mb-2">Your quote cart is empty</h3>
-            <p className="text-[var(--color-text-tertiary)] mb-6">Browse our catalog and add products you'd like a bulk quote for.</p>
-            <Link href="/products" onClick={() => setIsCartOpen(false)} className="btn btn-primary">
+            <h3 className="font-display text-base sm:text-lg text-[var(--color-text-primary)] mb-2">Your quote cart is empty</h3>
+            <p className="text-sm text-[var(--color-text-tertiary)] mb-6 leading-relaxed">Browse our catalog and add products you&apos;d like a bulk quote for.</p>
+            <Link href="/products" onClick={() => setIsCartOpen(false)} className="btn btn-primary btn-sm">
               Browse Products
             </Link>
           </div>
@@ -87,80 +90,84 @@ export function CartDrawer() {
           <>
             <div className="flex-1 overflow-y-auto">
               {step === 1 ? (
-                <div className="p-6 space-y-4">
+                <div className="p-4 sm:p-6 space-y-3">
                   {items.map((item) => (
-                    <div key={item.productId} className="card-glass flex gap-4 p-4">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-display text-[var(--color-text-primary)] truncate">{item.productName}</h4>
-                        <p className="text-sm text-[var(--color-text-tertiary)] mt-1">Minimum Order: 500kg</p>
+                    <div key={item.productId} className="card-glass flex flex-col gap-3 p-4 sm:p-5">
+                      <div className="flex-1">
+                        <h4 className="font-display text-sm sm:text-base text-[var(--color-text-primary)] line-clamp-2">{item.productName}</h4>
+                        <p className="text-xs sm:text-sm text-[var(--color-text-tertiary)] mt-1">Minimum Order: 500kg</p>
+                      </div>
 
-                        <div className="flex items-center gap-4 mt-4">
-                          <div className="flex items-center border border-[var(--color-border-default)] rounded-xl">
-                            <button
-                              className="px-3 py-1.5 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition-colors rounded-l-xl"
-                              onClick={() => updateQuantity(item.productId, item.quantity - 100)}
-                            >
-                              <Minus className="w-4 h-4" />
-                            </button>
-                            <span className="w-16 text-center text-sm font-medium text-[var(--color-text-primary)]">{item.quantity} kg</span>
-                            <button
-                              className="px-3 py-1.5 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition-colors rounded-r-xl"
-                              onClick={() => updateQuantity(item.productId, item.quantity + 100)}
-                            >
-                              <Plus className="w-4 h-4" />
-                            </button>
-                          </div>
-
+                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                        <div className="flex items-center border-2 border-[var(--color-border-default)] rounded-lg overflow-hidden">
                           <button
-                            onClick={() => removeItem(item.productId)}
-                            className="p-2 text-[var(--color-text-tertiary)] hover:text-red-500 transition-colors"
+                            className="p-2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition-colors"
+                            onClick={() => updateQuantity(item.productId, item.quantity - 100)}
+                            aria-label="Decrease quantity"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Minus className="w-4 h-4" />
+                          </button>
+                          <span className="px-4 text-center text-xs sm:text-sm font-medium text-[var(--color-text-primary)] min-w-max">{item.quantity}kg</span>
+                          <button
+                            className="p-2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition-colors"
+                            onClick={() => updateQuantity(item.productId, item.quantity + 100)}
+                            aria-label="Increase quantity"
+                          >
+                            <Plus className="w-4 h-4" />
                           </button>
                         </div>
+
+                        <button
+                          onClick={() => removeItem(item.productId)}
+                          className="btn-icon text-red-500 hover:text-red-600 ml-auto flex-shrink-0"
+                          aria-label="Remove item"
+                          title="Remove from cart"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <div className="m-6">
-                  <div className="card-glass p-6">
-                    <form id="inquiry-form" onSubmit={handleSubmit} className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <Label className="text-[var(--color-text-tertiary)]">Name *</Label>
-                          <Input required value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" className="input" />
+                <div className="p-4 sm:p-6">
+                  <div className="card-glass p-4 sm:p-6">
+                    <form id="inquiry-form" onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Name *</Label>
+                          <Input id="name" required value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" />
                         </div>
-                        <div className="space-y-1.5">
-                          <Label className="text-[var(--color-text-tertiary)]">Company</Label>
-                          <Input value={company} onChange={e => setCompany(e.target.value)} placeholder="Herbs LLC" className="input" />
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5">
-                        <Label className="text-[var(--color-text-tertiary)]">Email *</Label>
-                        <Input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@example.com" className="input" />
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1.5">
-                          <Label className="text-[var(--color-text-tertiary)]">Phone</Label>
-                          <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 234..." className="input" />
-                        </div>
-                        <div className="space-y-1.5">
-                          <Label className="text-[var(--color-text-tertiary)]">Country</Label>
-                          <Input value={country} onChange={e => setCountry(e.target.value)} placeholder="United States" className="input" />
+                        <div className="space-y-2">
+                          <Label htmlFor="company">Company</Label>
+                          <Input id="company" value={company} onChange={e => setCompany(e.target.value)} placeholder="Herbs LLC" />
                         </div>
                       </div>
 
-                      <div className="space-y-1.5">
-                        <Label className="text-[var(--color-text-tertiary)]">Additional Notes (Optional)</Label>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email *</Label>
+                        <Input id="email" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@example.com" />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone</Label>
+                          <Input id="phone" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 234..." />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="country">Country</Label>
+                          <Input id="country" value={country} onChange={e => setCountry(e.target.value)} placeholder="United States" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="notes">Additional Notes (Optional)</Label>
                         <Textarea
+                          id="notes"
                           rows={4}
                           value={notes}
                           onChange={e => setNotes(e.target.value)}
                           placeholder="Destination port, special requirements, forms..."
-                          className="input resize-none"
                         />
                       </div>
                     </form>
@@ -170,19 +177,20 @@ export function CartDrawer() {
             </div>
 
             {/* Footer */}
-            <div className="p-6 border-t border-[var(--color-border-default)] bg-[var(--color-bg-base)]">
+            <div className="p-4 sm:p-6 border-t border-[var(--color-border-default)] bg-[var(--color-bg-base)] flex-shrink-0 space-y-3">
               {step === 1 ? (
-                <button className="btn btn-primary w-full" onClick={() => setStep(2)}>
-                  Proceed to Contact Details <ArrowRight className="w-5 h-5 ml-2" />
+                <button className="btn btn-primary w-full flex items-center justify-center gap-2" onClick={() => setStep(2)}>
+                  Proceed to Details
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               ) : (
-                <div className="flex gap-3">
+                <div className="flex gap-2 sm:gap-3">
                   <button type="button" className="btn btn-secondary flex-1" onClick={() => setStep(1)}>
                     Back
                   </button>
-                  <button type="submit" form="inquiry-form" disabled={isSubmitting} className="btn btn-primary flex-[2] disabled:opacity-50 disabled:pointer-events-none">
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : null}
-                    {isSubmitting ? 'Submitting...' : 'Submit Inquiry'}
+                  <button type="submit" form="inquiry-form" disabled={isSubmitting} className="btn btn-primary flex-1 flex items-center justify-center gap-2">
+                    {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+                    {isSubmitting ? 'Submitting...' : 'Submit'}
                   </button>
                 </div>
               )}

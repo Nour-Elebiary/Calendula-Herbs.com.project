@@ -41,19 +41,19 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
     <header
       className={`nav-primary ${isScrolled ? 'is-scrolled' : ''}`}
     >
-      <div className="container mx-auto max-w-7xl flex items-center justify-between">
+      <div className="container mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 z-50 nav-logo">
-          <div className="flex items-center justify-center rounded-full w-10 h-10" style={{ background: 'var(--color-green-100)' }}>
+        <Link href="/" className="flex items-center gap-2 sm:gap-3 z-50 nav-logo flex-shrink-0">
+          <div className="flex items-center justify-center rounded-full w-10 h-10 flex-shrink-0" style={{ background: 'var(--color-green-100)' }}>
             <Leaf className="w-5 h-5" style={{ color: 'var(--color-green-600)' }} />
           </div>
-          <span className="font-display text-2xl font-medium tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+          <span className="font-display text-xl sm:text-2xl font-medium tracking-tight hidden sm:inline" style={{ color: 'var(--color-text-primary)' }}>
             {siteName}
           </span>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8 nav-links">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 nav-links">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
             return (
@@ -68,13 +68,14 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
                   color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
                   textDecoration: 'none',
                   position: 'relative',
-                  transition: 'color 120ms var(--ease-smooth)'
+                  transition: 'color 120ms var(--ease-smooth)',
+                  padding: '8px 0'
                 }}
                 className="nav-link"
               >
                 {link.label}
                 {isActive && (
-                  <span style={{ position: 'absolute', bottom: -2, left: 0, right: 0, height: 1, background: 'var(--color-green-600)' }} />
+                  <span style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'var(--color-green-600)', borderRadius: '1px' }} />
                 )}
               </Link>
             )
@@ -82,22 +83,24 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
         </nav>
 
         {/* Desktop Actions */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3 lg:gap-4">
           <button
             onClick={() => setIsCartOpen(true)}
             className="btn-icon relative"
             aria-label="Quote cart"
+            title="Open quote cart"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-5 h-5" />
             {cartItemCount > 0 && (
               <span style={{
-                position: 'absolute', top: -2, right: -2,
-                width: 16, height: 16,
+                position: 'absolute', top: -4, right: -4,
+                width: 20, height: 20,
                 background: 'var(--color-calendula-500)',
                 color: '#FAFAF6',
-                fontSize: 10, fontWeight: 700,
+                fontSize: 11, fontWeight: 700,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '9999px'
+                borderRadius: '9999px',
+                border: '2px solid var(--color-bg-void)'
               }}>
                 {cartItemCount}
               </span>
@@ -105,29 +108,31 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
           </button>
           <Link
             href="/contact"
-            className="btn btn-primary"
+            className="btn btn-primary text-sm"
           >
             Get a Quote
           </Link>
         </div>
 
         {/* Mobile Toggle */}
-        <div className="flex items-center gap-3 md:hidden z-50">
+        <div className="flex items-center gap-2 md:hidden z-50">
           <button
             onClick={() => setIsCartOpen(true)}
-            className="btn-icon"
+            className="btn-icon relative"
             aria-label="Quote cart"
+            title="Open quote cart"
           >
-            <ShoppingCart className="w-4 h-4" />
+            <ShoppingCart className="w-5 h-5" />
             {cartItemCount > 0 && (
               <span style={{
-                position: 'absolute', top: -2, right: -2,
-                width: 16, height: 16,
+                position: 'absolute', top: -4, right: -4,
+                width: 20, height: 20,
                 background: 'var(--color-calendula-500)',
                 color: '#FAFAF6',
-                fontSize: 10, fontWeight: 700,
+                fontSize: 11, fontWeight: 700,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '9999px'
+                borderRadius: '9999px',
+                border: '2px solid var(--color-bg-void)'
               }}>
                 {cartItemCount}
               </span>
@@ -135,8 +140,9 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
           </button>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="w-9 h-9 flex flex-col justify-center items-center gap-1 bg-transparent border-none cursor-pointer p-2"
+            className="btn-icon"
             aria-label="Toggle menu"
+            title={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} /> : <Menu className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />}
           </button>
@@ -159,8 +165,8 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
             }}
             className="md:hidden"
           >
-            <div className="flex flex-col h-full pt-28 pb-8" style={{ paddingLeft: 'var(--section-x)', paddingRight: 'var(--section-x)' }}>
-              <nav className="flex flex-col gap-8 mb-auto">
+            <div className="flex flex-col h-full pt-20 pb-8 px-6" style={{ marginTop: '64px' }}>
+              <nav className="flex flex-col gap-6 mb-auto">
                 {NAV_LINKS.map((link, i) => (
                   <motion.div
                     key={link.href}
@@ -172,7 +178,7 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
                       href={link.href}
                       style={{
                         fontFamily: 'var(--font-display)',
-                        fontSize: 'var(--text-3xl)',
+                        fontSize: 'clamp(var(--text-xl), 5vw, var(--text-3xl))',
                         fontWeight: 500,
                         letterSpacing: 'var(--tracking-tight)',
                         color: pathname === link.href ? 'var(--color-green-600)' : 'var(--color-text-secondary)',
@@ -193,7 +199,7 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
               >
                 <Link
                   href="/contact"
-                  className="btn btn-primary btn-lg w-full justify-center"
+                  className="btn btn-primary btn-lg w-full justify-center text-base"
                 >
                   Get a Quote
                 </Link>
