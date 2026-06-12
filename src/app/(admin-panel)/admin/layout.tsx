@@ -9,7 +9,7 @@ export default function AdminPanelLayout({
 }) {
   return (
     <SessionProvider>
-      <div className="admin-panel flex h-screen overflow-hidden bg-[#0a0f0d] text-green-50">
+      <div className="admin-panel flex h-screen overflow-hidden bg-[var(--color-bg-void)] text-[var(--color-text-primary)]">
         <AdminSidebar />
         <div className="flex flex-col flex-1 overflow-hidden">
           <AdminHeader />

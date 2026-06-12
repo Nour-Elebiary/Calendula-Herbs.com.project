@@ -20,7 +20,7 @@ Domain: calendulaherbs.com
 ## DB Schema version
 Prisma schema: `prisma/schema.prisma` (all models defined)
 Migration status: ✅ **Migrated** (`20260611013013_init`)
-Seed status: ✅ **Seeded** (`admin@calendulaherbs.com` / `admin123`)
+Seed status: ✅ **Seeded** (`nour.elebiary448@gmail.com` / from `secrets.json`)
 
 ## Conventions
 - All admin API routes: /api/admin/* (JWT protected via middleware)

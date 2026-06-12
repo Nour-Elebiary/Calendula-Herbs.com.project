@@ -44,8 +44,11 @@ const config: Config = {
         ring: "var(--ring)",
       },
       fontFamily: {
-        heading: ["var(--font-heading)", "sans-serif"],
+        heading: ["var(--font-display)", "serif"],
         body: ["var(--font-body)", "sans-serif"],
+        display: ["var(--font-display)", "serif"],
+        script: ["var(--font-script)", "cursive"],
+        mono: ["var(--font-mono)", "monospace"],
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

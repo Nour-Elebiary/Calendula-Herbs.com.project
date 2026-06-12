@@ -28,15 +28,18 @@ async function main() {
 
   // 2. Create the first admin user
   // This uses upsert so we don't duplicate if seeded twice.
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@calendulaherbs.com'
+  const adminEmail = process.env.ADMIN_EMAIL || 'nour.elebiary448@gmail.com'
   
   const admin = await prisma.admin.upsert({
     where: { email: adminEmail },
-    update: {},
+    update: {
+      recoveryEmails: ['nour.elebiary448@gmail.com', 'nour@calendula-herbsspices.com'],
+    },
     create: {
-      name: 'System Admin',
+      name: 'Nour Elebiary',
       email: adminEmail,
       passwordHash: passwordHash,
+      recoveryEmails: ['nour.elebiary448@gmail.com', 'nour@calendula-herbsspices.com'],
     },
   })
   console.log(`✅ Admin user ensured: ${admin.email}`)

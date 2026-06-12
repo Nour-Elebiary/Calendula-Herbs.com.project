@@ -81,8 +81,8 @@ function OtpForm() {
   if (!email) {
     return (
       <div className="text-center">
-        <p className="text-red-300 text-sm mb-4">No email provided.</p>
-        <Link href="/admin/forgot-password" className="text-green-400 hover:underline">
+        <p className="text-red-600 text-sm mb-4">No email provided.</p>
+        <Link href="/admin/forgot-password" className="text-[var(--color-calendula-600)] hover:underline">
           Go back to Forgot Password
         </Link>
       </div>
@@ -92,36 +92,36 @@ function OtpForm() {
   return (
     <>
       <div className="flex flex-col items-center mb-8">
-        <div className="w-16 h-16 rounded-2xl bg-green-500/20 border border-green-400/30 flex items-center justify-center mb-4">
-          <KeyRound className="w-8 h-8 text-green-400" />
+        <div className="w-16 h-16 rounded-2xl bg-[var(--color-calendula-500)]/15 border border-[var(--color-calendula-500)]/30 flex items-center justify-center mb-4">
+          <KeyRound className="w-8 h-8 text-[var(--color-calendula-500)]" />
         </div>
         <h1
-          className="text-2xl font-bold text-white mb-1"
-          style={{ fontFamily: 'var(--font-heading)' }}
+          className="text-2xl font-bold text-[var(--color-text-primary)] mb-1"
+          style={{ fontFamily: 'var(--font-display)' }}
         >
           Enter Reset Code
         </h1>
-        <p className="text-green-300/70 text-sm text-center">
+        <p className="text-[var(--color-text-tertiary)] text-sm text-center">
           Code sent to <strong>{email}</strong>
         </p>
       </div>
 
       {error && (
         <div className="mb-6 flex gap-3 items-start p-4 rounded-xl bg-red-500/10 border border-red-400/30">
-          <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 shrink-0" />
-          <p className="text-red-300 text-sm leading-relaxed">{error}</p>
+          <AlertCircle className="w-5 h-5 text-red-500 mt-0.5 shrink-0" />
+          <p className="text-red-700 text-sm leading-relaxed">{error}</p>
         </div>
       )}
 
       {isSuccess ? (
-        <div className="text-center p-6 rounded-xl bg-green-500/10 border border-green-400/30">
-          <p className="text-green-300 font-medium mb-2">Password reset successful!</p>
-          <p className="text-green-200/70 text-sm">Redirecting to login...</p>
+        <div className="text-center p-6 rounded-xl bg-[var(--color-green-500)]/10 border border-[var(--color-green-500)]/30">
+          <p className="text-[var(--color-green-800)] font-medium mb-2">Password reset successful!</p>
+          <p className="text-[var(--color-green-600)] text-sm">Redirecting to login...</p>
         </div>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
           <div>
-            <label htmlFor="code" className="block text-sm font-medium text-green-100/80 mb-2">
+            <label htmlFor="code" className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
               6-Digit Code
             </label>
             <input
@@ -132,19 +132,15 @@ function OtpForm() {
               placeholder="000000"
               disabled={isSubmitting}
               {...register('code')}
-              className="w-full px-4 py-3 rounded-xl text-center text-2xl tracking-widest text-white placeholder-white/20 transition-all duration-200 focus:outline-none disabled:opacity-50"
-              style={{
-                background: 'rgba(255,255,255,0.08)',
-                border: errors.code ? '1px solid rgba(248,113,113,0.6)' : '1px solid rgba(255,255,255,0.12)',
-              }}
+              className="w-full px-4 py-3 rounded-xl text-center text-2xl tracking-widest text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)]/30 transition-all duration-200 focus:outline-none disabled:opacity-50 bg-[var(--color-bg-base)] border border-[var(--color-border-default)] focus:border-[var(--color-calendula-500)]/50 focus:shadow-[0_0_0_3px_rgba(220,126,24,0.10)]"
             />
             {errors.code && (
-              <p className="mt-1.5 text-xs text-center text-red-400">{errors.code.message}</p>
+              <p className="mt-1.5 text-xs text-center text-red-500">{errors.code.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-green-100/80 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-[var(--color-text-secondary)] mb-2">
               New Password
             </label>
             <div className="relative">
@@ -154,22 +150,18 @@ function OtpForm() {
                 placeholder="Enter new password"
                 disabled={isSubmitting}
                 {...register('password')}
-                className="w-full px-4 py-3 pr-12 rounded-xl text-white placeholder-white/30 text-sm transition-all duration-200 focus:outline-none disabled:opacity-50"
-                style={{
-                  background: 'rgba(255,255,255,0.08)',
-                  border: errors.password ? '1px solid rgba(248,113,113,0.6)' : '1px solid rgba(255,255,255,0.12)',
-                }}
+                className="w-full px-4 py-3 pr-12 rounded-xl text-[var(--color-text-primary)] placeholder-[var(--color-text-tertiary)]/50 text-sm transition-all duration-200 focus:outline-none disabled:opacity-50 bg-[var(--color-bg-base)] border border-[var(--color-border-default)] focus:border-[var(--color-calendula-500)]/50 focus:shadow-[0_0_0_3px_rgba(220,126,24,0.10)]"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 p-1"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-secondary)] p-1"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {errors.password && (
-              <p className="mt-1.5 text-xs text-red-400">{errors.password.message}</p>
+              <p className="mt-1.5 text-xs text-red-500">{errors.password.message}</p>
             )}
 
             {/* Strength meter */}
@@ -185,13 +177,13 @@ function OtpForm() {
                             ? 'bg-red-400'
                             : strength < 5
                               ? 'bg-yellow-400'
-                              : 'bg-green-400'
-                          : 'bg-white/10'
+                              : 'bg-green-500'
+                          : 'bg-black/[0.06]'
                       }`}
                     />
                   ))}
                 </div>
-                <p className="text-[10px] text-green-200/50">
+                <p className="text-[10px] text-[var(--color-text-tertiary)]">
                   Must contain 8+ chars, upper, lower, number, and special character.
                 </p>
               </div>
@@ -203,7 +195,7 @@ function OtpForm() {
             disabled={isSubmitting}
             className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-semibold text-white text-sm transition-all duration-200 disabled:opacity-60"
             style={{
-              background: 'linear-gradient(135deg, #15803d, #166534)',
+              background: 'linear-gradient(135deg, var(--color-green-500), var(--color-green-700))',
             }}
           >
             {isSubmitting ? (
@@ -221,7 +213,7 @@ function OtpForm() {
       <div className="mt-6 flex justify-center">
         <Link
           href="/admin/login"
-          className="text-sm text-green-400 hover:text-green-300 transition-colors"
+          className="text-sm text-[var(--color-calendula-600)] hover:text-[var(--color-calendula-500)] transition-colors"
         >
           Cancel and return to login
         </Link>
@@ -235,21 +227,21 @@ export default function OtpPage() {
     <div className="min-h-screen flex items-center justify-center p-4">
       {/* Background pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-emerald-400/10 blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-[var(--color-calendula-500)]/5 blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-[var(--color-green-500)]/8 blur-3xl" />
       </div>
 
       <div className="relative w-full max-w-md">
         <div
           style={{
-            background: 'rgba(255,255,255,0.05)',
+            background: 'rgba(255,255,255,0.85)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(255,255,255,0.12)',
+            border: '1px solid var(--color-border-default)',
           }}
-          className="rounded-2xl p-8 shadow-2xl"
+          className="rounded-2xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.08)]"
         >
-          <Suspense fallback={<div className="text-center text-white/50">Loading...</div>}>
+          <Suspense fallback={<div className="text-center text-[var(--color-text-tertiary)]">Loading...</div>}>
             <OtpForm />
           </Suspense>
         </div>
