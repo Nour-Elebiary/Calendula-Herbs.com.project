@@ -49,7 +49,12 @@ export async function POST(req: NextRequest) {
     }
 
     const code = await createOtp(identifier, type as OtpType)
-    await sendOtpEmail(identifier, code)
+    const result = await sendOtpEmail(identifier, code)
+
+    if (result.error) {
+      console.error('Resend Error:', result.error)
+      return NextResponse.json({ error: 'Failed to send OTP email: ' + result.error.message }, { status: 500 })
+    }
 
     return NextResponse.json({ success: true })
   } catch (err) {

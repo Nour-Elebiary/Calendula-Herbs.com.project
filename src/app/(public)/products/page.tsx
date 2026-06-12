@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { db } from '@/lib/db'
 import { Leaf, Search, Package } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 
 export const metadata = {
   title: 'Our Products | Calendula Herbs For Import & Export',
@@ -49,11 +50,11 @@ export default async function ProductsPage({ searchParams }: { searchParams: Pro
               <div className="card-glass p-6">
                 <form className="relative mb-6">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--color-text-tertiary)]" />
-                  <input 
+                  <Input 
                     name="q"
                     defaultValue={q}
                     placeholder="Search products..." 
-                    className="input pl-9"
+                    className="pl-10 bg-[var(--color-glass-fill)]"
                   />
                   {category && <input type="hidden" name="category" value={category} />}
                 </form>
