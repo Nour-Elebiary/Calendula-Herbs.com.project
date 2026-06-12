@@ -1,83 +1,102 @@
 # AGENTS.md — Calendula Herbs
 
-## Status
-✅ Codebase complete — all improvements applied. Ready for production deployment after env var config.
-
 ## Stack
-- Next.js 16.2.9 (App Router) + TypeScript + Tailwind CSS v4 + Radix UI
-- Prisma 6 + Supabase (PostgreSQL) + Cloudinary + NextAuth.js v5 (beta)
-- Upstash Redis + Framer Motion + Zustand + RHF + Zod
-- No test framework, no CI workflows, no typecheck script
+- Next.js 16.2.9 (App Router) + TypeScript + Tailwind CSS v4 (`@tailwindcss/postcss`) + Radix UI + Framer Motion
+- Prisma 6 + Supabase PostgreSQL (IPv4 pooler, `aws-0-eu-west-3`) + Cloudinary + NextAuth.js v5 (beta)
+- Upstash Redis (rate limits) + Zustand + React Hook Form + Zod v4
+- **No test framework**, no typecheck script, no `src/hooks/`, `src/stores/`, or `src/types/` dirs
 
 ## Commands
 ```bash
-npm run dev       # next dev
-npm run build     # next build
-npm run start     # next start
-npm run lint      # eslint
-npx prisma migrate dev   # create/apply migration
-npx prisma db push       # quick schema sync (no migration file)
-tsx prisma/seed.ts       # seed: admin@calendulaherbs.com / admin123
+pnpm dev                     # next dev (port 3000)
+pnpm build                   # next build (run prisma generate first)
+pnpm start                   # next start
+pnpm lint                    # ESLint (33 pre-existing — setState-in-effect, `any`, unescaped entities)
+
+pnpm prisma generate         # required after schema changes before build
+pnpm prisma migrate dev      # create & apply migration
+pnpm prisma db push          # quick schema sync (no migration file)
+pnpm prisma studio           # DB browser
+pnpm tsx prisma/seed.ts      # seed: admin@calendulaherbs.com / key from secrets.json
+
+pnpm tsc --noEmit            # explicit typecheck (no npm script)
 ```
 
+Package manager is **pnpm**. Run `prisma generate` before `build` and `tsc --noEmit`.
+
+## Design system — "Botanical Light Glass — Calendula Dawn Edition"
+- **Public site**: light theme (`#FAFAF6` bg-void, `#F2EFE7` bg-base, `#E8E3D9` bg-elevated). CSS variables in `globals.css`. Calendula `#DC7E18` accent, sage green `#5E9E66`.
+- **Admin panel** (`#0a0f0d` bg): dark theme preserved under `.admin-panel` CSS scope. Utility classes `admin-card`, `admin-table`, `admin-input`. Radix context fix: add `className="admin-panel"` to admin layout root div.
+- **Typography**: Cormorant Garamond (headings, `--font-display`), DM Sans (body, `--font-body`), Dancing Script (script, `--font-script`), JetBrains Mono (mono, `--font-mono`). Fluid `clamp()` scale.
+- **Component classes** (all in `globals.css`): `card-glass`, `btn`/`btn-primary`/`btn-secondary`/`btn-accent` (pill shape), `badge`/`badge-green`/`badge-calendula`, `hero-atmospheric` (photo + vignette overlay), `nav-primary` (frosted sticky), `footer-primary` (4-col), `stat-row`, `cert-strip`/`cert-badge`, `section-divider`, `feature-card`, `channel-card`, `product-card`, `leaf-float`, `scroll-reveal`.
+- **Product grid**: 1 col `<480px`, 2 cols `480-1023px`, 3 cols `≥1024px` (`.product-grid` class).
+- **Accessibility**: calendula `#DC7E18` on `#FAFAF6` is WCAG AA (4.8:1). Tap targets min 44×44px.
+- **B2B export only**: no pricing displayed, no "Buy Now" / "Add to Cart" — only "Request a Quote", "Get a Sample", "Contact Us".
+
+## Animation conventions
+- Shared variants in `src/lib/animations.ts`: `fadeInUp`, `fadeInLeft`, `staggerContainer`, `cardVariant`. `LazyMotion` + `domAnimation` at root layout.
+- Public pages: `whileInView` + `viewport={{ once: true }}` (never replay). Hero uses `animate`.
+- Respect `prefers-reduced-motion` via `useReducedMotion()`.
+
 ## Route groups
-- `(public)/` — public pages (/, /about, /products, /contact, /galleries, /certificates, /privacy, /terms)
-- `(admin-auth)/` — `/admin/login`, `/admin/forgot-password`, `/admin/otp`
-- `(admin-panel)/` — `/admin/dashboard/*` (protected)
-- `/api/admin/*` — JWT-protected (middleware returns 401/redirect)
-- `/api/public/*` — read-only, rate limited, now with email notifications
-- `/api/auth/[...nextauth]` — NextAuth handler
-- `/api/otp/*` — forgot-password OTP flow
+| Group | Routes |
+|---|---|
+| `(public)/` | `/`, `/about`, `/products`, `/products/[slug]`, `/galleries`, `/certificates`, `/contact`, `/team`, `/sample`, `/faq` |
+| `(admin-auth)/` | `/admin/login`, `/admin/forgot-password`, `/admin/otp` |
+| `(admin-panel)/admin/dashboard/` | media, galleries, certificates, products, team, settings, inquiries, profile |
+| `/api/admin/*` | JWT-protected CRUD (middleware returns 401 or redirect) |
+| `/api/public/*` | read-only, rate limited |
+| `/api/auth/[...nextauth]` | NextAuth handler |
+| `/api/otp/*` | forgot-password OTP flow |
+| Root-level | `/privacy`, `/terms`, `not-found.tsx`, `error.tsx`, `sitemap.ts`, `robots.ts` |
 
 ## Key architectural rules
-1. **Every API endpoint** validates input with Zod before touching DB
-2. **Admin auth**: NextAuth v5 credentials, JWT strategy, 8h expiry. Custom `AdminSession` for per-session revocation.
-3. **Middleware** protects `/admin/*` and `/api/admin/*`. Login + forgot-password exempted.
-4. **Cloudinary signed uploads only** — server generates signature; client never has write API key
-5. **All colors via CSS variables** (globals.css, overridable from `SiteSetting` DB table)
-6. **Images**: `next/image` with Cloudinary remote pattern (`res.cloudinary.com`)
-7. **Rate limiting**: Upstash Redis on all public endpoints (login, OTP, contact, cart, sample, search, generic API)
+1. **Zod validation** on every API endpoint before touching DB (Zod v4, import from `zod`)
+2. **Admin auth**: NextAuth v5 credentials, JWT strategy, 8h expiry. Custom `AdminSession` table for per-session revocation. Proxy in `src/proxy.ts` (Next.js 16 proxy convention).
+3. **Cloudinary signed uploads only** — server generates signature in `POST /api/admin/media/sign`, client never has write key
+4. **Colors via CSS variables** in `globals.css`, overridable from `SiteSetting` DB table
+5. **Images**: `next/image` with Cloudinary remote pattern `res.cloudinary.com`. CSP allows `blob:`.
+6. **Rate limiting**: Upstash Redis — 7 limiters in `src/lib/rate-limit.ts` (login, OTP send/verify, contact, cart, search, generic API)
+7. **Email**: Resend (3K/month free) for OTP, contact confirmation, inquiry notifications
+8. **`serverExternalPackages`**: `["@prisma/client", "bcryptjs"]` in next.config.ts
+9. **Plugin system**: CMS-managed embed codes at HEAD, BODY_END, FOOTER_FIXED, CHAT_WIDGET positions
+10. **Admin login security**: 5-attempt lockout (15 min), IP + User-Agent + geolocation capture, audit log on all write actions
 
 ## Database
-- `prisma/schema.prisma` — 18 models
-- Migration applied: `20260611013013_init`
-- DB seeded: `admin@calendulaherbs.com` / `admin123`
-- DB live on Supabase (IPv4 pooler, aws-0-eu-west-3)
-
-## Recent improvements (this session)
-- **Rate limiters** wired to contact, cart, and sample API routes
-- **Email notifications** wired — confirmation to user + notification to admin on contact, cart, sample
-- **Sample request email functions** added (confirmation + notification)
-- **DOMPurify sanitization** on product descriptions (XSS prevention)
-- **Input length limits** on all public Zod schemas
-- **`trustHost`** scoped to development only
-- **Honeypot field** added to ContactForm (anti-spam)
-- **Lightbox modal** for gallery images with keyboard navigation
-- **Missing pages**: `/privacy`, `/terms`, `not-found.tsx`, `error.tsx`
-- **Dashboard stats** now use real DB queries (products, sessions, inquiries)
-- **Custom 404 and error pages**
-
-## Deployment prerequisites
-Env vars to configure (`.env.example` has full list):
-- `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`
-- `RESEND_API_KEY`, `RESEND_FROM_EMAIL`
-- `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`
-- `NEXTAUTH_URL`, `NEXTAUTH_SECRET`
-- `NEXT_PUBLIC_SITE_URL`
+- `prisma/schema.prisma` — 18 models. Migration `20260611013013_init` already applied to Supabase.
+- Seed: single admin (`admin@calendulaherbs.com`), password from `secrets.json` (`adminInitialKey`). Delete `secrets.json` after first login & password change.
+- Prisma v6 dual-connection: `DATABASE_URL` (pooler, port 6543) for queries, `DIRECT_URL` (port 5432) for migrations.
+- `pnpm-workspace.yaml` explicitly allows `@prisma/client`, `prisma`, `sharp` builds.
 
 ## Codebase layout
-- `src/lib/` — auth, db, cloudinary, email, otp, rate-limit, security, utils
-- `src/components/ui/` — primitives (button, input, dialog, select, etc.)
-- `src/components/admin/` — AdminSidebar, AdminHeader, MediaUploader, MediaPicker, ImageCropper
-- `src/components/public/` — Header, Footer, CartDrawer, CartProvider, ContactForm, ProductActions, GalleryLightbox
-- `src/app/(public)/` — public server components + async data fetching
-- `src/app/(admin-panel)/admin/dashboard/` — admin CMS pages
-- `src/app/api/admin/` — all admin CRUD routes
+```
+src/
+  lib/            auth, db, cloudinary, email, otp, rate-limit, security, animations, utils
+  app/
+    (public)/     public server components + async data fetching
+    (admin-auth)/ login, forgot-password, OTP pages
+    (admin-panel)/admin/dashboard/  admin CMS pages
+    api/          admin/, public/, auth/[...nextauth], otp/send, otp/verify
+    globals.css   Tailwind v4 + CSS variables + design tokens
+    layout.tsx    root layout (fonts, providers, PWA)
+  components/
+    ui/           Radix UI primitives (button, input, dialog, select, etc.)
+    admin/        AdminSidebar, AdminHeader, MediaUploader, MediaPicker, ImageCropper
+    public/       Header, Footer, CartDrawer, CartProvider, ContactForm, GalleryLightbox, CookieConsent, MapEmbed
+    public/home/  HeroSection, StatsBar, FeaturedProductsSection, BotanicalAboutSection, ProcessSection, CertsBanner
+    public/shared/ BotanicalDivider, FloatingLeaves, SectionLabel
+  proxy.ts        auth guard (Next.js 16 proxy convention, replaces middleware)
+prisma/           schema.prisma, seed.ts, migrations/
+```
 
-## opencode
-Config in `.opencode/opencode.json`. Custom agents: `admin-dev`, `public-dev`.
+## Deployment
+Env vars in `.env.example` (all currently populated in `.env.local`):
+- `DATABASE_URL`, `DIRECT_URL` — Supabase pooler + direct
+- Cloudinary, Resend, Upstash Redis, NEXTAUTH, `NEXT_PUBLIC_SITE_URL`
+- CSP in `next.config.ts` allows tawk.to, Cloudinary, Supabase, YouTube, Resend, Upstash
+- Image remotePatterns: `res.cloudinary.com`, `*.supabase.co`, `img.youtube.com`, `i.ytimg.com`
 
-## Open issues (pre-existing, non-blocking)
-- Middleware convention deprecated (Next.js 16 recommends "proxy" file)
-- 33 lint errors (setState-in-effect, `any` types, unescaped entities — pre-existing)
-- Cloudinary/Resend/Upstash env vars still `REPLACE_ME`
+## Security notes
+- `.env.local` contains live credentials (Supabase DB password, Cloudinary secret, Resend key, Upstash token). Do not commit.
+- `secrets.json` contains the initial admin key. Delete after first use.
+- No CI workflows exist (`.github/workflows/` absent). No `.opencode/opencode.json` despite prior reference.

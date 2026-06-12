@@ -3,15 +3,14 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Leaf, Menu, X, ShoppingCart } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Menu, X, ShoppingCart, Leaf } from 'lucide-react'
 import { useCart } from './CartProvider'
-import { Button } from '@/components/ui/button'
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
   { label: 'Products', href: '/products' },
   { label: 'About Us', href: '/about' },
-  { label: 'Galleries', href: '/galleries' },
   { label: 'Certificates', href: '/certificates' },
   { label: 'Contact', href: '/contact' },
 ]
@@ -23,16 +22,12 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const prevPathname = useRef(pathname)
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
-    }
+    const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => {
     if (prevPathname.current !== pathname) {
       setIsMobileMenuOpen(false)
@@ -43,112 +38,170 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
   const cartItemCount = items.length
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm py-3' : 'bg-transparent py-5'
-      }`}
+    <header
+      className={`nav-primary ${isScrolled ? 'is-scrolled' : ''}`}
     >
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="flex items-center justify-between">
-          
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 z-50">
-            <div className={`flex items-center justify-center rounded-full w-10 h-10 ${isScrolled ? 'bg-primary text-white' : 'bg-primary text-white'}`}>
-              <Leaf className="w-5 h-5" />
-            </div>
-            <span className={`font-heading text-xl font-bold tracking-tight ${isScrolled ? 'text-neutral-900' : 'text-neutral-900 md:text-white lg:text-neutral-900'} transition-colors`}>
-              {siteName}
-            </span>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
-              return (
-                <Link 
-                  key={link.href} 
-                  href={link.href}
-                  className={`text-sm font-medium transition-colors ${
-                    isActive 
-                      ? 'text-primary' 
-                      : isScrolled ? 'text-neutral-600 hover:text-black' : 'text-neutral-600 hover:text-black md:text-white/80 md:hover:text-white lg:text-neutral-600 lg:hover:text-black'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className={`relative p-2 rounded-full transition-colors ${
-                isScrolled ? 'text-neutral-600 hover:bg-neutral-100' : 'text-neutral-600 md:text-white hover:bg-black/10 lg:text-neutral-600 lg:hover:bg-neutral-100'
-              }`}
-            >
-              <ShoppingCart className="w-5 h-5" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full transform translate-x-1 -translate-y-1">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
-            <Button asChild className="rounded-full px-6">
-              <Link href="/products">Get a Quote</Link>
-            </Button>
+      <div className="container mx-auto max-w-7xl flex items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 z-50 nav-logo">
+          <div className="flex items-center justify-center rounded-full w-10 h-10" style={{ background: 'var(--color-green-100)' }}>
+            <Leaf className="w-5 h-5" style={{ color: 'var(--color-green-600)' }} />
           </div>
+          <span className="font-display text-2xl font-medium tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+            {siteName}
+          </span>
+        </Link>
 
-          {/* Mobile Menu Toggle */}
-          <div className="flex items-center gap-4 md:hidden z-50">
-            <button 
-              onClick={() => setIsCartOpen(true)}
-              className="relative p-2 text-neutral-900"
-            >
-              <ShoppingCart className="w-6 h-6" />
-              {cartItemCount > 0 && (
-                <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-white text-[10px] font-bold flex items-center justify-center rounded-full">
-                  {cartItemCount}
-                </span>
-              )}
-            </button>
-            <button 
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 -mr-2 text-neutral-900"
-            >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Menu Dropdown */}
-      <div 
-        className={`fixed inset-0 bg-white z-40 transition-transform duration-300 md:hidden ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
-      >
-        <div className="flex flex-col h-full pt-24 pb-8 px-6">
-          <nav className="flex flex-col gap-6 text-xl font-heading mb-auto">
-            {NAV_LINKS.map((link) => (
-              <Link 
-                key={link.href} 
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-8 nav-links">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href))
+            return (
+              <Link
+                key={link.href}
                 href={link.href}
-                className={pathname === link.href ? 'text-primary font-semibold' : 'text-neutral-600'}
+                style={{
+                  fontFamily: 'var(--font-body)',
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 400,
+                  letterSpacing: 'var(--tracking-wide)',
+                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                  textDecoration: 'none',
+                  position: 'relative',
+                  transition: 'color 120ms var(--ease-smooth)'
+                }}
+                className="nav-link"
               >
                 {link.label}
+                {isActive && (
+                  <span style={{ position: 'absolute', bottom: -2, left: 0, right: 0, height: 1, background: 'var(--color-green-600)' }} />
+                )}
               </Link>
-            ))}
-          </nav>
-          <div className="pt-8 border-t">
-            <Button asChild className="w-full text-lg h-14 rounded-xl">
-              <Link href="/products">Get a Quote</Link>
-            </Button>
-          </div>
+            )
+          })}
+        </nav>
+
+        {/* Desktop Actions */}
+        <div className="hidden md:flex items-center gap-4">
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="btn-icon relative"
+            aria-label="Quote cart"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {cartItemCount > 0 && (
+              <span style={{
+                position: 'absolute', top: -2, right: -2,
+                width: 16, height: 16,
+                background: 'var(--color-calendula-500)',
+                color: '#FAFAF6',
+                fontSize: 10, fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '9999px'
+              }}>
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+          <Link
+            href="/contact"
+            className="btn btn-primary"
+          >
+            Get a Quote
+          </Link>
+        </div>
+
+        {/* Mobile Toggle */}
+        <div className="flex items-center gap-3 md:hidden z-50">
+          <button
+            onClick={() => setIsCartOpen(true)}
+            className="btn-icon"
+            aria-label="Quote cart"
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {cartItemCount > 0 && (
+              <span style={{
+                position: 'absolute', top: -2, right: -2,
+                width: 16, height: 16,
+                background: 'var(--color-calendula-500)',
+                color: '#FAFAF6',
+                fontSize: 10, fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: '9999px'
+              }}>
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="w-9 h-9 flex flex-col justify-center items-center gap-1 bg-transparent border-none cursor-pointer p-2"
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} /> : <Menu className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 40,
+              background: 'var(--color-bg-void)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)'
+            }}
+            className="md:hidden"
+          >
+            <div className="flex flex-col h-full pt-28 pb-8" style={{ paddingLeft: 'var(--section-x)', paddingRight: 'var(--section-x)' }}>
+              <nav className="flex flex-col gap-8 mb-auto">
+                {NAV_LINKS.map((link, i) => (
+                  <motion.div
+                    key={link.href}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 + i * 0.05, duration: 0.4 }}
+                  >
+                    <Link
+                      href={link.href}
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 'var(--text-3xl)',
+                        fontWeight: 500,
+                        letterSpacing: 'var(--tracking-tight)',
+                        color: pathname === link.href ? 'var(--color-green-600)' : 'var(--color-text-secondary)',
+                        textDecoration: 'none',
+                        transition: 'color 120ms'
+                      }}
+                    >
+                      {link.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                style={{ paddingTop: 'var(--space-8)', borderTop: '1px solid var(--color-border-subtle)' }}
+              >
+                <Link
+                  href="/contact"
+                  className="btn btn-primary btn-lg w-full justify-center"
+                >
+                  Get a Quote
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   )
 }

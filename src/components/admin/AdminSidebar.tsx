@@ -31,40 +31,46 @@ export function AdminSidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="flex flex-col w-64 bg-[#0a0f0d] border-r border-green-900/30 text-green-50 h-screen sticky top-0">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-green-500/20 border border-green-400/30 flex items-center justify-center">
-          <Leaf className="w-5 h-5 text-green-400" />
+    <div className="flex flex-col w-64 bg-[#060a08] border-r border-white/5 text-green-50 h-screen sticky top-0 shrink-0">
+      {/* Logo */}
+      <div className="p-6 flex items-center gap-3 border-b border-white/5">
+        <div className="w-9 h-9 rounded-lg bg-gold/15 border border-gold/30 flex items-center justify-center shadow-[0_0_16px_rgba(201,150,58,0.08)]">
+          <Leaf className="w-5 h-5 text-gold" />
         </div>
-        <span className="font-bold text-lg" style={{ fontFamily: 'var(--font-heading)' }}>
+        <span className="font-heading text-lg font-bold text-white tracking-tight">
           Calendula
         </span>
       </div>
 
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
+      {/* Nav */}
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
           return (
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all relative ${
                 isActive
-                  ? 'bg-green-500/10 text-green-400 font-medium'
-                  : 'text-green-100/70 hover:bg-white/5 hover:text-green-100'
+                  ? 'bg-gold/10 text-gold font-medium'
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/[0.03]'
               }`}
             >
-              <item.icon className={`w-4 h-4 ${isActive ? 'text-green-400' : 'text-green-100/50'}`} />
+              {isActive && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-gold rounded-full" />
+              )}
+              <item.icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-gold' : 'text-white/40'}`} />
               {item.name}
             </Link>
           )
         })}
       </nav>
 
-      <div className="p-4 border-t border-green-900/30">
+      {/* Sign Out */}
+      <div className="p-3 border-t border-white/5">
         <button
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
-          className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-400/80 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+          className="flex w-full items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-4 h-4" />
           Sign Out

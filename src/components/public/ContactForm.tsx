@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
@@ -23,14 +22,14 @@ export function ContactForm() {
     e.preventDefault()
     if (honeypot) return
     setIsSubmitting(true)
-    
+
     try {
       const res = await fetch('/api/public/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, phone, company, country, subject, message })
       })
-      
+
       if (res.ok) {
         toast.success('Message sent successfully! We will get back to you soon.')
         setName(''); setEmail(''); setPhone(''); setCompany(''); setCountry(''); setSubject(''); setMessage('')
@@ -45,60 +44,62 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1.5">
-          <Label>Name *</Label>
-          <Input required value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
+    <div className="card-glass p-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Name *</Label>
+            <Input required value={name} onChange={e => setName(e.target.value)} placeholder="Jane Doe" className="input h-12" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Email *</Label>
+            <Input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@example.com" className="input h-12" />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label>Email *</Label>
-          <Input type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder="jane@example.com" className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1.5">
-          <Label>Phone</Label>
-          <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 234..." className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
-        </div>
-        <div className="space-y-1.5">
-          <Label>Country</Label>
-          <Input value={country} onChange={e => setCountry(e.target.value)} placeholder="United States" className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-1.5">
-          <Label>Company</Label>
-          <Input value={company} onChange={e => setCompany(e.target.value)} placeholder="Herbs LLC" className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Phone</Label>
+            <Input value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 234..." className="input h-12" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Country</Label>
+            <Input value={country} onChange={e => setCountry(e.target.value)} placeholder="United States" className="input h-12" />
+          </div>
         </div>
-        <div className="space-y-1.5">
-          <Label>Subject</Label>
-          <Input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Bulk Inquiry" className="h-12 bg-neutral-50 border-transparent focus:bg-white" />
-        </div>
-      </div>
-      
-      <div className="space-y-1.5">
-        <Label>Message *</Label>
-        <Textarea 
-          required 
-          rows={6} 
-          value={message} 
-          onChange={e => setMessage(e.target.value)} 
-          placeholder="How can we help you?" 
-          className="bg-neutral-50 border-transparent focus:bg-white resize-none"
-        />
-      </div>
 
-      <div aria-hidden="true" className="absolute -left-[9999px] opacity-0">
-        <label htmlFor="hp-field">Leave this empty</label>
-        <input id="hp-field" name="hp-field" tabIndex={-1} autoComplete="off" value={honeypot} onChange={e => setHoneypot(e.target.value)} />
-      </div>
-      <Button type="submit" disabled={isSubmitting} size="lg" className="h-14 px-8 text-base rounded-full w-full sm:w-auto">
-        {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Send className="w-5 h-5 mr-2" />}
-        {isSubmitting ? 'Sending...' : 'Send Message'}
-      </Button>
-    </form>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Company</Label>
+            <Input value={company} onChange={e => setCompany(e.target.value)} placeholder="Herbs LLC" className="input h-12" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="text-[var(--color-text-tertiary)]">Subject</Label>
+            <Input value={subject} onChange={e => setSubject(e.target.value)} placeholder="Bulk Inquiry" className="input h-12" />
+          </div>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label className="text-[var(--color-text-tertiary)]">Message *</Label>
+          <Textarea
+            required
+            rows={6}
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="How can we help you?"
+            className="input resize-none"
+          />
+        </div>
+
+        <div aria-hidden="true" className="absolute -left-[9999px] opacity-0">
+          <label htmlFor="hp-field">Leave this empty</label>
+          <input id="hp-field" name="hp-field" tabIndex={-1} autoComplete="off" value={honeypot} onChange={e => setHoneypot(e.target.value)} />
+        </div>
+        <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg disabled:opacity-50 disabled:pointer-events-none">
+          {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+          {isSubmitting ? 'Sending...' : 'Send Inquiry'}
+        </button>
+      </form>
+    </div>
   )
 }

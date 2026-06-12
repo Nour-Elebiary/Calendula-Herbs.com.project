@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
-import { Button } from '@/components/ui/button'
 
 const STORAGE_KEY = 'calendula_cookie_consent'
 
@@ -28,21 +27,21 @@ export function CookieConsent() {
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-[100] p-4 md:p-6">
-      <div className="max-w-4xl mx-auto bg-white border rounded-2xl shadow-2xl p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+      <div className="max-w-4xl mx-auto card-glass p-5 md:p-6 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
         <div className="flex-1">
-          <p className="text-sm text-neutral-700">
+          <p className="text-sm text-[var(--color-text-primary)]">
             This site uses cookies for analytics and essential functionality.{' '}
-            <a href="/privacy" className="text-primary underline hover:no-underline">Privacy Policy</a>
+            <a href="/privacy" className="text-[var(--color-green-600)] underline hover:no-underline">Privacy Policy</a>
           </p>
         </div>
         <div className="flex items-center gap-3 shrink-0">
-          <Button variant="outline" size="sm" onClick={decline}>
+          <button onClick={decline} className="btn btn-secondary btn-sm">
             Decline
-          </Button>
-          <Button size="sm" onClick={accept}>
+          </button>
+          <button onClick={accept} className="btn btn-primary btn-sm">
             Accept
-          </Button>
-          <button onClick={decline} className="p-1 text-neutral-400 hover:text-neutral-600" aria-label="Close">
+          </button>
+          <button onClick={decline} className="p-1 text-[var(--color-text-tertiary)] hover:text-[var(--color-text-primary)] transition-colors" aria-label="Close">
             <X className="h-4 w-4" />
           </button>
         </div>

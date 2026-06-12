@@ -672,22 +672,22 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabId>('general')
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold font-heading">Site Settings</h1>
-        <p className="text-sm text-neutral-500 mt-1">Configure your website's global settings</p>
+        <h1 className="text-2xl font-heading font-bold text-white">Site Settings</h1>
+        <p className="text-sm text-white/50 mt-1">Configure your website&apos;s global settings</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b">
+      <div className="flex border-b border-white/10">
         {TABS.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`flex items-center gap-2 px-5 py-3 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab.id
-                ? 'border-primary text-primary'
-                : 'border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300'
+                ? 'border-gold text-gold'
+                : 'border-transparent text-white/40 hover:text-white/60 hover:border-white/20'
             }`}
           >
             <tab.icon className="h-4 w-4" />

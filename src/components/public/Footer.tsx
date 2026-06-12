@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Leaf, MapPin, Phone, Mail, Clock } from 'lucide-react'
+import { Leaf, MapPin, Phone, Mail, Clock, Globe } from 'lucide-react'
 
 type FooterProps = {
   settings: Record<string, string>
@@ -17,130 +17,137 @@ type FooterProps = {
 export function Footer({ settings, contact }: FooterProps) {
   const currentYear = new Date().getFullYear()
   const siteName = settings.site_name || 'Calendula Herbs'
-  
+
   let hours: Record<string, string> = {}
   try {
     if (contact?.businessHours) hours = JSON.parse(contact.businessHours)
   } catch {}
 
+  const socialLinks = [
+    { key: 'social_linkedin', icon: Globe, label: 'LinkedIn' },
+    { key: 'social_facebook', icon: Globe, label: 'Facebook' },
+    { key: 'social_instagram', icon: Globe, label: 'Instagram' },
+    { key: 'social_twitter', icon: Globe, label: 'Twitter / X' },
+  ]
+
   return (
-    <footer className="bg-neutral-900 text-neutral-300 pt-16 pb-8">
-      <div className="container mx-auto px-6 max-w-7xl">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          
+    <footer className="footer-primary">
+      <div className="container mx-auto max-w-7xl">
+        <div className="footer-grid">
           {/* Brand */}
-          <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-2 inline-flex">
-              <div className="flex items-center justify-center rounded-full w-10 h-10 bg-primary text-white">
-                <Leaf className="w-5 h-5" />
-              </div>
-              <span className="font-heading text-xl font-bold tracking-tight text-white">
+          <div>
+            <div className="footer-brand">
+              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
                 {siteName}
-              </span>
-            </Link>
-            <p className="text-neutral-400 text-sm leading-relaxed">
-              {settings.site_tagline || 'Premium organic herbs, spices, and seeds exported globally.'}
+              </Link>
+            </div>
+            <p className="footer-tagline">
+              {settings.site_tagline || 'Specialists in exporting premium Egyptian dried herbs, spices, herbal tea, and seeds.'}
             </p>
-            
-            {/* Socials */}
-            <div className="flex items-center gap-4">
-              {settings.social_facebook && (
-                <a href={settings.social_facebook} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-xs font-bold">
-                  FB
-                </a>
-              )}
-              {settings.social_instagram && (
-                <a href={settings.social_instagram} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-xs font-bold">
-                  IG
-                </a>
-              )}
-              {settings.social_twitter && (
-                <a href={settings.social_twitter} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-xs font-bold">
-                  TW
-                </a>
-              )}
-              {settings.social_linkedin && (
-                <a href={settings.social_linkedin} target="_blank" rel="noreferrer" className="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center hover:bg-primary hover:text-white transition-colors text-xs font-bold">
-                  IN
-                </a>
+            <div className="flex items-center gap-3 mt-6">
+              {socialLinks.map(({ key, icon: Icon, label }) =>
+                settings[key] ? (
+                  <a
+                    key={key}
+                    href={settings[key]}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200"
+                    style={{
+                      border: '1px solid var(--color-border-default)',
+                      color: 'var(--color-text-tertiary)'
+                    }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--color-border-accent)'; e.currentTarget.style.color = 'var(--color-green-700)' }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--color-border-default)'; e.currentTarget.style.color = 'var(--color-text-tertiary)' }}
+                    aria-label={label}
+                  >
+                    <Icon className="w-4 h-4" />
+                  </a>
+                ) : null
               )}
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-heading font-semibold text-lg mb-6">Quick Links</h4>
-            <ul className="space-y-3 text-sm">
-              <li><Link href="/products" className="hover:text-white transition-colors">Products Catalog</Link></li>
-              <li><Link href="/about" className="hover:text-white transition-colors">About Our Company</Link></li>
-              <li><Link href="/galleries" className="hover:text-white transition-colors">Farm & Processing Galleries</Link></li>
-              <li><Link href="/certificates" className="hover:text-white transition-colors">Quality Certificates</Link></li>
-              <li><Link href="/contact" className="hover:text-white transition-colors">Contact Us</Link></li>
+            <h4 className="footer-heading">Quick Links</h4>
+            <ul className="footer-links">
+              <li><Link href="/products" className="footer-link">Products Catalog</Link></li>
+              <li><Link href="/about" className="footer-link">About Our Company</Link></li>
+              <li><Link href="/galleries" className="footer-link">Farm & Processing Galleries</Link></li>
+              <li><Link href="/certificates" className="footer-link">Quality Certificates</Link></li>
+              <li><Link href="/contact" className="footer-link">Contact Us</Link></li>
+              <li><Link href="/privacy" className="footer-link">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="footer-link">Terms of Service</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div>
-            <h4 className="text-white font-heading font-semibold text-lg mb-6">Contact Us</h4>
-            <ul className="space-y-4 text-sm">
-              {contact?.mapAddress && (
-                <li className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 shrink-0 text-primary mt-0.5" />
-                  <span>{contact.mapAddress}</span>
-                </li>
-              )}
-              {contact?.phones && contact.phones.length > 0 && (
-                <li className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 shrink-0 text-primary mt-0.5" />
-                  <div className="space-y-1">
-                    {contact.phones.map((phone, i) => (
-                      <div key={i}><a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="hover:text-white transition-colors">{phone}</a></div>
-                    ))}
-                  </div>
-                </li>
-              )}
-              {contact?.publicEmails && contact.publicEmails.length > 0 && (
-                <li className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 shrink-0 text-primary mt-0.5" />
-                  <div className="space-y-1">
-                    {contact.publicEmails.map((email, i) => (
-                      <div key={i}><a href={`mailto:${email}`} className="hover:text-white transition-colors">{email}</a></div>
-                    ))}
-                  </div>
-                </li>
-              )}
-            </ul>
+            <h4 className="footer-heading">Contact Us</h4>
+            {contact?.mapAddress && (
+              <div className="flex items-start gap-3 mb-3">
+                <MapPin className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-calendula-500)' }} />
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>{contact.mapAddress}</span>
+              </div>
+            )}
+            {contact?.phones && contact.phones.length > 0 && (
+              <div className="flex items-start gap-3 mb-3">
+                <Phone className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-calendula-500)' }} />
+                <div style={{ fontSize: 'var(--text-sm)' }}>
+                  {contact.phones.map((phone, i) => (
+                    <div key={i}>
+                      <a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="footer-link">{phone}</a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {contact?.publicEmails && contact.publicEmails.length > 0 && (
+              <div className="flex items-start gap-3">
+                <Mail className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-calendula-500)' }} />
+                <div style={{ fontSize: 'var(--text-sm)' }}>
+                  {contact.publicEmails.map((email, i) => (
+                    <div key={i}>
+                      <a href={`mailto:${email}`} className="footer-link">{email}</a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="mt-4 flex flex-wrap gap-2">
+              {['ISO 9001', 'EU Organic', 'HALAL', 'KOSHER', 'FDA'].map(cert => (
+                <span key={cert} className="badge badge-green text-[10px]">{cert}</span>
+              ))}
+            </div>
           </div>
 
           {/* Business Hours */}
           <div>
-            <h4 className="text-white font-heading font-semibold text-lg mb-6">Business Hours</h4>
+            <h4 className="footer-heading">Business Hours</h4>
             {Object.keys(hours).length > 0 ? (
-              <ul className="space-y-3 text-sm">
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                 {Object.entries(hours).map(([days, time]) => (
-                  <li key={days} className="flex items-center justify-between border-b border-neutral-800 pb-2">
-                    <span className="text-neutral-400">{days}</span>
-                    <span className="text-white">{time}</span>
+                  <li key={days} className="flex items-center justify-between py-2" style={{ borderBottom: '1px solid var(--color-border-subtle)' }}>
+                    <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-tertiary)' }}>{days}</span>
+                    <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-primary)' }}>{time}</span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <div className="flex items-start gap-3 text-sm">
-                <Clock className="w-5 h-5 shrink-0 text-primary mt-0.5" />
-                <span>Contact us anytime for inquiries.</span>
+              <div className="flex items-start gap-3">
+                <Clock className="w-4 h-4 shrink-0 mt-0.5" style={{ color: 'var(--color-calendula-500)' }} />
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>Contact us anytime for inquiries.</span>
               </div>
             )}
           </div>
-
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-neutral-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-neutral-500">
-          <p>© {currentYear} {siteName}. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-          </div>
+        <div className="footer-bottom">
+          <p className="footer-copyright">
+            © {currentYear} Calendula Herbs For Import & Export. Ibshaway, Fayoum, Egypt.
+          </p>
         </div>
       </div>
     </footer>

@@ -18,7 +18,9 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' https://tawk.to https://embed.tawk.to https://va.vercel-scripts.com",
+      process.env.NODE_ENV === "development"
+        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://tawk.to https://embed.tawk.to https://va.vercel-scripts.com"
+        : "script-src 'self' 'unsafe-inline' https://tawk.to https://embed.tawk.to https://va.vercel-scripts.com",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https://res.cloudinary.com https://*.supabase.co https://img.youtube.com https://i.ytimg.com",
       "media-src 'self' blob: https://res.cloudinary.com https://www.youtube.com",

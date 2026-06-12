@@ -1,71 +1,61 @@
 import React from 'react'
-import Image from 'next/image'
-import { db } from '@/lib/db'
-import { Award } from 'lucide-react'
+import { Award, FileText, Shield, Leaf, Globe, Star, BadgeCheck, Heart, FlaskConical, Users, Building2 } from 'lucide-react'
 
 export const metadata = {
   title: 'Certificates | Calendula Herbs',
-  description: 'Our organic and quality assurance certificates.',
+  description: 'Our organic and quality assurance certificates — ISO, EU Organic, HALAL, KOSHER, USDA NOP, and more.',
 }
 
-export default async function CertificatesPage() {
-  const certificates = await db.certificate.findMany({
-    where: { isActive: true },
-    include: { file: true },
-    orderBy: { order: 'asc' }
-  })
+const certifications = [
+  { icon: FileText, title: 'ISO 9001', desc: 'Quality Management System — consistent quality through certified processes.' },
+  { icon: Shield, title: 'ISO 22000', desc: 'Food Safety Management — ensuring safe handling from farm to shipment.' },
+  { icon: Leaf, title: 'EU Organic', desc: 'European Union organic certification for all exported botanical products.' },
+  { icon: Users, title: 'SEDEX / Semeta', desc: 'Ethical trade and social compliance — responsible sourcing and labor practices.' },
+  { icon: Star, title: 'HALAL', desc: 'Halal-certified processing and handling for Muslim-majority markets.' },
+  { icon: BadgeCheck, title: 'KOSHER', desc: 'Kosher supervision ensuring compliance with dietary laws.' },
+  { icon: Globe, title: 'USDA NOP', desc: 'United States Department of Agriculture National Organic Program certified.' },
+  { icon: Heart, title: 'FDA Approval', desc: 'Registered with the US Food and Drug Administration for import compliance.' },
+  { icon: FlaskConical, title: 'BRCGS', desc: 'Global Standard for Food Safety — independently audited quality systems.' },
+  { icon: Building2, title: 'NFSA Whitelist', desc: 'Egyptian National Food Safety Authority whitelisted exporter.' },
+  { icon: Award, title: 'AHK Council Member', desc: 'Arab-German Chamber of Commerce member — trusted bilateral trade partner.' },
+]
 
+export default function CertificatesPage() {
   return (
-    <div className="bg-white min-h-screen pb-24">
-      {/* Header */}
-      <div className="bg-neutral-900 pt-32 pb-20 text-white text-center px-6">
-        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">Quality & Certifications</h1>
-        <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
-          We adhere to the highest international standards for organic farming, processing, and export.
-        </p>
-      </div>
+    <div className="page-root">
+      <div className="page-content">
+        <section className="bg-[var(--color-bg-elevated)] pt-32 pb-20 text-center px-6">
+          <h1 className="font-display text-4xl md:text-5xl font-medium mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Quality & Certifications
+          </h1>
+          <p className="max-w-2xl mx-auto text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+            We adhere to the highest international standards for organic farming, processing, and export.
+          </p>
+        </section>
 
-      <div className="container mx-auto px-6 max-w-7xl mt-16">
-        {certificates.length === 0 ? (
-          <div className="text-center py-24 border rounded-2xl bg-neutral-50">
-            <Award className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-heading font-bold text-neutral-900">No Certificates Available</h3>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {certificates.map(cert => {
-              const fileUrl = cert.file?.url
-              const isPdf = cert.fileType === 'PDF'
-
+        <div className="section">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {certifications.map((cert, i) => {
+              const Icon = cert.icon
               return (
-                <div key={cert.id} className="bg-white border rounded-2xl p-6 flex flex-col items-center text-center transition-shadow hover:shadow-xl hover:border-primary/30">
-                  <div className="w-full aspect-[3/4] relative bg-neutral-50 rounded-xl mb-6 overflow-hidden border">
-                    {fileUrl ? (
-                      isPdf ? (
-                        <div className="absolute inset-0 flex items-center justify-center bg-neutral-100">
-                          <a href={fileUrl} target="_blank" rel="noreferrer" className="text-primary font-medium hover:underline flex flex-col items-center gap-2">
-                            <span className="text-4xl">📄</span>
-                            View PDF
-                          </a>
-                        </div>
-                      ) : (
-                        <Image src={fileUrl} alt={cert.title} fill className="object-contain p-4" />
-                      )
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <Award className="w-12 h-12 text-neutral-200" />
-                      </div>
-                    )}
+                <div key={i} className="card-glass cert-card">
+                  <div
+                    className="w-16 h-16 rounded-full flex items-center justify-center mb-2"
+                    style={{ background: 'rgba(94,158,102,0.10)' }}
+                  >
+                    <Icon className="w-8 h-8" style={{ color: 'var(--color-green-600)' }} />
                   </div>
-                  <h3 className="text-lg font-heading font-bold text-neutral-900">{cert.title}</h3>
-                  {cert.issuer && (
-                    <p className="text-sm text-neutral-500 mt-1 uppercase tracking-wider">{cert.issuer}</p>
-                  )}
+                  <h3 className="cert-card__name">{cert.title}</h3>
+                  <p className="cert-card__desc">{cert.desc}</p>
+                  <span className="badge badge-green mt-2">
+                    <Leaf className="w-3 h-3" />
+                    Certified
+                  </span>
                 </div>
               )
             })}
           </div>
-        )}
+        </div>
       </div>
     </div>
   )

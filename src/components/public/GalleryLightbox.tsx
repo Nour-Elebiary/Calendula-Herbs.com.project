@@ -59,7 +59,7 @@ export function GalleryLightbox({ items }: { items: LightboxItem[] }) {
           <button
             key={item.id}
             onClick={() => open(index)}
-            className="group relative aspect-square bg-neutral-100 rounded-xl overflow-hidden cursor-pointer text-left"
+            className="card-glass group relative aspect-square overflow-hidden cursor-pointer text-left"
           >
             {itemImgUrl ? (
               <Image
@@ -70,20 +70,45 @@ export function GalleryLightbox({ items }: { items: LightboxItem[] }) {
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
-                {isVideo ? <Play className="w-10 h-10 text-neutral-300" /> : <Image src="/file.svg" alt="" width={40} height={40} className="text-neutral-300" />}
+                {isVideo
+                  ? <Play className="w-10 h-10" style={{ color: 'var(--color-text-tertiary)' }} />
+                  : <Image src="/file.svg" alt="" width={40} height={40} style={{ color: 'var(--color-text-tertiary)' }} />
+                }
               </div>
             )}
             {isVideo && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
-                <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur flex items-center justify-center pl-1">
-                  <Play className="w-5 h-5 text-neutral-900" />
+              <div
+                className="absolute inset-0 flex items-center justify-center transition-colors"
+                style={{ background: 'rgba(0,0,0,0.20)' }}
+              >
+                <div
+                  className="w-12 h-12 rounded-full flex items-center justify-center pl-1"
+                  style={{
+                    background: 'rgba(255,253,248,0.90)',
+                    backdropFilter: 'blur(8px)'
+                  }}
+                >
+                  <Play className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />
                 </div>
               </div>
             )}
             {(item.title || item.caption) && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4">
-                {item.title && <h4 className="text-white font-medium text-sm">{item.title}</h4>}
-                {item.caption && <p className="text-white/80 text-xs mt-1 line-clamp-2">{item.caption}</p>}
+              <div
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-4"
+                style={{
+                  background: 'linear-gradient(to top, rgba(25,40,25,0.85) 0%, rgba(25,40,25,0.15) 60%, transparent 100%)'
+                }}
+              >
+                {item.title && (
+                  <h4 className="font-medium text-sm" style={{ color: 'var(--color-text-inverse)' }}>
+                    {item.title}
+                  </h4>
+                )}
+                {item.caption && (
+                  <p className="text-xs mt-1 line-clamp-2" style={{ color: 'rgba(250,250,246,0.75)' }}>
+                    {item.caption}
+                  </p>
+                )}
               </div>
             )}
           </button>
@@ -92,12 +117,14 @@ export function GalleryLightbox({ items }: { items: LightboxItem[] }) {
 
       {isOpen && imgUrl && (
         <div
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+          style={{ background: 'rgba(6,15,9,0.95)' }}
           onClick={close}
         >
           <button
             onClick={close}
-            className="absolute top-4 right-4 z-10 p-2 text-white/70 hover:text-white transition-colors"
+            className="absolute top-4 right-4 z-10 p-2 transition-colors"
+            style={{ color: 'rgba(250,250,246,0.7)' }}
             aria-label="Close lightbox"
           >
             <X className="w-8 h-8" />
@@ -107,14 +134,16 @@ export function GalleryLightbox({ items }: { items: LightboxItem[] }) {
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); prev() }}
-                className="absolute left-4 z-10 p-3 text-white/70 hover:text-white transition-colors"
+                className="absolute left-4 z-10 p-3 transition-colors"
+                style={{ color: 'rgba(250,250,246,0.7)' }}
                 aria-label="Previous image"
               >
                 <ChevronLeft className="w-8 h-8" />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); next() }}
-                className="absolute right-4 z-10 p-3 text-white/70 hover:text-white transition-colors"
+                className="absolute right-4 z-10 p-3 transition-colors"
+                style={{ color: 'rgba(250,250,246,0.7)' }}
                 aria-label="Next image"
               >
                 <ChevronRight className="w-8 h-8" />
@@ -137,11 +166,19 @@ export function GalleryLightbox({ items }: { items: LightboxItem[] }) {
             </div>
             {(current?.title || current?.caption) && (
               <div className="text-center mt-4 max-w-2xl">
-                {current?.title && <p className="text-white font-medium">{current.title}</p>}
-                {current?.caption && <p className="text-white/60 text-sm mt-1">{current.caption}</p>}
+                {current?.title && (
+                  <p className="font-medium" style={{ color: 'var(--color-text-inverse)' }}>
+                    {current.title}
+                  </p>
+                )}
+                {current?.caption && (
+                  <p className="text-sm mt-1" style={{ color: 'rgba(250,250,246,0.6)' }}>
+                    {current.caption}
+                  </p>
+                )}
               </div>
             )}
-            <p className="text-white/40 text-xs mt-3">
+            <p className="text-xs mt-3" style={{ color: 'rgba(250,250,246,0.4)' }}>
               {currentIndex + 1} / {items.length}
             </p>
           </div>

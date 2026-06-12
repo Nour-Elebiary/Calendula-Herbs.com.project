@@ -1,16 +1,32 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Cormorant_Garamond, Dancing_Script, DM_Sans, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({
-  variable: '--font-body',
+const cormorantGaramond = Cormorant_Garamond({
+  variable: '--font-display',
   subsets: ['latin'],
+  weight: ['400', '500', '600'],
   display: 'swap',
 })
 
-const playfair = Playfair_Display({
-  variable: '--font-heading',
+const dancingScript = Dancing_Script({
+  variable: '--font-script',
   subsets: ['latin'],
+  weight: ['600', '700'],
+  display: 'swap',
+})
+
+const dmSans = DM_Sans({
+  variable: '--font-body',
+  subsets: ['latin'],
+  weight: ['300', '400', '500'],
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-mono',
+  subsets: ['latin'],
+  weight: ['400'],
   display: 'swap',
 })
 
@@ -56,14 +72,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full scroll-smooth`}
+      className={`${cormorantGaramond.variable} ${dancingScript.variable} ${dmSans.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#2d7a3a" />
+        <meta name="theme-color" content="#FAFAF6" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
-      <body className="min-h-full flex flex-col antialiased bg-background text-foreground">
+      <body className="min-h-full flex flex-col antialiased bg-[var(--color-bg-void)] text-[var(--color-text-primary)]">
         {children}
       </body>
     </html>

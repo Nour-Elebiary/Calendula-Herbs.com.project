@@ -70,9 +70,13 @@ export function SampleRequestForm({ products }: Props) {
   if (submitted) {
     return (
       <div className="text-center py-12">
-        <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-        <h3 className="text-2xl font-heading font-bold text-neutral-900 mb-2">Request Submitted!</h3>
-        <p className="text-neutral-600 mb-6">We'll review your request and get back to you within 24 hours.</p>
+        <CheckCircle className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--color-green-600)' }} />
+        <h3 className="font-display text-2xl font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+          Request Submitted!
+        </h3>
+        <p className="mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+          We&apos;ll review your request and get back to you within 24 hours.
+        </p>
         <Button variant="outline" onClick={() => { reset(); setSubmitted(false) }}>
           Submit Another Request
         </Button>
@@ -97,7 +101,7 @@ export function SampleRequestForm({ products }: Props) {
             ))}
           </SelectContent>
         </Select>
-        {errors.productName && <p className="text-sm text-red-500">{errors.productName.message}</p>}
+        {errors.productName && <p className="text-sm" style={{ color: 'var(--color-error)' }}>{errors.productName.message}</p>}
       </div>
 
       <div className="space-y-1.5">
@@ -109,12 +113,12 @@ export function SampleRequestForm({ products }: Props) {
         <div className="space-y-1.5">
           <Label htmlFor="sample-name">Your Name *</Label>
           <Input id="sample-name" {...register('name')} />
-          {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
+          {errors.name && <p className="text-sm" style={{ color: 'var(--color-error)' }}>{errors.name.message}</p>}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="sample-email">Email *</Label>
           <Input id="sample-email" type="email" {...register('email')} />
-          {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
+          {errors.email && <p className="text-sm" style={{ color: 'var(--color-error)' }}>{errors.email.message}</p>}
         </div>
       </div>
 
@@ -132,12 +136,12 @@ export function SampleRequestForm({ products }: Props) {
         <Label>Shipping Cost *</Label>
         <div className="flex gap-4">
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="radio" {...register('shippingBy')} value="buyer" checked={shippingBy === 'buyer'} onChange={() => setValue('shippingBy', 'buyer')} className="text-primary" />
-            <span className="text-sm">I will cover shipping</span>
+            <input type="radio" {...register('shippingBy')} value="buyer" checked={shippingBy === 'buyer'} onChange={() => setValue('shippingBy', 'buyer')} style={{ accentColor: 'var(--color-green-600)' }} />
+            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>I will cover shipping</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
-            <input type="radio" {...register('shippingBy')} value="calendula" checked={shippingBy === 'calendula'} onChange={() => setValue('shippingBy', 'calendula')} className="text-primary" />
-            <span className="text-sm">Calendula covers (qualified buyers)</span>
+            <input type="radio" {...register('shippingBy')} value="calendula" checked={shippingBy === 'calendula'} onChange={() => setValue('shippingBy', 'calendula')} style={{ accentColor: 'var(--color-green-600)' }} />
+            <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>Calendula covers (qualified buyers)</span>
           </label>
         </div>
       </div>
@@ -147,10 +151,10 @@ export function SampleRequestForm({ products }: Props) {
         <Textarea id="sample-notes" rows={3} {...register('notes')} />
       </div>
 
-      <Button type="submit" disabled={isSubmitting} className="w-full">
-        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Send className="h-4 w-4 mr-2" />}
+      <button type="submit" disabled={isSubmitting} className="btn btn-primary btn-lg w-full">
+        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
         Submit Sample Request
-      </Button>
+      </button>
     </form>
   )
 }

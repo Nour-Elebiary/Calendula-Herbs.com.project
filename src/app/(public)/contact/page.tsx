@@ -1,12 +1,12 @@
 import React from 'react'
 import { db } from '@/lib/db'
-import { MapPin, Phone, Mail, Clock, MessageSquare } from 'lucide-react'
+import { MapPin, Phone, Mail, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/public/ContactForm'
 import { MapEmbed } from '@/components/public/MapEmbed'
 
 export const metadata = {
-  title: 'Contact Us | Calendula Herbs',
-  description: 'Get in touch with Calendula Herbs for bulk inquiries, sample requests, and more.',
+  title: 'Contact Us | Calendula Herbs For Import & Export',
+  description: 'Get in touch with Calendula Herbs for bulk inquiries, sample requests, and export orders. Reach us by phone, email, or WhatsApp.',
 }
 
 export default async function ContactPage() {
@@ -19,126 +19,117 @@ export default async function ContactPage() {
 
   const formEnabled = contact?.formEnabled ?? true
 
+  const phones = contact?.phones?.length ? contact.phones : ['+20 112 023 8857', '+20 112 770 3323']
+  const emails = contact?.publicEmails?.length ? contact.publicEmails : ['info@calendula-herbs.com']
+  const address = contact?.mapAddress || 'New Seat St., Ibshway, Fayoum, Egypt — ZIP 63611'
+
   return (
-    <div className="bg-white min-h-screen pb-24">
-      {/* Header */}
-      <div className="bg-neutral-900 pt-32 pb-20 text-white text-center px-6">
-        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">Contact Us</h1>
-        <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
-          We're here to help with your bulk herbal export needs. Reach out to our team today.
-        </p>
-      </div>
+    <div className="page-root">
+      <div className="page-content">
+        {/* Header */}
+        <section className="section section--tint text-center">
+          <h1 className="text-4xl md:text-5xl font-display font-bold text-[var(--color-text-primary)] mb-4">Contact Us</h1>
+          <p className="text-[var(--color-text-secondary)] max-w-2xl mx-auto text-lg">
+            We are here to assist with your bulk herbal export needs. Pricing is provided after we understand your specific requirements and volume.
+          </p>
+        </section>
 
-      <div className="container mx-auto px-6 max-w-7xl mt-16">
-        <div className="grid lg:grid-cols-3 gap-16">
-          
-          {/* Contact Details */}
-          <div className="lg:col-span-1 space-y-12">
-            <div>
-              <h3 className="text-2xl font-heading font-bold text-neutral-900 mb-6">Get in Touch</h3>
-              <p className="text-neutral-600 mb-8 leading-relaxed">
-                Whether you need a quote, want to request samples, or have questions about our certifications, our team is ready to assist you.
-              </p>
+        <div className="section">
+          <div className="container">
+            <div className="grid lg:grid-cols-5 gap-16">
               
-              <ul className="space-y-6">
-                {contact?.mapAddress && (
-                  <li className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <MapPin className="w-5 h-5 text-primary" />
+              {/* Form — left (3 cols) */}
+              <div className="lg:col-span-3">
+                <div className="card-glass p-8 md:p-10">
+                  <h2 className="text-3xl font-display font-bold text-[var(--color-text-primary)] mb-2">Send an Inquiry</h2>
+                  <p className="text-[var(--color-text-tertiary)] mb-8">Tell us about your requirements and we will get back to you within 24 hours.</p>
+                  
+                  {formEnabled ? (
+                    <ContactForm />
+                  ) : (
+                    <div className="card-glass p-12 text-center">
+                      <MessageSquare className="w-12 h-12 text-[var(--color-text-tertiary)] mx-auto mb-4" />
+                      <h3 className="text-xl font-medium text-[var(--color-text-primary)] mb-2">Contact Form is Currently Unavailable</h3>
+                      <p className="text-[var(--color-text-secondary)]">Please reach out to us directly via email or phone using the details provided.</p>
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 mb-1">Headquarters & Farm</h4>
-                      <p className="text-neutral-600 text-sm leading-relaxed">{contact.mapAddress}</p>
-                    </div>
-                  </li>
-                )}
-                
-                {contact?.phones && contact.phones.length > 0 && (
-                  <li className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Phone className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 mb-1">Phone & WhatsApp</h4>
-                      <div className="space-y-1">
-                        {contact.phones.map((phone, i) => (
-                          <div key={i}><a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="text-neutral-600 text-sm hover:text-primary transition-colors">{phone}</a></div>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
-                )}
-
-                {contact?.publicEmails && contact.publicEmails.length > 0 && (
-                  <li className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Mail className="w-5 h-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-neutral-900 mb-1">Email Support</h4>
-                      <div className="space-y-1">
-                        {contact.publicEmails.map((email, i) => (
-                          <div key={i}><a href={`mailto:${email}`} className="text-neutral-600 text-sm hover:text-primary transition-colors">{email}</a></div>
-                        ))}
-                      </div>
-                    </div>
-                  </li>
-                )}
-
-                {Object.keys(hours).length > 0 && (
-                  <li className="flex gap-4">
-                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Clock className="w-5 h-5 text-primary" />
-                    </div>
-                    <div className="w-full">
-                      <h4 className="font-semibold text-neutral-900 mb-2">Business Hours</h4>
-                      <ul className="space-y-2 text-sm w-full">
-                        {Object.entries(hours).map(([days, time]) => (
-                          <li key={days} className="flex items-center justify-between border-b border-neutral-100 pb-2">
-                            <span className="text-neutral-500">{days}</span>
-                            <span className="text-neutral-900 font-medium">{time}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </li>
-                )}
-              </ul>
-            </div>
-          </div>
-
-          {/* Form */}
-          <div className="lg:col-span-2">
-            <div className="bg-white border rounded-3xl p-8 md:p-12 shadow-sm">
-              <h2 className="text-3xl font-heading font-bold text-neutral-900 mb-2">Send an Inquiry</h2>
-              <p className="text-neutral-500 mb-8">Fill out the form below and we'll get back to you within 24 hours.</p>
-              
-              {formEnabled ? (
-                <ContactForm />
-              ) : (
-                <div className="bg-neutral-50 border rounded-2xl p-12 text-center">
-                  <MessageSquare className="w-12 h-12 text-neutral-300 mx-auto mb-4" />
-                  <h3 className="text-xl font-medium text-neutral-900 mb-2">Contact Form is Currently Unavailable</h3>
-                  <p className="text-neutral-500">Please reach out to us directly via email or phone using the details provided.</p>
+                  )}
                 </div>
-              )}
+              </div>
+
+              {/* Direct Channels — right (2 cols) */}
+              <div className="lg:col-span-2 space-y-8">
+                <div>
+                  <h3 className="text-2xl font-display font-bold text-[var(--color-text-primary)] mb-6">Direct Contact</h3>
+                  <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">
+                    Prefer to reach us directly? Our team is available during business hours.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    {/* Phone & WhatsApp */}
+                    <div className="card-glass channel-card">
+                      <span className="channel-card__label"><Phone className="w-3 h-3 inline mr-1" /> Phone & WhatsApp</span>
+                      {phones.map((phone, i) => (
+                        <a key={i} href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="channel-card__value">{phone}</a>
+                      ))}
+                      <div className="flex gap-2 mt-3">
+                        <a href={`https://wa.me/${phones[0].replace(/[^\d]/g, '')}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm">
+                          WhatsApp
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div className="card-glass channel-card">
+                      <span className="channel-card__label"><Mail className="w-3 h-3 inline mr-1" /> Email Support</span>
+                      {emails.map((email, i) => (
+                        <a key={i} href={`mailto:${email}`} className="channel-card__value">{email}</a>
+                      ))}
+                    </div>
+
+                    {/* Address */}
+                    <div className="card-glass channel-card">
+                      <span className="channel-card__label"><MapPin className="w-3 h-3 inline mr-1" /> Headquarters & Farm</span>
+                      <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{address}</p>
+                    </div>
+
+                    {/* Business Hours */}
+                    {Object.keys(hours).length > 0 && (
+                      <div className="card-glass channel-card">
+                        <span className="channel-card__label">Business Hours</span>
+                        <div className="space-y-2 text-sm">
+                          {Object.entries(hours).map(([days, time]) => (
+                            <div key={days} className="flex items-center justify-between border-b border-[var(--color-border-subtle)] pb-2">
+                              <span className="text-[var(--color-text-tertiary)]">{days}</span>
+                              <span className="text-[var(--color-text-primary)] font-medium">{time}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
-
         </div>
-      </div>
 
-      {/* Map */}
-      {contact?.mapLat && contact?.mapLng && (
-        <div className="container mx-auto px-6 max-w-7xl mt-20">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-heading font-bold text-neutral-900">Our Location</h2>
-            <p className="text-neutral-500 mt-2">{contact.mapAddress}</p>
+        {/* Map */}
+        {(contact?.mapLat && contact?.mapLng) && (
+          <div className="section pt-0">
+            <div className="container">
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-display font-bold text-[var(--color-text-primary)]">Our Location</h2>
+                <p className="text-[var(--color-text-tertiary)] mt-2">{address}</p>
+              </div>
+              <div className="card-glass overflow-hidden p-1">
+                <MapEmbed lat={contact.mapLat} lng={contact.mapLng} address={address} />
+              </div>
+            </div>
           </div>
-          <MapEmbed lat={contact.mapLat} lng={contact.mapLng} address={contact.mapAddress || ''} />
-        </div>
-      )}
+        )}
 
+      </div>
     </div>
   )
 }

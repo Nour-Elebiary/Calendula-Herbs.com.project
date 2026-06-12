@@ -4,35 +4,83 @@ import { HelpCircle, ChevronDown } from 'lucide-react'
 
 export const metadata = {
   title: 'FAQ | Calendula Herbs',
-  description: 'Frequently asked questions about ordering, certifications, shipping, and quality at Calendula Herbs.',
+  description: 'B2B export FAQs — MOQ, free samples, certifications, shipping, and payment terms for bulk herb and spice buyers.',
 }
 
 type FaqItem = { question: string; answer: string }
 
 const DEFAULT_FAQS: FaqItem[] = [
-  { question: 'What is your minimum order quantity (MOQ)?', answer: 'Our standard MOQ is 500 kg per product. However, we can accommodate smaller trial orders for first-time buyers or sample requests. Contact our sales team for details.' },
-  { question: 'What certifications do you hold?', answer: 'We hold multiple organic certifications including EU Organic, NOP (USDA), and other international standards. Visit our Certificates page for the full list.' },
-  { question: 'Do you offer free samples?', answer: 'Yes, we offer free samples of up to 200g for qualified buyers. The buyer covers shipping costs. Submit a sample request through our website or contact us directly.' },
-  { question: 'What are your shipping terms?', answer: 'We ship worldwide via air and sea freight. Common terms include FOB, CIF, and EXW depending on the destination and order volume. We work with reliable freight forwarders to ensure timely delivery.' },
-  { question: 'What payment terms do you accept?', answer: 'Payment terms are discussed per order. Typical arrangements include T/T (wire transfer), L/C (letter of credit), and sometimes D/P. Contact us to discuss the best option for your order.' },
-  { question: 'What is your typical lead time?', answer: 'Lead times vary by product and order size. Generally 7–14 days for stock items and 20–30 days for custom processing orders. We will provide an accurate timeline upon order confirmation.' },
-  { question: 'Do you source from your own farms?', answer: 'Yes, we own and operate our own farms in Ibshaway, Fayoum, Egypt. We also work with trusted partner farmers under our direct supervision to ensure consistent quality and traceability.' },
-  { question: 'How do you ensure product quality?', answer: 'Quality is ensured at every stage: seed selection, cultivation, harvesting, processing, and packaging. We conduct laboratory testing for purity, potency, and contamination. Our facilities follow GMP and HACCP guidelines.' },
-  { question: 'Can I visit your farm or facility?', answer: 'Yes, we welcome visits from serious buyers. Please contact us in advance to schedule a tour of our farms, processing facilities, and quality control labs in Fayoum, Egypt.' },
-  { question: 'How do I place an order?', answer: 'Browse our product catalog, add items to your inquiry cart, and submit the inquiry form. Our sales team will contact you within 24 hours with a detailed quotation and next steps.' },
+  {
+    question: 'What is your minimum order quantity (MOQ)?',
+    answer: 'Our standard MOQ is 500–1,000 kg per product depending on the item and season. We can accommodate smaller trial orders (50–100 kg) for first-time qualified buyers. Contact our sales team to discuss your specific volume needs.'
+  },
+  {
+    question: 'Do you offer free samples for quality evaluation?',
+    answer: 'Yes, we provide free samples of 50–200 g for qualified B2B buyers. The buyer covers shipping costs unless otherwise negotiated. Submit a sample request through our website, and our team will prepare material from current production batches.'
+  },
+  {
+    question: 'What sterilization options do you offer?',
+    answer: 'We offer several sterilization methods including steam sterilization (autoclave), ethylene oxide (EtO), and gamma irradiation depending on product specifications and destination country requirements. Our processing facilities follow GMP and HACCP guidelines. Please specify your sterilization requirements when requesting a quote.'
+  },
+  {
+    question: 'Can you provide pricing on your website?',
+    answer: 'Herb and spice prices fluctuate with crop yields, market conditions, and seasonality. We provide accurate, current pricing only after understanding your specific requirements — volume, quality grade, packaging, and destination. Contact us for a tailored quotation.'
+  },
+  {
+    question: 'What certifications do you hold?',
+    answer: 'We hold 11 major certifications including ISO 9001, ISO 22000, EU Organic, USDA NOP, HALAL, KOSHER, BRCGS, FDA Registration, SEDEX/Semeta, NFSA Whitelist, and AHK Council membership. Visit our Certificates page for full details. We can provide certificates upon request for your compliance review.'
+  },
+  {
+    question: 'What are your shipping terms and lead times?',
+    answer: 'We ship worldwide via air and sea freight. Common incoterms include FOB (Damietta or Alexandria ports), CIF, and EXW. Lead times are 7–14 days for stock items and 20–30 days for custom processing. We work with reliable freight forwarders and can assist with logistics arrangements.'
+  },
+  {
+    question: 'What payment terms do you accept?',
+    answer: 'Payment terms are discussed and agreed per order based on order value, destination, and buyer history. Typical arrangements include T/T (wire transfer) and L/C (letter of credit). Contact our sales team to discuss the best option for your order.'
+  },
+  {
+    question: 'Do you source exclusively from your own farms?',
+    answer: 'We own and operate our own farms in Ibshaway, Fayoum, Egypt — over 500 acres dedicated to organic calendula, chamomile, hibiscus, and other botanicals. We supplement with trusted partner farms under our direct agronomist supervision to ensure consistent quality, traceability, and year-round availability.'
+  },
+  {
+    question: 'How do you ensure product quality and consistency?',
+    answer: 'Quality is ensured at every stage: seed selection, cultivation, harvesting, processing, and packaging. We conduct in-house laboratory testing for purity, potency, microbiological contamination, and heavy metals. Our quality management system is ISO 9001 and ISO 22000 certified, following GMP and HACCP guidelines throughout.'
+  },
+  {
+    question: 'Can I visit your farm or processing facility?',
+    answer: 'Yes, we welcome visits from serious buyers and importers. Please contact us in advance to schedule a tour of our farms, processing facilities, and quality control labs in Fayoum, Egypt. We recommend allowing at least two weeks for visa and travel arrangements.'
+  },
+  {
+    question: 'How do I place a bulk order?',
+    answer: 'Browse our product catalog, submit an inquiry through our Request a Quote form, or contact our sales team directly. We will respond within 24 hours with product specifications, current pricing, and next steps including sample provision and contract terms.'
+  },
+  {
+    question: 'Do you offer private labelling or custom packaging?',
+    answer: 'Yes, we offer private labelling, custom packaging, and OEM services for B2B partners. Minimum quantities apply. Contact us with your specifications for a detailed proposal.'
+  },
 ]
 
 function FaqAccordion({ items }: { items: FaqItem[] }) {
   return (
     <div className="space-y-4">
       {items.map((item, index) => (
-        <details key={index} className="group bg-white border rounded-xl overflow-hidden transition-shadow hover:shadow-md [&[open]]:shadow-md">
+        <details key={index} className="card-glass group [&[open]]:border-[var(--color-border-accent)]">
           <summary className="flex items-center justify-between p-5 md:p-6 cursor-pointer list-none">
-            <span className="text-left font-medium text-neutral-900 pr-4">{item.question}</span>
-            <ChevronDown className="h-5 w-5 text-primary shrink-0 transition-transform duration-200 group-open:rotate-180" />
+            <span className="text-left font-medium pr-4" style={{ color: 'var(--color-text-primary)' }}>
+              {item.question}
+            </span>
+            <ChevronDown
+              className="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180"
+              style={{ color: 'var(--color-green-600)' }}
+            />
           </summary>
-          <div className="px-5 md:px-6 pb-5 md:pb-6 border-t border-neutral-100 pt-4">
-            <p className="text-neutral-600 leading-relaxed">{item.answer}</p>
+          <div
+            className="px-5 md:px-6 pb-5 md:pb-6 pt-4"
+            style={{ borderTop: '1px solid var(--color-border-subtle)' }}
+          >
+            <p className="leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+              {item.answer}
+            </p>
           </div>
         </details>
       ))}
@@ -52,30 +100,43 @@ export default async function FaqPage() {
   }
 
   return (
-    <div className="bg-white min-h-screen pb-24">
-      <div className="bg-neutral-900 pt-32 pb-20 text-white text-center px-6">
-        <h1 className="text-4xl md:text-5xl font-heading font-bold mb-4">Frequently Asked Questions</h1>
-        <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
-          Everything you need to know about ordering from Calendula Herbs.
-        </p>
-      </div>
+    <div className="page-root">
+      <div className="page-content">
+        <section className="bg-[var(--color-bg-elevated)] pt-32 pb-20 text-center px-6">
+          <h1 className="font-display text-4xl md:text-5xl font-medium mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Frequently Asked Questions
+          </h1>
+          <p className="max-w-2xl mx-auto text-lg" style={{ color: 'var(--color-text-secondary)' }}>
+            Everything B2B buyers need to know about ordering from Calendula Herbs.
+          </p>
+        </section>
 
-      <div className="container mx-auto px-6 max-w-3xl mt-16">
-        {faqs.length === 0 ? (
-          <div className="text-center py-24 border rounded-2xl bg-neutral-50">
-            <HelpCircle className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
-            <h3 className="text-2xl font-heading font-bold text-neutral-900">No FAQs Available</h3>
+        <div className="section" style={{ maxWidth: 'var(--container-tight)', margin: '0 auto' }}>
+          {faqs.length === 0 ? (
+            <div className="card-glass py-24 text-center">
+              <HelpCircle className="w-16 h-16 mx-auto mb-4" style={{ color: 'var(--color-text-tertiary)' }} />
+              <h3 className="font-display text-2xl font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+                No FAQs Available
+              </h3>
+            </div>
+          ) : (
+            <FaqAccordion items={faqs} />
+          )}
+
+          <div
+            className="card-glass mt-16 p-8 md:p-10 text-center"
+            style={{ borderColor: 'var(--color-border-accent)' }}
+          >
+            <h2 className="font-display text-2xl font-medium mb-2" style={{ color: 'var(--color-text-primary)' }}>
+              Still have questions?
+            </h2>
+            <p className="mb-6" style={{ color: 'var(--color-text-secondary)' }}>
+              Our export team is ready to help with any additional inquiries.
+            </p>
+            <a href="/contact" className="btn btn-primary btn-lg">
+              Contact Us
+            </a>
           </div>
-        ) : (
-          <FaqAccordion items={faqs} />
-        )}
-
-        <div className="mt-16 p-8 bg-primary/5 border border-primary/10 rounded-2xl text-center">
-          <h2 className="text-2xl font-heading font-bold text-neutral-900 mb-2">Still have questions?</h2>
-          <p className="text-neutral-600 mb-6">Our team is ready to help with any additional inquiries.</p>
-          <a href="/contact" className="inline-flex items-center justify-center rounded-xl bg-primary text-white px-8 py-3 font-medium hover:bg-primary/90 transition-colors">
-            Contact Us
-          </a>
         </div>
       </div>
     </div>

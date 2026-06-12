@@ -32,5 +32,5 @@ export function MapEmbed({ lat, lng, address }: Props) {
     instanceRef.current = map
   }, [lat, lng, address])
 
-  return <div ref={mapRef} className="w-full h-[400px] rounded-2xl border overflow-hidden z-0" />
+  return <div ref={mapRef} className="w-full h-[400px] rounded-2xl overflow-hidden z-0" style={{ border: '1px solid var(--color-border-subtle)' }} />
 }
