@@ -7,6 +7,8 @@ import { CartProvider } from '@/components/public/CartProvider'
 import { CartDrawer } from '@/components/public/CartDrawer'
 import { CookieConsent } from '@/components/public/CookieConsent'
 
+export const dynamic = 'force-dynamic'
+
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
   const [siteSettings, contactSetting, activePlugins] = await Promise.all([
     db.siteSetting.findMany(),
