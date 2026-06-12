@@ -43,11 +43,11 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
           from Egypt&apos;s fertile lands since {founded || '2005'}.
         </motion.p>
 
-        <motion.div variants={heroChild} className="hero-atmospheric__actions">
-          <Link href="/contact" className="btn btn-primary btn-lg">
+        <motion.div variants={heroChild} className="hero-atmospheric__actions flex flex-wrap gap-4 sm:gap-6 items-center justify-center sm:justify-start">
+          <Link href="/contact" className="btn btn-primary btn-lg whitespace-nowrap">
             Request a Quote
           </Link>
-          <Link href="/products" className="btn btn-secondary btn-lg" style={{ color: 'var(--color-text-inverse)', borderColor: 'rgba(255,255,255,0.35)' }}>
+          <Link href="/products" className="btn btn-secondary btn-lg whitespace-nowrap" style={{ color: 'var(--color-text-inverse)', borderColor: 'rgba(255,255,255,0.35)' }}>
             Explore Products
           </Link>
         </motion.div>
