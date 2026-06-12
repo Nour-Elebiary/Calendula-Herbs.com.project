@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ media }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors }, { status: 400 })
+      return NextResponse.json({ error: (error as z.ZodError).issues }, { status: 400 })
     }
     console.error('Media save error:', error)
     return NextResponse.json({ error: 'Failed to save media record' }, { status: 500 })

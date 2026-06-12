@@ -12,7 +12,7 @@ import { CSS } from '@dnd-kit/utilities'
 import { GalleryItem, MediaFile } from '@prisma/client'
 import { GalleryItemType } from '@prisma/client'
 import {
-  Plus, GripVertical, Trash2, Youtube, Link, ArrowLeft, Loader2, Image as ImageIcon, Film
+  Plus, GripVertical, Trash2, PlayCircle, Link, ArrowLeft, Loader2, Image as ImageIcon, Film
 } from 'lucide-react'
 import Image from 'next/image'
 import { MediaPicker } from '@/components/admin/media/MediaPicker'
@@ -36,7 +36,7 @@ function SortableItem({ item, onDelete }: { item: FullItem; onDelete: (id: strin
         <Image src={thumb} alt={item.title || 'Gallery item'} fill className="object-cover" sizes="200px" />
       ) : (
         <div className="flex items-center justify-center h-full bg-neutral-100">
-          {item.type === 'YOUTUBE' ? <Youtube className="h-8 w-8 text-red-400" /> : <Film className="h-8 w-8 text-neutral-300" />}
+          {item.type === 'YOUTUBE' ? <PlayCircle className="h-8 w-8 text-red-400" /> : <Film className="h-8 w-8 text-neutral-300" />}
         </div>
       )}
 

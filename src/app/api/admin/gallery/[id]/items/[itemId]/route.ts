@@ -3,19 +3,21 @@ import { db } from '@/lib/db'
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string; itemId: string } }
+  { params }: { params: Promise<{ id: string; itemId: string }> }
 ) {
-  await db.galleryItem.delete({ where: { id: params.itemId } })
+  const { itemId } = await params;
+  await db.galleryItem.delete({ where: { id: itemId } })
   return NextResponse.json({ success: true })
 }
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string; itemId: string } }
+  { params }: { params: Promise<{ id: string; itemId: string }> }
 ) {
+  const { itemId } = await params;
   const { title, caption, isActive } = await req.json()
   const item = await db.galleryItem.update({
-    where: { id: params.itemId },
+    where: { id: itemId },
     data: {
       ...(title !== undefined && { title }),
       ...(caption !== undefined && { caption }),

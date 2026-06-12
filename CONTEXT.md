@@ -1,5 +1,5 @@
 # Calendula Herbs — Project Context
-Last updated: 2026-06-11 | Current chunk: **5 (Products Manager — next up)**
+Last updated: 2026-06-11 | Current chunk: **8 (Public-Facing Frontend — next up)**
 
 ## Stack
 Next.js 16.2.9 (App Router) + TypeScript + Tailwind CSS v4 + Radix UI
@@ -49,6 +49,28 @@ Seed status: ✅ **Seeded** (`admin@calendulaherbs.com` / `admin123`)
   - [x] `/admin/dashboard/galleries` — dnd-kit list, create, rename, delete
   - [x] `/admin/dashboard/galleries/[id]` — grid items, add (media/YouTube/Drive), drag-reorder
   - [x] `/admin/dashboard/certificates` — dnd-kit list, create/edit dialog with MediaPicker
+- [x] Chunk 5 — Products Manager
+  - [x] `POST/GET /api/admin/products`, `GET/PATCH/DELETE /api/admin/products/[id]`
+  - [x] `POST/GET/PATCH /api/admin/products/[id]/images`, `PATCH/DELETE /api/admin/products/[id]/images/[imageId]`
+  - [x] `POST/GET/PATCH/DELETE /api/admin/categories` + `PATCH/DELETE /api/admin/categories/[id]`
+  - [x] `/admin/dashboard/products` — table, search/filter, status/featured toggles, pagination
+  - [x] `/admin/dashboard/products/[id]` — full product editor, dnd images, category checkboxes
+  - [x] `/admin/dashboard/products/categories` — dnd list, inline create/rename/delete
+- [x] Chunk 6 — Team & Board Manager
+  - [x] `POST/GET /api/admin/team`, `GET/PATCH/DELETE /api/admin/team/[id]`, `POST /api/admin/team/reorder`
+  - [x] `/admin/dashboard/team` — dnd list, TEAM/BOARD tabs, create, delete
+  - [x] `/admin/dashboard/team/[id]` — full editor: name, title, bio, photo, contacts, active toggle
+- [x] Chunk 7 — Site Settings & Inquiries
+  - [x] `GET/PATCH /api/admin/settings` — key-value SiteSetting store
+  - [x] `GET/PATCH /api/admin/contact-settings` — single ContactSetting record
+  - [x] `GET/POST/PATCH /api/admin/plugins`, `PATCH/DELETE /api/admin/plugins/[id]`
+  - [x] `GET /api/admin/inquiries/contact`, `PATCH/DELETE /api/admin/inquiries/contact/[id]`
+  - [x] `GET /api/admin/inquiries/cart`, `PATCH/DELETE /api/admin/inquiries/cart/[id]`
+  - [x] `GET /api/admin/inquiries/samples`, `PATCH/DELETE /api/admin/inquiries/samples/[id]`
+  - [x] `/admin/dashboard/settings` — General / Contact / Plugins tabs
+  - [x] `/admin/dashboard/inquiries` — Contact / Cart / Samples tabs with expandable cards
+- [x] Chunk 8: Public-Facing Frontend Components and Layout
+- [x] Chunk 9: Final Polishing, Performance Optimization, and Testing
 
 ## Key file locations
 - Admin login: `src/app/(admin-auth)/admin/login/page.tsx`
@@ -61,8 +83,20 @@ Seed status: ✅ **Seeded** (`admin@calendulaherbs.com` / `admin123`)
 - Media API: `src/app/api/admin/media/route.ts`
 - OTP API: `src/app/api/otp/send/route.ts`
 
-## Open issues / known debt
-1. ⚠️ Upstash Redis not configured — rate limiting will fail until REPLACE_ME values are filled in `.env.local`
-2. ⚠️ Cloudinary not configured — media uploads blocked until keys added to `.env.local`
-3. ⚠️ Resend not configured — OTP emails will fail to send until API key is added
-4. Admin login page uses `zod v4` — `z.string().email()` should be used instead of `z.email()`.
+## Next Steps for Production Deployment (Pending .env.local configuration)
+The project codebase is completely finished. Before deploying to production, the following environment variables must be populated in `.env.local` or your hosting provider's dashboard (e.g., Vercel):
+
+### Upstash Redis (Rate Limiting)
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+*(Without these, rate limiters on public forms and logins will throw errors).*
+
+### Cloudinary (Media Storage)
+- `CLOUDINARY_CLOUD_NAME`
+- `CLOUDINARY_API_KEY`
+- `CLOUDINARY_API_SECRET`
+*(Without these, media uploads and image rendering will fail).*
+
+### Resend (Email Provider)
+- `RESEND_API_KEY`
+*(Without this, OTP emails for password reset will fail).*

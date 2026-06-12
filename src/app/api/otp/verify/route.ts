@@ -6,7 +6,7 @@ import { otpVerifyRateLimit } from '@/lib/rate-limit'
 import { getClientIp } from '@/lib/security'
 
 const schema = z.object({
-  identifier: z.email(),
+  identifier: z.string().email(),
   type: z.enum(['EMAIL_RESET', 'PHONE_RESET', 'EMAIL_VERIFY']),
   code: z.string().length(6),
 })

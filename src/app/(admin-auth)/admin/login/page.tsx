@@ -1,22 +1,21 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { Suspense, useState, useTransition } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Eye, EyeOff, Leaf, Loader2, LogIn, AlertCircle } from 'lucide-react'
-import type { Metadata } from 'next'
 
 const loginSchema = z.object({
-  email: z.email('Please enter a valid email'),
+  email: z.string().email('Please enter a valid email'),
   password: z.string().min(1, 'Password is required'),
 })
 
 type LoginForm = z.infer<typeof loginSchema>
 
-export default function AdminLoginPage() {
+function LoginFormInner() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
@@ -259,5 +258,17 @@ export default function AdminLoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-green-400" />
+      </div>
+    }>
+      <LoginFormInner />
+    </Suspense>
   )
 }

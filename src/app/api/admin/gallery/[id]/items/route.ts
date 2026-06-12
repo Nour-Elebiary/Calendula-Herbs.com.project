@@ -11,7 +11,8 @@ const addItemSchema = z.object({
   caption: z.string().optional().nullable(),
 })
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const json = await req.json()
     const data = addItemSchema.parse(json)
@@ -32,13 +33,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     const maxOrder = await db.galleryItem.aggregate({
       _max: { order: true },
-      where: { galleryId: params.id },
+      where: { galleryId: id },
     })
     const order = (maxOrder._max.order ?? -1) + 1
 
     const item = await db.galleryItem.create({
       data: {
-        galleryId: params.id,
+        galleryId: id,
         type: data.type,
         mediaFileId: data.mediaFileId ?? null,
         externalUrl: data.externalUrl ?? null,
@@ -53,12 +54,13 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
 
     return NextResponse.json({ item }, { status: 201 })
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors }, { status: 400 })
+    if (err instanceof z.ZodError) return NextResponse.json({ error: (err as z.ZodError).issues }, { status: 400 })
     return NextResponse.json({ error: 'Failed to add item' }, { status: 500 })
   }
 }
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   // Reorder items
   try {
     const { ids } = await req.json()

@@ -8,7 +8,7 @@ import { getClientIp } from '@/lib/security'
 import { db } from '@/lib/db'
 
 const schema = z.object({
-  identifier: z.email('Valid email required'),
+  identifier: z.string().email('Valid email required'),
   type: z.enum(['EMAIL_RESET', 'PHONE_RESET', 'EMAIL_VERIFY']),
 })
 

@@ -11,18 +11,20 @@ const updateSchema = z.object({
   isActive: z.boolean().optional(),
 })
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const data = updateSchema.parse(await req.json())
-    const cert = await db.certificate.update({ where: { id: params.id }, data })
+    const cert = await db.certificate.update({ where: { id }, data })
     return NextResponse.json({ cert })
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors }, { status: 400 })
+    if (err instanceof z.ZodError) return NextResponse.json({ error: (err as z.ZodError).issues }, { status: 400 })
     return NextResponse.json({ error: 'Update failed' }, { status: 500 })
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  await db.certificate.delete({ where: { id: params.id } })
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  await db.certificate.delete({ where: { id } })
   return NextResponse.json({ success: true })
 }

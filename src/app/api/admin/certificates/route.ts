@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const cert = await db.certificate.create({ data: { ...data, order } })
     return NextResponse.json({ cert }, { status: 201 })
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors }, { status: 400 })
+    if (err instanceof z.ZodError) return NextResponse.json({ error: (err as z.ZodError).issues }, { status: 400 })
     return NextResponse.json({ error: 'Failed to create certificate' }, { status: 500 })
   }
 }

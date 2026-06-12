@@ -7,7 +7,7 @@ import { db } from '@/lib/db'
 import { otpVerifyRateLimit } from '@/lib/rate-limit'
 
 const schema = z.object({
-  identifier: z.email(),
+  identifier: z.string().email(),
   code: z.string().length(6),
   newPassword: z.string().min(8),
 })

@@ -11,18 +11,20 @@ import {
   Award,
   LogOut,
   Leaf,
-  FolderOpen
+  FolderOpen,
+  Inbox
 } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard },
-  { name: 'Products', href: '/admin/products', icon: ShoppingBag },
-  { name: 'Media Library', href: '/admin/media', icon: ImageIcon },
-  { name: 'Galleries', href: '/admin/gallery', icon: FolderOpen },
-  { name: 'Certificates', href: '/admin/certificates', icon: Award },
-  { name: 'Team & Board', href: '/admin/team', icon: Users },
-  { name: 'Site Settings', href: '/admin/settings', icon: Settings },
+  { name: 'Products', href: '/admin/dashboard/products', icon: ShoppingBag },
+  { name: 'Media Library', href: '/admin/dashboard/media', icon: ImageIcon },
+  { name: 'Galleries', href: '/admin/dashboard/galleries', icon: FolderOpen },
+  { name: 'Certificates', href: '/admin/dashboard/certificates', icon: Award },
+  { name: 'Team & Board', href: '/admin/dashboard/team', icon: Users },
+  { name: 'Inquiries', href: '/admin/dashboard/inquiries', icon: Inbox },
+  { name: 'Site Settings', href: '/admin/dashboard/settings', icon: Settings },
 ]
 
 export function AdminSidebar() {

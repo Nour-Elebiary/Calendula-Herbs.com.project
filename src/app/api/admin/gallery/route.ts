@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const gallery = await db.gallery.create({ data: { name, slug, description, order } })
     return NextResponse.json({ gallery }, { status: 201 })
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors }, { status: 400 })
+    if (err instanceof z.ZodError) return NextResponse.json({ error: (err as z.ZodError).issues }, { status: 400 })
     return NextResponse.json({ error: 'Failed to create gallery' }, { status: 500 })
   }
 }

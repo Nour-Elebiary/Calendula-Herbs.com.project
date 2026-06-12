@@ -4,6 +4,14 @@ import { z } from 'zod'
 import { db } from '@/lib/db'
 import { verifyPassword } from '@/lib/security'
 
+type ExtendedToken = {
+  id?: string
+  email?: string | null
+  name?: string | null
+  sessionId?: string
+  error?: string
+}
+
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
@@ -77,7 +85,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             if (geoData && geoData.country) {
               country = geoData.country
             }
-          } catch (err) {
+          } catch {
              // ignore
           }
         }
@@ -133,7 +141,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id
         token.email = user.email
         token.name = user.name
-        token.sessionId = (user as any).sessionId
+        token.sessionId = (user as { sessionId?: string }).sessionId
       }
 
       // Verify that the session hasn't been revoked
@@ -151,20 +159,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
 
     async session({ session, token }) {
-      if (token.error === 'Revoked') {
-         // Return an empty/invalid session to force logout
-         return {} as any
+      const extToken = token as ExtendedToken
+      if (extToken.error === 'Revoked') {
+        return { ...session, user: {} } as typeof session
       }
 
-      if (token && session.user) {
-        session.user.id = token.id as string
-        session.user.email = token.email as string
-        session.user.name = token.name as string
-        ;(session as any).sessionId = token.sessionId
+      if (extToken && session.user) {
+        session.user.id = extToken.id as string
+        session.user.email = extToken.email as string
+        session.user.name = extToken.name as string
       }
       return session
     },
   },
 
-  trustHost: true,
+  trustHost: process.env.NODE_ENV === 'development' ? true : process.env.NEXTAUTH_URL?.startsWith('http://localhost') ? true : false,
 })

@@ -126,7 +126,7 @@ export default async function ProfilePage() {
                       <span className="flex items-center gap-1"><Globe className="w-3 h-3" /> Unknown Location</span>
                       <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> Logged in: {new Intl.DateTimeFormat('en-US', { dateStyle: 'short', timeStyle: 'short' }).format(sess.createdAt)}</span>
                     </div>
-                    <div className="text-[10px] text-green-100/30 mt-1 font-mono truncate max-w-sm" title={sess.userAgent}>
+                    <div className="text-[10px] text-green-100/30 mt-1 font-mono truncate max-w-sm" title={sess.userAgent || undefined}>
                       {sess.userAgent}
                     </div>
                   </div>

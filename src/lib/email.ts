@@ -197,6 +197,75 @@ export async function sendCartConfirmation(
   })
 }
 
+// ─── Sample Request Confirmation (to user) ─────────────────────────────────────
+
+export async function sendSampleConfirmation(to: string, name: string, productName: string) {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f0fdf4;font-family:Inter,Arial,sans-serif">
+  <div style="max-width:540px;margin:40px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
+    <div style="background:linear-gradient(135deg,#15803d,#166534);padding:32px 40px">
+      <h1 style="margin:0;color:#fff;font-size:22px;font-weight:700">🌿 ${COMPANY}</h1>
+    </div>
+    <div style="padding:40px">
+      <h2 style="margin:0 0 16px;color:#0f172a;font-size:20px">Sample Request Received, ${name}!</h2>
+      <p style="margin:0 0 12px;color:#475569;font-size:15px;line-height:1.7">We've received your request for a sample of <strong>${productName}</strong>.</p>
+      <p style="margin:0 0 20px;color:#475569;font-size:15px;line-height:1.7">Our team will review your request and reach out to coordinate shipping details within <strong>1–2 business days</strong>.</p>
+      <p style="margin:0;color:#475569;font-size:14px;line-height:1.7">Questions? Email us at <a href="mailto:info@calendulaherbs.com" style="color:#15803d">info@calendulaherbs.com</a></p>
+    </div>
+    <div style="background:#f8fafc;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0">
+      <p style="margin:0;color:#94a3b8;font-size:12px">© ${new Date().getFullYear()} ${COMPANY} For Import &amp; Export</p>
+    </div>
+  </div>
+</body>
+</html>`
+
+  return resend.emails.send({
+    from: FROM,
+    to,
+    subject: `Sample Request Received — ${COMPANY}`,
+    html,
+  })
+}
+
+// ─── Sample Request Notification (to admin) ────────────────────────────────────
+
+export async function sendSampleNotification(
+  managingEmails: string[],
+  data: { name: string; email: string; productName: string; company?: string | null; address?: string | null; shippingBy: string; notes?: string | null },
+) {
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0;padding:0;background:#f8fafc;font-family:Inter,Arial,sans-serif">
+  <div style="max-width:600px;margin:40px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">
+    <div style="background:#0f172a;padding:24px 40px">
+      <h2 style="margin:0;color:#a78bfa;font-size:16px;font-weight:600">📦 New Sample Request</h2>
+    </div>
+    <div style="padding:32px 40px">
+      <table style="width:100%;border-collapse:collapse;font-size:14px">
+        ${row('Product', data.productName)}
+        ${row('Name', data.name)}
+        ${row('Email', `<a href="mailto:${data.email}" style="color:#15803d">${data.email}</a>`)}
+        ${data.company ? row('Company', data.company) : ''}
+        ${data.address ? row('Address', data.address) : ''}
+        ${row('Shipping', data.shippingBy === 'buyer' ? 'Buyer covers' : 'Calendula covers')}
+        ${data.notes ? row('Notes', data.notes) : ''}
+      </table>
+    </div>
+  </div>
+</body>
+</html>`
+
+  return resend.emails.send({
+    from: FROM,
+    to: managingEmails,
+    subject: `📦 New Sample Request: ${data.productName} from ${data.name}`,
+    html,
+  })
+}
+
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
 function row(label: string, value: string) {

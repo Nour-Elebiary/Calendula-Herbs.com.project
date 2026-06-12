@@ -3,12 +3,13 @@ import { db } from '@/lib/db'
 import { 
   Users, 
   ShoppingBag, 
-  Eye, 
+  MessageSquare,
   TrendingUp, 
   AlertCircle,
   MapPin,
   Clock,
-  ShieldCheck
+  ShieldCheck,
+  Mail
 } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
@@ -22,13 +23,20 @@ export default async function AdminDashboard() {
 
   if (!admin) redirect('/admin/login')
 
-  // Format last login time
   const lastLoginFormatted = admin.lastLoginAt 
-    ? new Intl.DateTimeFormat('en-US', { 
-        dateStyle: 'medium', 
-        timeStyle: 'short' 
-      }).format(admin.lastLoginAt)
+    ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(admin.lastLoginAt)
     : 'Unknown'
+
+  const [productCount, activeSessions, unreadContact, unreadCart, unreadSamples] = await Promise.all([
+    db.product.count({ where: { isActive: true } }),
+    db.adminSession.count({ where: { revokedAt: null, expiresAt: { gt: new Date() } } }),
+    db.contactSubmission.count({ where: { isRead: false } }),
+    db.cartInquiry.count({ where: { isRead: false } }),
+    db.sampleRequest.count({ where: { isRead: false } }),
+  ])
+
+  const totalInquiries = unreadContact + unreadCart + unreadSamples
+  const inquiryRate = productCount > 0 ? ((totalInquiries / productCount) * 100).toFixed(1) : '0.0'
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -39,7 +47,6 @@ export default async function AdminDashboard() {
         <p className="text-green-100/60">Here's what's happening with Calendula Herbs today.</p>
       </div>
 
-      {/* Security Banner */}
       <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center shrink-0">
@@ -55,56 +62,85 @@ export default async function AdminDashboard() {
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
-          title="Total Products"
-          value="24"
-          change="+3 this month"
+          title="Active Products"
+          value={productCount}
           icon={ShoppingBag}
         />
         <StatCard
           title="Active Sessions"
-          value="1"
-          change="Secure"
+          value={activeSessions}
           icon={Users}
         />
         <StatCard
-          title="Site Visitors"
-          value="1,240"
-          change="+12% from last week"
-          icon={Eye}
+          title="Unread Inquiries"
+          value={totalInquiries}
+          icon={Mail}
+          highlight={totalInquiries > 0}
         />
         <StatCard
-          title="Conversion Rate"
-          value="4.2%"
-          change="+0.8% from last week"
+          title="Inquiry Rate"
+          value={`${inquiryRate}%`}
           icon={TrendingUp}
           highlight
         />
       </div>
 
-      {/* Recent Activity Placeholder */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-6 h-96 flex flex-col">
-            <h2 className="text-lg font-semibold text-white mb-4">Traffic Overview</h2>
-            <div className="flex-1 flex items-center justify-center text-green-100/40 border-2 border-dashed border-white/10 rounded-lg">
-              Chart Integration Pending
-            </div>
+          <div className="bg-white/5 border border-white/10 rounded-xl p-6 flex flex-col">
+            <h2 className="text-lg font-semibold text-white mb-4">Recent Inquiries</h2>
+            {totalInquiries > 0 ? (
+              <div className="space-y-3">
+                {unreadContact > 0 && (
+                  <div className="flex gap-3 items-start p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                    <MessageSquare className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-blue-50">{unreadContact} new contact message{unreadContact > 1 ? 's' : ''}</p>
+                      <p className="text-xs text-blue-100/60 mt-1">Awaiting your response</p>
+                    </div>
+                  </div>
+                )}
+                {unreadCart > 0 && (
+                  <div className="flex gap-3 items-start p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+                    <ShoppingBag className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-amber-50">{unreadCart} new cart quote{unreadCart > 1 ? 's' : ''}</p>
+                      <p className="text-xs text-amber-100/60 mt-1">Product inquiry from potential buyer</p>
+                    </div>
+                  </div>
+                )}
+                {unreadSamples > 0 && (
+                  <div className="flex gap-3 items-start p-3 rounded-lg bg-purple-500/10 border border-purple-500/20">
+                    <TrendingUp className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm font-medium text-purple-50">{unreadSamples} new sample request{unreadSamples > 1 ? 's' : ''}</p>
+                      <p className="text-xs text-purple-100/60 mt-1">Quality evaluation request</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex-1 flex items-center justify-center text-green-100/40 border-2 border-dashed border-white/10 rounded-lg min-h-[200px]">
+                No inquiries yet
+              </div>
+            )}
           </div>
         </div>
         <div>
           <div className="bg-white/5 border border-white/10 rounded-xl p-6 h-96 flex flex-col">
-            <h2 className="text-lg font-semibold text-white mb-4">System Alerts</h2>
+            <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
             <div className="flex-1 space-y-4">
-              <div className="flex gap-3 items-start p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
-                <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm font-medium text-yellow-50">Upload missing certificates</p>
-                  <p className="text-xs text-yellow-100/60 mt-1">2 organic certificates are expiring soon.</p>
+              {productCount === 0 && (
+                <div className="flex gap-3 items-start p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                  <AlertCircle className="w-5 h-5 text-yellow-400 shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm font-medium text-yellow-50">No products yet</p>
+                    <p className="text-xs text-yellow-100/60 mt-1">Add your first product to start receiving inquiries.</p>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
@@ -116,13 +152,11 @@ export default async function AdminDashboard() {
 function StatCard({ 
   title, 
   value, 
-  change, 
   icon: Icon,
   highlight = false 
 }: { 
   title: string
   value: string | number
-  change: string
   icon: React.ElementType
   highlight?: boolean
 }) {
@@ -140,10 +174,7 @@ function StatCard({
           <Icon className="w-4 h-4" />
         </div>
       </div>
-      <div>
-        <div className="text-2xl font-bold text-white mb-1">{value}</div>
-        <div className="text-xs text-green-100/50">{change}</div>
-      </div>
+      <div className="text-2xl font-bold text-white mb-1">{value}</div>
     </div>
   )
 }

@@ -4,8 +4,9 @@ import { v2 as cloudinary } from 'cloudinary'
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   try {
     const { name } = await req.json()
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -13,7 +14,7 @@ export async function PATCH(
     }
 
     const media = await db.mediaFile.update({
-      where: { id: params.id },
+      where: { id },
       data: { name: name.trim() },
     })
 
@@ -26,10 +27,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = params.id
+    const { id } = await params;
     
     const media = await db.mediaFile.findUnique({
       where: { id },

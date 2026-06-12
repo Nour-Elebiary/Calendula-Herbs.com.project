@@ -60,6 +60,14 @@ export const searchRateLimit = new Ratelimit({
   analytics: true,
 })
 
+/** Sample request — 5 submissions per hour per IP */
+export const sampleRateLimit = new Ratelimit({
+  redis,
+  limiter: Ratelimit.slidingWindow(5, '1 h'),
+  prefix: 'rl:sample',
+  analytics: true,
+})
+
 /** Generic API rate limit — 100 requests per minute per IP */
 export const apiRateLimit = new Ratelimit({
   redis,

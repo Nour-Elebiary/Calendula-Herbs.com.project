@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const gallery = await db.gallery.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { items: { orderBy: { order: 'asc' }, include: { mediaFile: true } } },
   })
   if (!gallery) return NextResponse.json({ error: 'Not found' }, { status: 404 })
@@ -17,19 +18,21 @@ const updateSchema = z.object({
   isActive: z.boolean().optional(),
 })
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   try {
     const json = await req.json()
     const data = updateSchema.parse(json)
-    const gallery = await db.gallery.update({ where: { id: params.id }, data })
+    const gallery = await db.gallery.update({ where: { id }, data })
     return NextResponse.json({ gallery })
   } catch (err) {
-    if (err instanceof z.ZodError) return NextResponse.json({ error: err.errors }, { status: 400 })
+    if (err instanceof z.ZodError) return NextResponse.json({ error: (err as z.ZodError).issues }, { status: 400 })
     return NextResponse.json({ error: 'Update failed' }, { status: 500 })
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
-  await db.gallery.delete({ where: { id: params.id } })
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  await db.gallery.delete({ where: { id } })
   return NextResponse.json({ success: true })
 }
