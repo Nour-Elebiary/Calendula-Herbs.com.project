@@ -1,13 +1,26 @@
 import { Resend } from 'resend'
 import type { SenderMeta } from '@/lib/sender-meta'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resend: Resend | null = null
+
+function getResendClient(): Resend {
+  if (!resend) {
+    const apiKey = process.env.RESEND_API_KEY
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set')
+    }
+    resend = new Resend(apiKey)
+  }
+  return resend
+}
+
 const FROM = process.env.RESEND_FROM_EMAIL || 'noreply@calendula-herbs.com'
 const COMPANY = 'Calendula Herbs'
 
 // ─── OTP Email ────────────────────────────────────────────────────────────────
 
 export async function sendOtpEmail(to: string, code: string) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -47,6 +60,7 @@ export async function sendContactConfirmation(
   to: string,
   name: string,
 ) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -82,6 +96,7 @@ export async function sendContactNotification(
   data: { name: string; email: string; phone?: string | null; company?: string | null; country?: string | null; subject?: string | null; message: string },
   meta?: SenderMeta,
 ) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -124,6 +139,7 @@ export async function sendCartNotification(
   items: Array<{ productName: string; quantity: number }>,
   meta?: SenderMeta,
 ) {
+  const resend = getResendClient()
   const itemsHtml = items
     .map((i) => `<tr><td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;color:#0f172a">${i.productName}</td><td style="padding:8px 12px;border-bottom:1px solid #f1f5f9;color:#64748b;text-align:right">${i.quantity} kg</td></tr>`)
     .join('')
@@ -170,6 +186,7 @@ export async function sendCartConfirmation(
   name: string,
   items: Array<{ productName: string; quantity: number }>,
 ) {
+  const resend = getResendClient()
   const itemsList = items.map((i) => `<li style="padding:6px 0;color:#475569">${i.productName} — ${i.quantity} kg</li>`).join('')
 
   const html = `
@@ -205,6 +222,7 @@ export async function sendCartConfirmation(
 // ─── Sample Request Confirmation (to user) ─────────────────────────────────────
 
 export async function sendSampleConfirmation(to: string, name: string, productName: string) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -241,6 +259,7 @@ export async function sendSampleNotification(
   data: { name: string; email: string; productName: string; company?: string | null; address?: string | null; shippingBy: string; notes?: string | null },
   meta?: SenderMeta,
 ) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -276,6 +295,7 @@ export async function sendSampleNotification(
 // ─── Product Request Confirmation (to user) ────────────────────────────────────
 
 export async function sendProductRequestConfirmation(to: string, name: string, productName: string) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -312,6 +332,7 @@ export async function sendProductRequestNotification(
   data: { name: string; email: string; productName: string; productDescription?: string | null; company?: string | null; country?: string | null; phone?: string | null; quantity?: string | null; usage?: string | null; notes?: string | null },
   meta?: SenderMeta,
 ) {
+  const resend = getResendClient()
   const html = `
 <!DOCTYPE html>
 <html lang="en">
