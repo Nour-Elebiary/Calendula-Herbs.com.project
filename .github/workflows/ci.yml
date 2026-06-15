@@ -2,27 +2,31 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, develop, master]
   pull_request:
-    branches: [ main, develop ]
+    branches: [main, develop, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
-    
+
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 20
-        
+
     - name: Install pnpm
       uses: pnpm/action-setup@v3
       with:
         version: 9
-        
+
     - name: Get pnpm store directory
       id: pnpm-cache
       shell: bash
@@ -51,3 +55,16 @@ jobs:
 
     - name: Run tests
       run: pnpm test
+
+    - name: Run build
+      run: pnpm build
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        DIRECT_URL: ${{ secrets.DIRECT_URL }}
+        UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+        UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+        CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+        NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: ${{ secrets.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME }}
