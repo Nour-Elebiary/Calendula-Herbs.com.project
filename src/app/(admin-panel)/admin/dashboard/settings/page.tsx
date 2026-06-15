@@ -408,7 +408,7 @@ function ContactTab() {
               </div>
               <div className="space-y-1.5">
                 <Label>Platform</Label>
-                <Select value={methodType} onValueChange={v => { setMethodType(v); setMethodIcon(null) }}>
+                <Select aria-label="Platform" value={methodType} onValueChange={v => { setMethodType(v); setMethodIcon(null) }}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     {CONTACT_METHOD_OPTIONS.map(o => (
@@ -419,7 +419,7 @@ function ContactTab() {
               </div>
               <div className="space-y-1.5">
                 <Label>Link Mode</Label>
-                <Select value={methodLinkMode} onValueChange={v => setMethodLinkMode(v as 'auto' | 'manual')}>
+                <Select aria-label="Link Mode" value={methodLinkMode} onValueChange={v => setMethodLinkMode(v as 'auto' | 'manual')}>
                   <SelectTrigger><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="auto">Auto-generate link</SelectItem>
@@ -681,7 +681,7 @@ function PluginsTab() {
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="plugin-pos">Position *</Label>
-              <Select value={formPosition} onValueChange={v => setFormPosition(v as Plugin['position'])}>
+              <Select aria-label="Position" value={formPosition} onValueChange={v => setFormPosition(v as Plugin['position'])}>
                 <SelectTrigger id="plugin-pos"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   {Object.entries(POSITION_LABELS).map(([k, v]) => (

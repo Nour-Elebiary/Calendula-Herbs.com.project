@@ -240,8 +240,8 @@ export default function GalleryItemsPage({ params }: { params: Promise<{ id: str
             </div>
 
             <div>
-              <Label>Title (optional)</Label>
-              <Input className="mt-1" placeholder="Item title..." value={title} onChange={e => setTitle(e.target.value)} />
+              <Label htmlFor="gallery-item-title">Title (optional)</Label>
+              <Input id="gallery-item-title" className="mt-1" placeholder="Item title..." value={title} onChange={e => setTitle(e.target.value)} />
             </div>
 
             {(addType === 'UPLOADED_IMAGE' || addType === 'UPLOADED_VIDEO') ? (

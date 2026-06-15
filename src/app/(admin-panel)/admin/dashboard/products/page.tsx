@@ -163,8 +163,8 @@ export default function ProductsPage() {
             className="pl-9"
           />
         </div>
-        <Select value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1) }}>
-          <SelectTrigger aria-label="Filter by status" className="w-40">
+        <Select aria-label="Filter by status" value={statusFilter} onValueChange={v => { setStatusFilter(v); setPage(1) }}>
+          <SelectTrigger className="w-40">
             <Filter className="h-4 w-4 mr-2 text-neutral-400" />
             <SelectValue />
           </SelectTrigger>
@@ -174,8 +174,8 @@ export default function ProductsPage() {
             <SelectItem value="inactive">Inactive</SelectItem>
           </SelectContent>
         </Select>
-        <Select value={categoryFilter} onValueChange={v => { setCategoryFilter(v); setPage(1) }}>
-          <SelectTrigger aria-label="Filter by category" className="w-44">
+        <Select aria-label="Filter by category" value={categoryFilter} onValueChange={v => { setCategoryFilter(v); setPage(1) }}>
+          <SelectTrigger className="w-44">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
           <SelectContent>

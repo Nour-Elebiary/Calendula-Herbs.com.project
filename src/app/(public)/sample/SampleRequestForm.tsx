@@ -93,7 +93,7 @@ export function SampleRequestForm({ products }: Props) {
 
       <div className="space-y-1.5">
         <Label htmlFor="sample-product">Product *</Label>
-        <Select onValueChange={v => setValue('productName', v)}>
+        <Select aria-label="Product" onValueChange={v => setValue('productName', v)}>
           <SelectTrigger id="sample-product"><SelectValue placeholder="Select a product..." /></SelectTrigger>
           <SelectContent>
             {products.map(p => (
