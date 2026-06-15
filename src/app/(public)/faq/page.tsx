@@ -89,7 +89,13 @@ function FaqAccordion({ items }: { items: FaqItem[] }) {
 }
 
 export default async function FaqPage() {
-  const setting = await db.siteSetting.findUnique({ where: { key: 'faqs' } })
+  let setting
+
+  try {
+    setting = await db.siteSetting.findUnique({ where: { key: 'faqs' } })
+  } catch (error) {
+    console.error('[v0] Error fetching FAQ settings:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   let faqs: FaqItem[] = DEFAULT_FAQS
   if (setting?.value) {

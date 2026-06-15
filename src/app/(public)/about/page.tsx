@@ -11,11 +11,17 @@ export const metadata = {
 }
 
 export default async function AboutPage() {
-  const teamMembers = await db.teamMember.findMany({
-    where: { isActive: true },
-    include: { photo: true, contacts: true },
-    orderBy: { order: 'asc' }
-  })
+  let teamMembers = []
+
+  try {
+    teamMembers = await db.teamMember.findMany({
+      where: { isActive: true },
+      include: { photo: true, contacts: true },
+      orderBy: { order: 'asc' }
+    })
+  } catch (error) {
+    console.error('[v0] Error fetching team members:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   const board = teamMembers.filter(m => m.memberType === 'BOARD')
   const team = teamMembers.filter(m => m.memberType === 'TEAM')

@@ -41,15 +41,21 @@ const SECTION_META: Record<GallerySection, { label: string; description: string 
 }
 
 export default async function GalleriesPage() {
-  const items = await db.galleryItem.findMany({
-    where: {
-      isActive: true,
-      section: { not: null },
-      gallery: { isActive: true },
-    },
-    include: { mediaFile: true, gallery: true },
-    orderBy: [{ section: 'asc' }, { order: 'asc' }],
-  })
+  let items = []
+
+  try {
+    items = await db.galleryItem.findMany({
+      where: {
+        isActive: true,
+        section: { not: null },
+        gallery: { isActive: true },
+      },
+      include: { mediaFile: true, gallery: true },
+      orderBy: [{ section: 'asc' }, { order: 'asc' }],
+    })
+  } catch (error) {
+    console.error('[v0] Error fetching gallery items:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   const grouped = SECTION_ORDER
     .map(section => ({

@@ -10,11 +10,17 @@ export const metadata = {
 }
 
 export default async function CertificatesPage() {
-  const certs = await db.certificate.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' },
-    include: { file: { select: { url: true, thumbnailUrl: true, type: true } } },
-  })
+  let certs = []
+
+  try {
+    certs = await db.certificate.findMany({
+      where: { isActive: true },
+      orderBy: { order: 'asc' },
+      include: { file: { select: { url: true, thumbnailUrl: true, type: true } } },
+    })
+  } catch (error) {
+    console.error('[v0] Error fetching certificates:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   return (
     <div className="page-root">

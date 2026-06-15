@@ -9,11 +9,17 @@ export const metadata = {
 }
 
 export default async function SamplePage() {
-  const products = await db.product.findMany({
-    where: { isActive: true },
-    select: { id: true, name: true },
-    orderBy: { name: 'asc' },
-  })
+  let products = []
+
+  try {
+    products = await db.product.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    })
+  } catch (error) {
+    console.error('[v0] Error fetching products for sample request:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   return (
     <div className="page-root">

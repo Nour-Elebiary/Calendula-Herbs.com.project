@@ -14,21 +14,28 @@ export const metadata = {
 export default async function ProductsPage({ searchParams }: { searchParams: Promise<{ q?: string; category?: string }> }) {
   const { q, category } = await searchParams
 
-  const [categories, products] = await Promise.all([
-    db.category.findMany({ orderBy: { order: 'asc' } }),
-    db.product.findMany({
-      where: {
-        isActive: true,
-        ...(q ? { name: { contains: q, mode: 'insensitive' } } : {}),
-        ...(category ? { categories: { some: { category: { slug: category } } } } : {})
-      },
-      include: {
-        images: { orderBy: { order: 'asc' }, take: 1, include: { mediaFile: true } },
-        categories: { include: { category: true } }
-      },
-      orderBy: { order: 'asc' }
-    })
-  ])
+  let categories = []
+  let products = []
+
+  try {
+    [categories, products] = await Promise.all([
+      db.category.findMany({ orderBy: { order: 'asc' } }),
+      db.product.findMany({
+        where: {
+          isActive: true,
+          ...(q ? { name: { contains: q, mode: 'insensitive' } } : {}),
+          ...(category ? { categories: { some: { category: { slug: category } } } } : {})
+        },
+        include: {
+          images: { orderBy: { order: 'asc' }, take: 1, include: { mediaFile: true } },
+          categories: { include: { category: true } }
+        },
+        orderBy: { order: 'asc' }
+      })
+    ])
+  } catch (error) {
+    console.error('[v0] Error fetching products:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   const productCards = products.map((product) => {
     const mainImage = product.images[0]?.mediaFile.url

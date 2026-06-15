@@ -7,7 +7,13 @@ import { generateContactLink, getDisplayValue, isClickableLink, CONTACT_METHOD_M
 import { getContactMethodIcon } from '@/lib/icon-map'
 
 export default async function ContactPage() {
-  const contact = await db.contactSetting.findUnique({ where: { id: 'main' } })
+  let contact
+
+  try {
+    contact = await db.contactSetting.findUnique({ where: { id: 'main' } })
+  } catch (error) {
+    console.error('[v0] Error fetching contact settings:', error instanceof Error ? error.message : 'Unknown error')
+  }
 
   let hours: Record<string, string> = {}
   try {

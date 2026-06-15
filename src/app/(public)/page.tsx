@@ -14,17 +14,25 @@ export const metadata = {
 }
 
 export default async function HomePage() {
-  const [featuredProducts, settingsRow] = await Promise.all([
-    db.product.findMany({
-      where: { isFeatured: true, isActive: true },
-      include: { images: { orderBy: { order: 'asc' }, take: 1, include: { mediaFile: true } } },
-      orderBy: { order: 'asc' },
-      take: 6,
-    }),
-    db.siteSetting.findMany({
-      where: { key: { in: ['site_tagline', 'company_founded'] } }
-    }),
-  ])
+  let featuredProducts = []
+  let settingsRow = []
+
+  try {
+    [featuredProducts, settingsRow] = await Promise.all([
+      db.product.findMany({
+        where: { isFeatured: true, isActive: true },
+        include: { images: { orderBy: { order: 'asc' }, take: 1, include: { mediaFile: true } } },
+        orderBy: { order: 'asc' },
+        take: 6,
+      }),
+      db.siteSetting.findMany({
+        where: { key: { in: ['site_tagline', 'company_founded'] } }
+      }),
+    ])
+  } catch (error) {
+    console.error('[v0] Error fetching home page data:', error instanceof Error ? error.message : 'Unknown error')
+    // Continue with empty data - fallback rendering
+  }
 
   const settings: Record<string, string> = {}
   settingsRow.forEach(s => { settings[s.key] = s.value })
