@@ -48,3 +48,6 @@ jobs:
 
     - name: Run typecheck
       run: pnpm tsc --noEmit
+
+    - name: Run tests
+      run: pnpm test
