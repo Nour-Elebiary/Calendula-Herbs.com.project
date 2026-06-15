@@ -6,6 +6,7 @@ import { Footer } from '@/components/public/Footer'
 import { CartProvider } from '@/components/public/CartProvider'
 import { CartDrawer } from '@/components/public/CartDrawer'
 import { CookieConsent } from '@/components/public/CookieConsent'
+import DOMPurify from 'isomorphic-dompurify'
 import type { ContactMethod } from '@/lib/contact-links'
 
 export const dynamic = 'force-dynamic'
@@ -30,7 +31,7 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <>
       {plugins.head.map(p => (
-        <div key={p.id} dangerouslySetInnerHTML={{ __html: p.code }} />
+        <div key={p.id} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.code) }} />
       ))}
       <CartProvider>
         <LazyMotion features={domAnimation}>
@@ -54,16 +55,16 @@ export default async function PublicLayout({ children }: { children: React.React
             <CookieConsent />
             
             {plugins.footerFixed.map(p => (
-              <div key={p.id} dangerouslySetInnerHTML={{ __html: p.code }} />
+              <div key={p.id} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.code) }} />
             ))}
             {plugins.chatWidget.map(p => (
-              <div key={p.id} dangerouslySetInnerHTML={{ __html: p.code }} />
+              <div key={p.id} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.code) }} />
             ))}
           </div>
         </LazyMotion>
       </CartProvider>
       {plugins.bodyEnd.map(p => (
-        <div key={p.id} dangerouslySetInnerHTML={{ __html: p.code }} />
+        <div key={p.id} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(p.code) }} />
       ))}
     </>
   )
