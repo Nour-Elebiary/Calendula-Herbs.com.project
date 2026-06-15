@@ -15,6 +15,7 @@ export default async function ProfilePage() {
 
   if (!admin) redirect('/admin/login')
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const currentTokenHash = (session.user as any).sessionId
 
   const activeSessions = await db.adminSession.findMany({
@@ -80,7 +81,7 @@ export default async function ProfilePage() {
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 text-sm font-medium text-red-600 transition-colors"
               >
                 <AlertTriangle className="w-4 h-4" />
-                That wasn't me! (Revoke Others)
+                That wasn&apos;t me! (Revoke Others)
               </button>
             </form>
           )}

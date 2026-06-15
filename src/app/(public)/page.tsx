@@ -52,6 +52,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. PRODUCTS — Featured products */}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
       <FeaturedProductsSection products={featuredProducts as any} />
 
       {/* 6. HOW IT WORKS — Process */}

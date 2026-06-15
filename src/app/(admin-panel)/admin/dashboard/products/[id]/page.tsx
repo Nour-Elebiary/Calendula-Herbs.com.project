@@ -125,7 +125,6 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
   const sensors = useSensors(useSensor(PointerSensor))
 
   const fetchProduct = async () => {
-    setLoading(true)
     try {
       const [prodRes, catRes] = await Promise.all([
         fetch(`/api/admin/products/${id}`),
@@ -165,6 +164,7 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
     }
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchProduct() }, [id])
 
   const handleSave = async () => {

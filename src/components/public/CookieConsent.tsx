@@ -10,7 +10,9 @@ export function CookieConsent() {
 
   useEffect(() => {
     const consent = localStorage.getItem(STORAGE_KEY)
-    if (!consent) setShow(true)
+    if (!consent)
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setShow(true)
   }, [])
 
   const accept = () => {

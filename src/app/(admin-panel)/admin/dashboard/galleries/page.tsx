@@ -74,13 +74,13 @@ export default function GalleriesPage() {
   const sensors = useSensors(useSensor(PointerSensor))
 
   const fetch_ = async () => {
-    setLoading(true)
     const res = await fetch('/api/admin/gallery')
     const data = await res.json()
     setGalleries(data.galleries || [])
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [])
 
   const handleCreate = async () => {

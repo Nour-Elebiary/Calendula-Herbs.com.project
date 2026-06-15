@@ -255,6 +255,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
           open={showMediaPicker}
           onOpenChange={setShowMediaPicker}
           onSelect={(file) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             setMember({ ...member, photoId: file.id, photo: file as any })
             setShowMediaPicker(false)
           }} 

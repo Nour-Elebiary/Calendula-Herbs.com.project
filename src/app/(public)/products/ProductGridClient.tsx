@@ -32,6 +32,7 @@ export function ProductGridClient({ products }: Props) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setActiveSlug(selectedSlug)
   }, [selectedSlug])
 

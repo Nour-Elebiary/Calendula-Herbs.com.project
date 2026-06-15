@@ -23,12 +23,6 @@ export function MediaPicker({ open, onOpenChange, onSelect, filterType }: MediaP
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-  useEffect(() => {
-    if (open) {
-      fetchMedia()
-    }
-  }, [open, page, search, filterType])
-
   const fetchMedia = async () => {
     setLoading(true)
     try {
@@ -52,6 +46,13 @@ export function MediaPicker({ open, onOpenChange, onSelect, filterType }: MediaP
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (open) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchMedia()
+    }
+  }, [open, page, search, filterType])
 
   const handleSelect = (item: MediaFile) => {
     onSelect(item)

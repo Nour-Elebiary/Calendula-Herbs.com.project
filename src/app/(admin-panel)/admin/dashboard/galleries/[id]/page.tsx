@@ -98,7 +98,6 @@ export default function GalleryItemsPage({ params }: { params: Promise<{ id: str
   const sensors = useSensors(useSensor(PointerSensor))
 
   const fetchGallery = async () => {
-    setLoading(true)
     const res = await fetch(`/api/admin/gallery/${id}`)
     const data = await res.json()
     if (res.ok) {
@@ -108,6 +107,7 @@ export default function GalleryItemsPage({ params }: { params: Promise<{ id: str
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { if (id) fetchGallery() }, [id])
 
   const addMedia = async (mediaFileId: string) => {

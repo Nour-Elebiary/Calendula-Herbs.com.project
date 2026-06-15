@@ -45,6 +45,7 @@ export async function GET(req: NextRequest) {
   const page = parseInt(sp.get('page') || '1')
   const limit = 30
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const where: any = {
     ...(status === 'active' ? { isActive: true } : status === 'inactive' ? { isActive: false } : {}),
     ...(featured === 'true' ? { isFeatured: true } : {}),

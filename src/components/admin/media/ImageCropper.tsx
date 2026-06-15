@@ -43,9 +43,9 @@ export function ImageCropper({ file, open, onOpenChange, onCropComplete, aspectR
   const [crop, setCrop] = useState<Crop>()
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
 
-  // Generate object URL for image when file changes
   React.useEffect(() => {
     if (file) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCrop(undefined)
       const reader = new FileReader()
       reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''))

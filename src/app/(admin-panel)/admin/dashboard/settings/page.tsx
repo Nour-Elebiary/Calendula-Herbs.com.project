@@ -581,13 +581,13 @@ function PluginsTab() {
   const [formSaving, setFormSaving] = useState(false)
 
   const fetchPlugins = useCallback(async () => {
-    setLoading(true)
     const res = await fetch('/api/admin/plugins')
     const data = await res.json()
     setPlugins(data.plugins || [])
     setLoading(false)
   }, [])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchPlugins() }, [fetchPlugins])
 
   const openCreate = () => {
@@ -814,7 +814,7 @@ function FaqTab() {
       {faqs.length === 0 ? (
         <div className="text-center py-16 text-neutral-400 border rounded-xl">
           <HelpCircle className="h-12 w-12 mx-auto mb-4 opacity-30" />
-          <p>No FAQ items yet. Click "Add Question" to start.</p>
+          <p>No FAQ items yet. Click &quot;Add Question&quot; to start.</p>
         </div>
       ) : (
         <div className="space-y-4">

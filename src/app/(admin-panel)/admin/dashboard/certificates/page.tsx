@@ -89,13 +89,13 @@ export default function CertificatesPage() {
   const sensors = useSensors(useSensor(PointerSensor))
 
   const fetch_ = async () => {
-    setLoading(true)
     const res = await fetch('/api/admin/certificates')
     const data = await res.json()
     setCerts(data.certs || [])
     setLoading(false)
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [])
 
   const openCreate = () => {
@@ -108,6 +108,7 @@ export default function CertificatesPage() {
   const openEdit = (cert: CertWithFile) => {
     setEditing(cert)
     setForm({ title: cert.title, issuer: cert.issuer || '', fileId: cert.fileId || '', fileType: cert.fileType })
+     
     setSelectedFile(cert.file ? { url: cert.file.url, id: cert.fileId! } : null)
     setDialogOpen(true)
   }

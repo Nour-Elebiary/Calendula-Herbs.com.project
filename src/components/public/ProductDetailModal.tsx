@@ -38,9 +38,11 @@ export function ProductDetailModal({ slug, onClose }: Props) {
 
   useEffect(() => {
     if (!slug) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setProduct(null)
       return
     }
+     
     setLoading(true)
     setError(null)
     fetch(`/api/public/products/${slug}`)
@@ -61,7 +63,6 @@ export function ProductDetailModal({ slug, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto">
-      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}

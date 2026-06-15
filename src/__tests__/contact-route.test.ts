@@ -1,3 +1,4 @@
+import type { NextRequest } from 'next/server'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { POST } from '@/app/api/public/contact/route'
 
@@ -49,7 +50,7 @@ function createRequest(body: unknown, ip = '127.0.0.1') {
   return {
     json: () => Promise.resolve(body),
     headers,
-  } as unknown as Request
+  } as unknown as NextRequest
 }
 
 beforeEach(() => {

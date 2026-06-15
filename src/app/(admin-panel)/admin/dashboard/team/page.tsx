@@ -28,7 +28,6 @@ export default function TeamPage() {
   const [loading, setLoading] = useState(true)
 
   const fetchMembers = useCallback(async () => {
-    setLoading(true)
     try {
       const res = await fetch(`/api/admin/team?type=${activeTab}`)
       const data = await res.json()

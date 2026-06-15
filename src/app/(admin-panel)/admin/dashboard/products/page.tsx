@@ -57,7 +57,6 @@ export default function ProductsPage() {
   const [total, setTotal] = useState(0)
 
   const fetchProducts = useCallback(async () => {
-    setLoading(true)
     try {
       const url = new URL('/api/admin/products', window.location.origin)
       url.searchParams.set('page', page.toString())

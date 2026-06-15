@@ -175,7 +175,7 @@ export default async function AboutPage() {
   )
 }
 
-function MemberCard({ member, small = false }: { member: any, small?: boolean }) {
+function MemberCard({ member, small = false }: { member: { name: string; title: string; bio: string | null; photo: { url: string } | null; contacts: { id: string; icon: string | null; type: string; value: string; label: string | null }[] }, small?: boolean }) {
   const photoUrl = member.photo?.url
 
   return (
@@ -199,7 +199,7 @@ function MemberCard({ member, small = false }: { member: any, small?: boolean })
 
         {member.contacts.length > 0 && (
           <div className="flex flex-wrap gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
-            {member.contacts.map((c: any) => {
+            {member.contacts.map((c: { id: string; icon: string | null; type: string; value: string; label: string | null }) => {
               const Icon = getContactTypeIcon(c.icon || c.type)
               const href = c.type === 'EMAIL' ? `mailto:${c.value}` : c.type === 'PHONE' || c.type === 'WHATSAPP' ? `tel:${c.value.replace(/[^\d+]/g, '')}` : c.value
               return (

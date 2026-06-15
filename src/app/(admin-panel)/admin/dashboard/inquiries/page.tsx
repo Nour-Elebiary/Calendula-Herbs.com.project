@@ -97,7 +97,6 @@ function InquiryCard({ isRead, isExpanded, onToggle, header, children, onMarkRea
       >
         {!isRead && <UnreadDot />}
         <div className="flex-1 min-w-0">{header}</div>
-        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
         <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation() }}>
           <Button size="sm" variant="ghost" onClick={onMarkRead} title={isRead ? 'Mark unread' : 'Mark read'}>
             {isRead ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
@@ -128,7 +127,6 @@ function ContactTab() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
-    setLoading(true)
     const url = `/api/admin/inquiries/contact?page=${page}${unreadOnly ? '&unread=true' : ''}`
     const res = await fetch(url)
     const data = await res.json()
@@ -137,6 +135,7 @@ function ContactTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
@@ -239,7 +238,6 @@ function CartTab() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
-    setLoading(true)
     const url = `/api/admin/inquiries/cart?page=${page}${unreadOnly ? '&unread=true' : ''}`
     const res = await fetch(url)
     const data = await res.json()
@@ -248,6 +246,7 @@ function CartTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
@@ -377,7 +376,6 @@ function SamplesTab() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
-    setLoading(true)
     const url = `/api/admin/inquiries/samples?page=${page}${unreadOnly ? '&unread=true' : ''}`
     const res = await fetch(url)
     const data = await res.json()
@@ -386,6 +384,7 @@ function SamplesTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
@@ -493,7 +492,6 @@ function ProductRequestsTab() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
-    setLoading(true)
     const url = `/api/admin/inquiries/product-requests?page=${page}${unreadOnly ? '&unread=true' : ''}`
     const res = await fetch(url)
     const data = await res.json()
@@ -502,6 +500,7 @@ function ProductRequestsTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch_() }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {

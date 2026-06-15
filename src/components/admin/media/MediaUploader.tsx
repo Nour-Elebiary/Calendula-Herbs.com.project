@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Upload, X, File, Image as ImageIcon, Film, Music, FileText } from 'lucide-react'
 import { toast } from 'sonner'
 import { MediaType } from '@prisma/client'
@@ -21,30 +21,6 @@ export function MediaUploader({ onUploadSuccess }: MediaUploaderProps) {
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState<{ [key: string]: number }>({})
   const fileInputRef = useRef<HTMLInputElement>(null)
-
-  const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(true)
-  }, [])
-
-  const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-  }, [])
-
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      handleFiles(Array.from(e.dataTransfer.files))
-    }
-  }, [])
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      handleFiles(Array.from(e.target.files))
-    }
-  }
 
   const getMediaType = (file: File): MediaType | null => {
     if (file.type.startsWith('image/')) return 'IMAGE'
@@ -108,6 +84,7 @@ export function MediaUploader({ onUploadSuccess }: MediaUploaderProps) {
           xhr.send(formData)
         })
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const cloudinaryRes = await uploadPromise as any
 
         // 3. Save to DB
@@ -150,6 +127,28 @@ export function MediaUploader({ onUploadSuccess }: MediaUploaderProps) {
     setUploading(false)
     onUploadSuccess()
     if (fileInputRef.current) fileInputRef.current.value = ''
+  }
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }, [])
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }, [])
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    handleFiles(Array.from(e.dataTransfer.files))
+  }, [])
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFiles(Array.from(e.target.files))
+    }
   }
 
   return (

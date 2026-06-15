@@ -79,7 +79,7 @@ export default function ForgotPasswordPage() {
               Reset Password
             </h1>
             <p className="text-[var(--color-text-tertiary)] text-sm text-center">
-              Enter your email address and we'll send you a verification code to reset your password.
+              Enter your email address and we&apos;ll send you a verification code to reset your password.
             </p>
           </div>
 

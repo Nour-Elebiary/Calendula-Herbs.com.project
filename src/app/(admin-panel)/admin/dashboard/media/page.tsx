@@ -43,7 +43,6 @@ export default function MediaPage() {
   const [deleting, setDeleting] = useState<string | null>(null)
 
   const fetchMedia = useCallback(async () => {
-    setLoading(true)
     try {
       const url = new URL('/api/admin/media', window.location.origin)
       url.searchParams.set('page', page.toString())
