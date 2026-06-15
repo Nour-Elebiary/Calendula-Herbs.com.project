@@ -201,12 +201,12 @@ export default function CertificatesPage() {
           </DialogHeader>
           <div className="space-y-4 mt-2">
             <div>
-              <Label>Title *</Label>
-              <Input className="mt-1" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. EU Organic Certificate" />
+              <Label htmlFor="cert-title">Title *</Label>
+              <Input id="cert-title" className="mt-1" value={form.title} onChange={e => setForm(f => ({ ...f, title: e.target.value }))} placeholder="e.g. EU Organic Certificate" />
             </div>
             <div>
-              <Label>Issuer</Label>
-              <Input className="mt-1" value={form.issuer} onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))} placeholder="e.g. Control Union" />
+              <Label htmlFor="cert-issuer">Issuer</Label>
+              <Input id="cert-issuer" className="mt-1" value={form.issuer} onChange={e => setForm(f => ({ ...f, issuer: e.target.value }))} placeholder="e.g. Control Union" />
             </div>
             <div>
               <Label>File Type</Label>

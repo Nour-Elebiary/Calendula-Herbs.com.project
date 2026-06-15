@@ -97,7 +97,8 @@ function InquiryCard({ isRead, isExpanded, onToggle, header, children, onMarkRea
       >
         {!isRead && <UnreadDot />}
         <div className="flex-1 min-w-0">{header}</div>
-        <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()}>
+        {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+        <div className="flex items-center gap-1 shrink-0" onClick={e => e.stopPropagation()} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') e.stopPropagation() }}>
           <Button size="sm" variant="ghost" onClick={onMarkRead} title={isRead ? 'Mark unread' : 'Mark read'}>
             {isRead ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
           </Button>

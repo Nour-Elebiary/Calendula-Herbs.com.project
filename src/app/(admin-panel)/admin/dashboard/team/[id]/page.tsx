@@ -123,12 +123,12 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
         <div className="md:col-span-2 space-y-6 bg-white p-6 rounded-xl border shadow-sm">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>Name</Label>
-              <Input value={member.name} onChange={e => setMember({ ...member, name: e.target.value })} />
+              <Label htmlFor="member-name">Name</Label>
+              <Input id="member-name" value={member.name} onChange={e => setMember({ ...member, name: e.target.value })} />
             </div>
             <div className="space-y-2">
-              <Label>Title / Role</Label>
-              <Input value={member.title} onChange={e => setMember({ ...member, title: e.target.value })} />
+              <Label htmlFor="member-title">Title / Role</Label>
+              <Input id="member-title" value={member.title} onChange={e => setMember({ ...member, title: e.target.value })} />
             </div>
           </div>
 
@@ -174,7 +174,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
                     <div className="space-y-2 w-28 shrink-0">
                       <Label className="text-xs">Type</Label>
                       <Select value={contact.type} onValueChange={(v: ContactType) => updateContact(i, { type: v })}>
-                        <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
+                        <SelectTrigger aria-label="Contact type" className="h-8 text-xs"><SelectValue /></SelectTrigger>
                         <SelectContent>
                           {CONTACT_TYPES.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}
                         </SelectContent>
@@ -182,11 +182,11 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
                     </div>
                     <div className="space-y-2 flex-1">
                       <Label className="text-xs">Value (URL, Email, Phone)</Label>
-                      <Input value={contact.value} onChange={e => updateContact(i, { value: e.target.value })} placeholder="e.g. https://linkedin.com/in/..." className="h-8 text-xs" />
+                      <Input id={`contact-value-${i}`} value={contact.value} onChange={e => updateContact(i, { value: e.target.value })} placeholder="e.g. https://linkedin.com/in/..." className="h-8 text-xs" />
                     </div>
                     <div className="space-y-2 w-28 shrink-0">
-                      <Label className="text-xs">Label (Optional)</Label>
-                      <Input value={contact.label || ''} onChange={e => updateContact(i, { label: e.target.value })} placeholder="Display text" className="h-8 text-xs" />
+                      <Label htmlFor={`contact-label-${i}`} className="text-xs">Label (Optional)</Label>
+                      <Input id={`contact-label-${i}`} value={contact.label || ''} onChange={e => updateContact(i, { label: e.target.value })} placeholder="Display text" className="h-8 text-xs" />
                     </div>
                     <div className="pt-6">
                       <Button variant="ghost" size="icon" onClick={() => removeContact(i)} className="text-red-500 hover:text-red-600 hover:bg-red-50">
@@ -237,9 +237,9 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
             </div>
 
             <div className="space-y-2 pt-4">
-              <Label>Type</Label>
+              <Label htmlFor="member-type">Type</Label>
               <Select value={member.memberType} onValueChange={(v: 'TEAM' | 'BOARD') => setMember({ ...member, memberType: v })}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectTrigger id="member-type"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="TEAM">Team Member</SelectItem>
                   <SelectItem value="BOARD">Board of Directors</SelectItem>

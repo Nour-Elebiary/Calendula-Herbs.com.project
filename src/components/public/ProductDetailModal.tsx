@@ -61,7 +61,12 @@ export function ProductDetailModal({ slug, onClose }: Props) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto">
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
+      <div
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+        onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}
+      />
       <div className="relative w-full max-w-5xl my-8 mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
         {/* Close button */}
         <button

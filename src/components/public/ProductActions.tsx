@@ -110,25 +110,25 @@ export function ProductActions({ productId, productName, minOrderKg }: Props) {
           <form onSubmit={submitSample} className="space-y-4 mt-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <Label className="text-[var(--color-text-tertiary)]">Contact Name *</Label>
-                <Input required value={sName} onChange={e => setSName(e.target.value)} className="input" />
+                <Label htmlFor="sample-name" className="text-[var(--color-text-tertiary)]">Contact Name *</Label>
+                <Input id="sample-name" required value={sName} onChange={e => setSName(e.target.value)} className="input" />
               </div>
               <div className="space-y-1.5">
-                <Label className="text-[var(--color-text-tertiary)]">Email *</Label>
-                <Input type="email" required value={sEmail} onChange={e => setSEmail(e.target.value)} className="input" />
+                <Label htmlFor="sample-email" className="text-[var(--color-text-tertiary)]">Email *</Label>
+                <Input id="sample-email" type="email" required value={sEmail} onChange={e => setSEmail(e.target.value)} className="input" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[var(--color-text-tertiary)]">Company</Label>
-              <Input value={sCompany} onChange={e => setSCompany(e.target.value)} className="input" />
+              <Label htmlFor="sample-company" className="text-[var(--color-text-tertiary)]">Company</Label>
+              <Input id="sample-company" value={sCompany} onChange={e => setSCompany(e.target.value)} className="input" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[var(--color-text-tertiary)]">Shipping Address *</Label>
-              <Textarea required value={sAddress} onChange={e => setSAddress(e.target.value)} rows={3} className="input resize-none" />
+              <Label htmlFor="sample-address" className="text-[var(--color-text-tertiary)]">Shipping Address *</Label>
+              <Textarea id="sample-address" required value={sAddress} onChange={e => setSAddress(e.target.value)} rows={3} className="input resize-none" />
             </div>
             <div className="space-y-1.5">
-              <Label className="text-[var(--color-text-tertiary)]">Shipping Account (DHL/FedEx) or Notes</Label>
-              <Textarea value={sNotes} onChange={e => setSNotes(e.target.value)} placeholder="Provide your courier account number if you want to cover shipping..." rows={2} className="input resize-none" />
+              <Label htmlFor="sample-notes" className="text-[var(--color-text-tertiary)]">Shipping Account (DHL/FedEx) or Notes</Label>
+              <Textarea id="sample-notes" value={sNotes} onChange={e => setSNotes(e.target.value)} placeholder="Provide your courier account number if you want to cover shipping..." rows={2} className="input resize-none" />
             </div>
             <div className="pt-4 flex justify-end gap-2">
               <button type="button" onClick={() => setSampleOpen(false)} className="btn btn-secondary">Cancel</button>
