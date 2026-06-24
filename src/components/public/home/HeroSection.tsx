@@ -1,13 +1,22 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useEffect } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { ChevronDown } from 'lucide-react'
 import DOMPurify from 'isomorphic-dompurify'
 import { heroStagger, heroChild } from '@/lib/animations'
-import { Hero3DCanvas } from '@/components/public/hero/Hero3DCanvas'
-import { HeroParticles } from '@/components/public/hero/HeroParticles'
+
+const Hero3DCanvas = dynamic(
+  () => import('@/components/public/hero/Hero3DCanvas').then(m => ({ default: m.Hero3DCanvas })),
+  { ssr: false },
+)
+
+const HeroParticles = dynamic(
+  () => import('@/components/public/hero/HeroParticles').then(m => ({ default: m.HeroParticles })),
+  { ssr: false },
+)
 
 function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
@@ -31,7 +40,18 @@ function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: num
 
 export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
   const prefersReducedMotion = useReducedMotion()
+
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const video = videoRef.current
+    if (!video) return
+    const play = async () => {
+      try { await video.play() } catch { /* autoplay blocked */ }
+    }
+    play()
+  }, [prefersReducedMotion])
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -71,10 +91,12 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
           />
         ) : (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             poster="https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp"
             className="hero-atmospheric__video"
           >

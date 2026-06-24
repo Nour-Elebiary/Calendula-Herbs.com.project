@@ -1,9 +1,21 @@
 'use client'
 
+import { useRef, useEffect } from 'react'
 import { useReducedMotion } from 'framer-motion'
 
 export function AboutHero() {
   const prefersReducedMotion = useReducedMotion()
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    if (prefersReducedMotion) return
+    const video = videoRef.current
+    if (!video) return
+    const play = async () => {
+      try { await video.play() } catch { /* autoplay blocked */ }
+    }
+    play()
+  }, [prefersReducedMotion])
 
   return (
     <section className="about-hero relative overflow-hidden">
@@ -12,10 +24,12 @@ export function AboutHero() {
       ) : (
         <>
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             poster="https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp"
             className="about-hero__video"
           >
