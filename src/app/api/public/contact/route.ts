@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
     }
 
-    const submission = await db.contactSubmission.create({
+    await db.contactSubmission.create({
       data: {
         name: data.name,
         email: data.email,
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     const contactSetting = await db.contactSetting.findUnique({ where: { id: 'main' } })
 
-    Promise.allSettled([
+    await Promise.allSettled([
       sendContactConfirmation(data.email, data.name),
       contactSetting?.managingEmails?.length
         ? sendContactNotification(contactSetting.managingEmails, data, meta)

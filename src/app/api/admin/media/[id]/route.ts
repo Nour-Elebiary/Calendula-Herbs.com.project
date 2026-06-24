@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { v2 as cloudinary } from 'cloudinary'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { name } = await req.json()
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -29,6 +31,7 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { id } = await params;
     

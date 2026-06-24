@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const createSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -9,6 +10,7 @@ const createSchema = z.object({
 })
 
 export async function GET(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { searchParams } = new URL(req.url)
     const type = searchParams.get('type') as 'TEAM' | 'BOARD' | null
@@ -31,6 +33,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = createSchema.parse(json)

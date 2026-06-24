@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { generateSignature } from '@/lib/cloudinary'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 export async function GET(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const searchParams = req.nextUrl.searchParams
     const folder = searchParams.get('folder') || 'calendula_media'

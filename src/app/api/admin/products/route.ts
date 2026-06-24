@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import type { Prisma } from '@prisma/client'
 import { z } from 'zod'
 import slugify from 'slugify'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const productSchema = z.object({
   name: z.string().min(1),
@@ -37,6 +39,7 @@ async function generateSlug(name: string, excludeId?: string) {
 }
 
 export async function GET(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const sp = req.nextUrl.searchParams
   const categoryId = sp.get('categoryId')
   const status = sp.get('status') // 'active' | 'inactive'
@@ -45,8 +48,7 @@ export async function GET(req: NextRequest) {
   const page = parseInt(sp.get('page') || '1')
   const limit = 30
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const where: any = {
+  const where: Prisma.ProductWhereInput = {
     ...(status === 'active' ? { isActive: true } : status === 'inactive' ? { isActive: false } : {}),
     ...(featured === 'true' ? { isFeatured: true } : {}),
     ...(categoryId ? { categories: { some: { categoryId } } } : {}),
@@ -78,6 +80,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const { categoryIds, slug: rawSlug, ...data } = productSchema.parse(json)

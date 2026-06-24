@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import slugify from 'slugify'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const patchSchema = z.object({
   name: z.string().min(1).optional(),
@@ -31,6 +32,7 @@ async function generateSlug(name: string, excludeId?: string) {
 }
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   const product = await db.product.findUnique({
     where: { id },
@@ -47,6 +49,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   try {
     const json = await req.json()
@@ -101,6 +104,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   try {
     await db.product.delete({ where: { id } })

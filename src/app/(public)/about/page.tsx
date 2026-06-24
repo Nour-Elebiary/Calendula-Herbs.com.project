@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { db } from '@/lib/db'
 import { Leaf, Sprout, Factory, Globe, Award, ArrowRight } from 'lucide-react'
 import { getContactTypeIcon } from '@/lib/icon-map'
+import { generateTeamContactLink } from '@/lib/contact-links'
 
 export const metadata = {
   title: 'About Us | Calendula Herbs For Import & Export',
@@ -201,13 +202,13 @@ function MemberCard({ member, small = false }: { member: { name: string; title: 
           <div className="flex flex-wrap gap-3 pt-4 border-t border-[var(--color-border-subtle)]">
             {member.contacts.map((c: { id: string; icon: string | null; type: string; value: string; label: string | null }) => {
               const Icon = getContactTypeIcon(c.icon || c.type)
-              const href = c.type === 'EMAIL' ? `mailto:${c.value}` : c.type === 'PHONE' || c.type === 'WHATSAPP' ? `tel:${c.value.replace(/[^\d+]/g, '')}` : c.value
+              const { href, external } = generateTeamContactLink(c.type, c.value)
               return (
                 <a
                   key={c.id}
                   href={href}
-                  target={c.type !== 'EMAIL' && c.type !== 'PHONE' ? '_blank' : undefined}
-                  rel="noreferrer"
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noreferrer' : undefined}
                   className="flex items-center justify-center w-9 h-9 rounded-full bg-[var(--color-bg-elevated)] text-[var(--color-text-tertiary)] hover:text-[var(--color-green-600)] hover:bg-[var(--color-green-50)] transition-all"
                   title={c.label || c.type}
                 >

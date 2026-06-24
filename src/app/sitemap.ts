@@ -5,14 +5,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://calendulaherbs.com'
 
   // Fetch dynamic content
-  const [products, categories] = await Promise.all([
+  const [products, categories, galleries] = await Promise.all([
     db.product.findMany({
       where: { isActive: true },
       select: { slug: true, updatedAt: true }
     }),
     db.category.findMany({
       select: { slug: true }
-    })
+    }),
+    db.gallery.findMany({
+      select: { slug: true, updatedAt: true },
+      where: { isActive: true }
+    }),
   ])
 
   // Static routes
@@ -21,8 +25,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/about',
     '/contact',
     '/products',
+    '/faq',
     '/galleries',
-    '/certificates'
+    '/certificates',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -46,5 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  return [...staticRoutes, ...productRoutes, ...categoryRoutes]
+  // Gallery routes
+  const galleryRoutes = galleries.map((gallery) => ({
+    url: `${baseUrl}/galleries/${gallery.slug}`,
+    lastModified: gallery.updatedAt,
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }))
+
+  return [...staticRoutes, ...productRoutes, ...categoryRoutes, ...galleryRoutes]
 }

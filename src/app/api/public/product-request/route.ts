@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
     }
 
-    const request = await db.productRequest.create({
+    await db.productRequest.create({
       data: {
         productName: data.productName,
         productDescription: data.productDescription,
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     const contactSetting = await db.contactSetting.findUnique({ where: { id: 'main' } })
 
-    Promise.allSettled([
+    await Promise.allSettled([
       sendProductRequestConfirmation(data.email, data.name, data.productName),
       contactSetting?.managingEmails?.length
         ? sendProductRequestNotification(contactSetting.managingEmails, data, meta)

@@ -1,12 +1,9 @@
-import { auth } from '@/lib/auth'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 import { db } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const session = await auth()
-  if (!session?.user?.email) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+  try { await requireAdmin() } catch { return unauthorized() }
 
   const [contact, cart, samples, productRequests] = await Promise.all([
     db.contactSubmission.count({ where: { isRead: false } }),

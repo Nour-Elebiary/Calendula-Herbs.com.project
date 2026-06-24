@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import { CertType } from '@prisma/client'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const updateSchema = z.object({
   title: z.string().min(1).optional(),
@@ -12,6 +13,7 @@ const updateSchema = z.object({
 })
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params;
   try {
     const data = updateSchema.parse(await req.json())
@@ -24,6 +26,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { id } = await params;
     await db.certificate.delete({ where: { id } })

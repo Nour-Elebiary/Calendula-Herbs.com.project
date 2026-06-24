@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { MediaType, MediaFile } from '@prisma/client'
-import { Search, Image as ImageIcon, Film, Music, FileText, CheckCircle2, Loader2 } from 'lucide-react'
+import { Search, Image as ImageIcon, Film, Music, FileText, Loader2 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -23,35 +23,26 @@ export function MediaPicker({ open, onOpenChange, onSelect, filterType }: MediaP
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
 
-  const fetchMedia = async () => {
-    setLoading(true)
-    try {
-      const url = new URL('/api/admin/media', window.location.origin)
-      url.searchParams.set('page', page.toString())
-      if (search) url.searchParams.set('search', search)
-      if (filterType) url.searchParams.set('type', filterType)
-      
-      const res = await fetch(url.toString())
-      const data = await res.json()
-      
-      if (res.ok) {
-        setMedia(data.items)
-        setTotalPages(data.totalPages)
-      } else {
-        toast.error('Failed to load media')
-      }
-    } catch (err) {
-      toast.error('Network error loading media')
-    } finally {
-      setLoading(false)
-    }
-  }
-
   useEffect(() => {
-    if (open) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      fetchMedia()
-    }
+    if (!open) return
+
+    Promise.resolve().then(() => setLoading(true))
+    const url = new URL('/api/admin/media', window.location.origin)
+    url.searchParams.set('page', page.toString())
+    if (search) url.searchParams.set('search', search)
+    if (filterType) url.searchParams.set('type', filterType)
+    fetch(url.toString())
+      .then(r => r.json())
+      .then(data => {
+        if (data.items) {
+          setMedia(data.items)
+          setTotalPages(data.totalPages)
+        } else {
+          toast.error('Failed to load media')
+        }
+      })
+      .catch(() => toast.error('Network error loading media'))
+      .finally(() => setLoading(false))
   }, [open, page, search, filterType])
 
   const handleSelect = (item: MediaFile) => {

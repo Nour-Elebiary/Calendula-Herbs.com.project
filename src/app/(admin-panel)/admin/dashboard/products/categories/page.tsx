@@ -73,15 +73,13 @@ export default function CategoriesPage() {
   const sensors = useSensors(useSensor(PointerSensor))
 
   const fetchCategories = async () => {
-    // Fetch with product counts
     const res = await fetch('/api/admin/categories?withCounts=true')
     const data = await res.json()
     setCategories(data.categories || [])
     setLoading(false)
   }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchCategories() }, [])
+  useEffect(() => { Promise.resolve().then(fetchCategories) }, [])
 
   const handleCreate = async () => {
     if (!newName.trim()) return

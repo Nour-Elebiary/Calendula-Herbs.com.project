@@ -135,8 +135,7 @@ function ContactTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [fetch_])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
     await fetch(`/api/admin/inquiries/contact/${id}`, {
@@ -246,8 +245,7 @@ function CartTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [fetch_])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
     await fetch(`/api/admin/inquiries/cart/${id}`, {
@@ -384,8 +382,7 @@ function SamplesTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [fetch_])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
     await fetch(`/api/admin/inquiries/samples/${id}`, {
@@ -500,8 +497,7 @@ function ProductRequestsTab() {
     setLoading(false)
   }, [page, unreadOnly])
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [fetch_])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [fetch_])
 
   const markRead = async (id: string, isRead: boolean) => {
     await fetch(`/api/admin/inquiries/product-requests/${id}`, {

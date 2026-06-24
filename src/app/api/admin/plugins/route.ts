@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const createSchema = z.object({
   name: z.string().min(1),
@@ -18,6 +19,7 @@ const patchSchema = z.object({
 })
 
 export async function GET() {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const plugins = await db.plugin.findMany({ orderBy: { order: 'asc' } })
     return NextResponse.json({ plugins })
@@ -28,6 +30,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = createSchema.parse(json)
@@ -44,6 +47,7 @@ export async function POST(req: NextRequest) {
 
 // PATCH for bulk reorder
 export async function PATCH(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { ids } = await req.json()
     await Promise.all(

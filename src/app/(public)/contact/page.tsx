@@ -1,8 +1,14 @@
 import React from 'react'
+import type { Metadata } from 'next'
 import { db } from '@/lib/db'
 import { MapPin, Phone, Mail, MessageSquare } from 'lucide-react'
 import { ContactForm } from '@/components/public/ContactForm'
-import { MapEmbed } from '@/components/public/MapEmbed'
+import { MapEmbedWrapper } from '@/components/public/MapEmbedWrapper'
+
+export const metadata: Metadata = {
+  title: 'Contact Us | Calendula Herbs For Import & Export',
+  description: 'Get in touch with Calendula Herbs for bulk organic herb export inquiries. Request a quote, product specifications, or samples.',
+}
 import { generateContactLink, getDisplayValue, isClickableLink, CONTACT_METHOD_META, type ContactMethod } from '@/lib/contact-links'
 import { getContactMethodIcon } from '@/lib/icon-map'
 
@@ -140,7 +146,7 @@ export default async function ContactPage() {
                 <p className="text-[var(--color-text-tertiary)] mt-2">{address}</p>
               </div>
               <div className="card-glass overflow-hidden p-1">
-                <MapEmbed lat={contact.mapLat} lng={contact.mapLng} address={address} />
+                <MapEmbedWrapper lat={contact.mapLat} lng={contact.mapLng} address={address} />
               </div>
             </div>
           </div>

@@ -95,8 +95,7 @@ export default function CertificatesPage() {
     setLoading(false)
   }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [])
 
   const openCreate = () => {
     setEditing(null)

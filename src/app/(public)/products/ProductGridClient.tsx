@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -28,23 +28,15 @@ type Props = {
 export function ProductGridClient({ products }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const selectedSlug = searchParams.get('product')
-  const [activeSlug, setActiveSlug] = useState<string | null>(null)
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setActiveSlug(selectedSlug)
-  }, [selectedSlug])
+  const activeSlug = searchParams.get('product')
 
   const openProduct = useCallback((slug: string) => {
-    setActiveSlug(slug)
     const params = new URLSearchParams(searchParams.toString())
     params.set('product', slug)
     router.replace(`/products?${params.toString()}`, { scroll: false })
   }, [router, searchParams])
 
   const closeProduct = useCallback(() => {
-    setActiveSlug(null)
     const params = new URLSearchParams(searchParams.toString())
     params.delete('product')
     const qs = params.toString()

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   try {
     const { isRead } = await req.json()
@@ -14,6 +16,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   try {
     await db.contactSubmission.delete({ where: { id } })

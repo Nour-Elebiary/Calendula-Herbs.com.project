@@ -1,14 +1,45 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
+import DOMPurify from 'isomorphic-dompurify'
 import { heroStagger, heroChild } from '@/lib/animations'
 
-export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
+function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
-    <section className="hero-atmospheric">
-      <div className="hero-atmospheric__bg">
+    <motion.div
+      className={className}
+      aria-hidden="true"
+      animate={{
+        y: [0, -12, 0],
+        rotate: [0, 8, -4, 0],
+        opacity: [0.15, 0.25, 0.15],
+      }}
+      transition={{
+        duration: 8 + delay,
+        repeat: Infinity,
+        ease: 'easeInOut',
+        delay,
+      }}
+    />
+  )
+}
+
+export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const fadeOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+
+  return (
+    <section ref={sectionRef} className="hero-atmospheric">
+      <motion.div className="hero-atmospheric__bg" style={{ y: backgroundY }}>
         <div
           className="w-full h-full bg-[var(--color-green-800)]"
           style={{
@@ -18,9 +49,18 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
             filter: 'saturate(1.05) brightness(0.72)',
           }}
         />
-      </div>
+      </motion.div>
       <div className="hero-atmospheric__vignette" />
-      <div className="hero-atmospheric__fade-bottom" />
+      <motion.div className="hero-atmospheric__fade-bottom" style={{ opacity: fadeOpacity }} />
+
+      <FloatingLeaf
+        className="absolute top-32 left-[8%] w-6 h-12 rounded-full bg-[var(--color-calendula-400)] blur-sm"
+        delay={0}
+      />
+      <FloatingLeaf
+        className="absolute bottom-24 right-[10%] w-5 h-10 rounded-full bg-[var(--color-green-400)] blur-sm"
+        delay={2}
+      />
 
       <motion.div
         className="hero-atmospheric__content"
@@ -35,7 +75,7 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
         <motion.h1
           variants={heroChild}
           className="hero-atmospheric__headline"
-          dangerouslySetInnerHTML={{ __html: tagline || 'Rooted in Nature,<br />Exported with Care.' }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(tagline || 'Rooted in Nature,<br />Exported with Care.') }}
         />
 
         <motion.p variants={heroChild} className="hero-atmospheric__body">
@@ -54,7 +94,7 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
       </motion.div>
 
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3]"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
       >

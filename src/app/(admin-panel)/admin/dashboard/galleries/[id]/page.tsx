@@ -107,8 +107,7 @@ export default function GalleryItemsPage({ params }: { params: Promise<{ id: str
     setLoading(false)
   }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { if (id) fetchGallery() }, [id])
+  useEffect(() => { if (id) Promise.resolve().then(fetchGallery) }, [id])
 
   const addMedia = async (mediaFileId: string) => {
     const type = addType === 'UPLOADED_IMAGE' ? 'UPLOADED_IMAGE' : 'UPLOADED_VIDEO'

@@ -3,7 +3,7 @@
 Next.js 16.2.9 App Router + TypeScript + Tailwind v4 (`@tailwindcss/postcss`) + Radix UI + Framer Motion.
 Prisma 6 + Supabase PostgreSQL + Cloudinary + NextAuth.js v5 beta.
 Upstash Redis (rate limits) + React Hook Form + Zod v4.
-**No test framework.** `@/` maps to `src/`. **Package manager: pnpm.**
+**Test framework:** Vitest 4 + React Testing Library + jsdom. Test files in `src/test/` (new) or `src/__tests__/` (existing). Run with `pnpm test` or `pnpm test:watch`. Config: `vitest.config.ts`. Setup: `src/__tests__/setup.ts`. `@/` maps to `src/`. **Package manager: pnpm.**
 
 ## Commands
 ```
@@ -78,7 +78,10 @@ All 4 public forms (contact, sample, product-request, cart) follow identical arc
 - Full 2095-line brand guideline at `DESIGN_SYSTEM.md` — read before visual changes.
 
 ## CI & deployment
-- CI: `.github/workflows/ci.yml` — push/PR to `main` or `develop`. Steps: `pnpm install --frozen-lockfile` → `prisma generate` → `lint` → `tsc`.
+- CI: `.github/workflows/ci.yml` — push/PR to `main`, `develop`, or `master`. Node.js 20 + 22 matrix. Steps: `pnpm install --frozen-lockfile` → `prisma generate` → `lint` → `tsc` → `test` → `build`.
+- CodeQL: `.github/workflows/codeql.yml` — weekly security analysis on push/PR to main/develop/master.
+- PR labeler: `.github/workflows/label.yml` + `.github/labeler.yml` — auto-labels PRs by changed file patterns.
+- Dependabot: `.github/dependabot.yml` — weekly npm + GitHub Actions updates, grouped by ecosystem (radix-ui, framer-motion, next, prisma).
 - Auto-deploys to Vercel from **`master`** branch. `master` is production. `main`/`develop` are CI branches.
 - `.env*` and `secrets.json` gitignored — set env vars in Vercel Dashboard.
 

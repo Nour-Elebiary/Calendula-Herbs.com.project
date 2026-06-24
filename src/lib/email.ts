@@ -5,6 +5,15 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = process.env.RESEND_FROM_EMAIL || 'noreply@calendula-herbs.com'
 const COMPANY = 'Calendula Herbs'
 
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error(`Resend timed out after ${ms}ms`)), ms)
+    ),
+  ]) as Promise<T>
+}
+
 // ─── OTP Email ────────────────────────────────────────────────────────────────
 
 export async function sendOtpEmail(to: string, code: string) {
@@ -33,12 +42,12 @@ export async function sendOtpEmail(to: string, code: string) {
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to,
     subject: `${code} — Your ${COMPANY} Admin Verification Code`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Contact Form Confirmation ────────────────────────────────────────────────
@@ -67,12 +76,12 @@ export async function sendContactConfirmation(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to,
     subject: `We received your message — ${COMPANY}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Contact Notification (to admin) ─────────────────────────────────────────
@@ -108,12 +117,12 @@ export async function sendContactNotification(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to: managingEmails,
     subject: `🌿 New Contact Inquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Cart Inquiry Notification ────────────────────────────────────────────────
@@ -155,12 +164,12 @@ export async function sendCartNotification(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to: managingEmails,
     subject: `🛒 New Product Inquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Cart Confirmation (to buyer) ─────────────────────────────────────────────
@@ -194,12 +203,12 @@ export async function sendCartConfirmation(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to,
     subject: `Your inquiry to ${COMPANY} — Products Requested`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Sample Request Confirmation (to user) ─────────────────────────────────────
@@ -226,12 +235,12 @@ export async function sendSampleConfirmation(to: string, name: string, productNa
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to,
     subject: `Sample Request Received — ${COMPANY}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Sample Request Notification (to admin) ────────────────────────────────────
@@ -265,12 +274,12 @@ export async function sendSampleNotification(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to: managingEmails,
     subject: `📦 New Sample Request: ${data.productName} from ${data.name}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Product Request Confirmation (to user) ────────────────────────────────────
@@ -297,12 +306,12 @@ export async function sendProductRequestConfirmation(to: string, name: string, p
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to,
     subject: `Product Request Received — ${COMPANY}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Product Request Notification (to admin) ───────────────────────────────────
@@ -339,12 +348,12 @@ export async function sendProductRequestNotification(
 </body>
 </html>`
 
-  return resend.emails.send({
+  return withTimeout(resend.emails.send({
     from: FROM,
     to: managingEmails,
     subject: `🔍 New Product Request: ${data.productName} from ${data.name}`,
     html,
-  })
+  }), 15000)
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

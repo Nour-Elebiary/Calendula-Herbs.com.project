@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ShoppingCart, Leaf } from 'lucide-react'
+import Image from 'next/image'
+import { Menu, X, ShoppingCart } from 'lucide-react'
 import { useCart } from './CartProvider'
 
 const NAV_LINKS = [
@@ -44,12 +45,14 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
       <div className="container mx-auto max-w-7xl flex items-center justify-between px-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 sm:gap-3 z-50 nav-logo flex-shrink-0">
-          <div className="flex items-center justify-center rounded-full w-10 h-10 flex-shrink-0" style={{ background: 'var(--color-green-100)' }}>
-            <Leaf className="w-5 h-5" style={{ color: 'var(--color-green-600)' }} />
-          </div>
-          <span className="font-display text-xl sm:text-2xl font-medium tracking-tight hidden sm:inline" style={{ color: 'var(--color-text-primary)' }}>
-            {siteName}
-          </span>
+          <Image
+            src="https://res.cloudinary.com/dcukpuftg/image/upload/v1782266932/calendula-herbs/brand/logo.png"
+            alt="Calendula Herbs"
+            width={111}
+            height={60}
+            className="object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop Nav */}
@@ -60,22 +63,13 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
               <Link
                 key={link.href}
                 href={link.href}
-                style={{
-                  fontFamily: 'var(--font-body)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 400,
-                  letterSpacing: 'var(--tracking-wide)',
-                  color: isActive ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
-                  textDecoration: 'none',
-                  position: 'relative',
-                  transition: 'color 120ms var(--ease-smooth)',
-                  padding: '8px 0'
-                }}
-                className="nav-link"
+                className={`nav-link text-sm font-normal tracking-wide no-underline relative py-2 transition-colors duration-[120ms] ${
+                  isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'
+                }`}
               >
                 {link.label}
                 {isActive && (
-                  <span style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 2, background: 'var(--color-green-600)', borderRadius: '1px' }} />
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-green-600)] rounded-[1px]" />
                 )}
               </Link>
             )
@@ -92,16 +86,7 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
           >
             <ShoppingCart className="w-5 h-5" />
             {cartItemCount > 0 && (
-              <span style={{
-                position: 'absolute', top: -4, right: -4,
-                width: 20, height: 20,
-                background: 'var(--color-calendula-500)',
-                color: '#FAFAF6',
-                fontSize: 11, fontWeight: 700,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '9999px',
-                border: '2px solid var(--color-bg-void)'
-              }}>
+              <span className="cart-badge">
                 {cartItemCount}
               </span>
             )}
@@ -124,16 +109,7 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
           >
             <ShoppingCart className="w-5 h-5" />
             {cartItemCount > 0 && (
-              <span style={{
-                position: 'absolute', top: -4, right: -4,
-                width: 20, height: 20,
-                background: 'var(--color-calendula-500)',
-                color: '#FAFAF6',
-                fontSize: 11, fontWeight: 700,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                borderRadius: '9999px',
-                border: '2px solid var(--color-bg-void)'
-              }}>
+              <span className="cart-badge">
                 {cartItemCount}
               </span>
             )}
@@ -142,9 +118,11 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="btn-icon"
             aria-label="Toggle menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-menu"
             title={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} /> : <Menu className="w-5 h-5" style={{ color: 'var(--color-text-primary)' }} />}
+            {isMobileMenuOpen ? <X className="w-5 h-5 text-[var(--color-text-primary)]" /> : <Menu className="w-5 h-5 text-[var(--color-text-primary)]" />}
           </button>
         </div>
       </div>
@@ -156,16 +134,16 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            id="mobile-menu"
+            className="fixed inset-0 z-40 md:hidden"
             style={{
-              position: 'fixed', inset: 0, zIndex: 40,
               background: 'var(--color-bg-void)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)'
             }}
-            className="md:hidden"
           >
-            <div className="flex flex-col h-full pt-20 pb-8 px-6" style={{ marginTop: '64px' }}>
+            <div className="flex flex-col h-full pt-20 pb-8 px-6 mt-16">
               <nav className="flex flex-col gap-6 mb-auto">
                 {NAV_LINKS.map((link, i) => (
                   <motion.div
@@ -176,15 +154,9 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
                   >
                     <Link
                       href={link.href}
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: 'clamp(var(--text-xl), 5vw, var(--text-3xl))',
-                        fontWeight: 500,
-                        letterSpacing: 'var(--tracking-tight)',
-                        color: pathname === link.href ? 'var(--color-green-600)' : 'var(--color-text-secondary)',
-                        textDecoration: 'none',
-                        transition: 'color 120ms'
-                      }}
+                      className={`font-display text-[clamp(1.25rem,5vw,1.875rem)] font-medium tracking-tight no-underline transition-colors duration-[120ms] ${
+                        pathname === link.href ? 'text-[var(--color-green-600)]' : 'text-[var(--color-text-secondary)]'
+                      }`}
                     >
                       {link.label}
                     </Link>
@@ -195,7 +167,7 @@ export function Header({ siteName = 'Calendula Herbs' }: { siteName?: string }) 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                style={{ paddingTop: 'var(--space-8)', borderTop: '1px solid var(--color-border-subtle)' }}
+                className="pt-8 border-t border-[var(--color-border-subtle)]"
               >
                 <Link
                   href="/contact"

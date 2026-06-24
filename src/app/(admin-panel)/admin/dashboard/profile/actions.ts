@@ -19,9 +19,9 @@ export async function revokeSession(sessionId: string) {
   revalidatePath('/admin/dashboard/profile')
 }
 
-export async function revokeAllOtherSessions(currentSessionTokenHash: string) {
+export async function revokeAllOtherSessions(currentSessionTokenHash: string | undefined) {
   const session = await auth()
-  if (!session?.user?.id) throw new Error('Unauthorized')
+  if (!session?.user?.id || !currentSessionTokenHash) return
 
   await db.adminSession.updateMany({
     where: { 

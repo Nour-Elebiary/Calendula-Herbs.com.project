@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 // DELETE — remove single image from product
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; imageId: string }> }
 ) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id, imageId } = await params
   try {
     const deleted = await db.productImage.delete({ where: { id: imageId, productId: id } })
@@ -32,6 +34,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string; imageId: string }> }
 ) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id, imageId } = await params
   try {
     await db.productImage.updateMany({ where: { productId: id }, data: { isPrimary: false } })

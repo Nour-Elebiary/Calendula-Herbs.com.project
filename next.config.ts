@@ -28,6 +28,9 @@ const securityHeaders = [
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://*.supabase.co https://api.resend.com https://api.cloudinary.com https://*.upstash.io https://ip-api.com https://vitals.vercel-insights.com",
       "worker-src blob:",
+      "form-action 'self'",
+      "base-uri 'self'",
+      "frame-ancestors 'none'",
     ].join("; "),
   },
 ];

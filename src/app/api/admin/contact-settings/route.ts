@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const contactMethodSchema = z.object({
   type: z.enum(['whatsapp', 'telegram', 'viber', 'skype', 'wechat', 'signal', 'messenger', 'line', 'discord', 'other']),
@@ -25,6 +26,7 @@ const schema = z.object({
 })
 
 export async function GET() {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const contact = await db.contactSetting.findUnique({ where: { id: 'main' } })
     return NextResponse.json({ contact })
@@ -35,6 +37,7 @@ export async function GET() {
 }
 
 export async function PATCH(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = schema.parse(json)

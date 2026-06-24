@@ -14,6 +14,15 @@ export function CartDrawer() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [step, setStep] = useState<1 | 2>(1)
 
+  React.useEffect(() => {
+    if (!isCartOpen) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsCartOpen(false)
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [isCartOpen, setIsCartOpen])
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -69,15 +78,16 @@ export function CartDrawer() {
             onClick={() => setIsCartOpen(false)}
             className="btn-icon"
             aria-label="Close cart"
-            title="Close quote cart"
+            title="Close cart"
+            autoFocus
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-8 text-center">
-            <div className="w-16 h-16 bg-[var(--color-bg-base)] rounded-full flex items-center justify-center mb-4">
+            <div className="w-16 h-16 bg-[var(--color-bg-base)] rounded-full flex items-center justify-center mb-4" aria-hidden="true">
               <span className="text-3xl">📋</span>
             </div>
             <h3 className="font-display text-base sm:text-lg text-[var(--color-text-primary)] mb-2">Your quote cart is empty</h3>

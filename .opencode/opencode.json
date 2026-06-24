@@ -14,6 +14,13 @@
     "routes": { "description": "List all application routes and their types", "prompt": "Read src/app directory structure and summarize all route groups, pages, and API endpoints by their access level (public, admin, auth)" }
   },
 
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+    }
+  },
+
   "agent": {
     "admin-dev": {
       "description": "Calendula Herbs admin panel specialist — works on admin dashboard, settings, media, products, galleries, inquiries, team management",

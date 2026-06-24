@@ -44,13 +44,13 @@ export function ImageCropper({ file, open, onOpenChange, onCropComplete, aspectR
   const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
 
   React.useEffect(() => {
-    if (file) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!file) return
+    const reader = new FileReader()
+    reader.addEventListener('load', () => {
       setCrop(undefined)
-      const reader = new FileReader()
-      reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''))
-      reader.readAsDataURL(file)
-    }
+      setImgSrc(reader.result?.toString() || '')
+    })
+    reader.readAsDataURL(file)
   }, [file])
 
   function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {

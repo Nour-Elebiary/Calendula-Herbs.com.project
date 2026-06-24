@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 // GET all site settings as a key-value map
 export async function GET() {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const settings = await db.siteSetting.findMany()
     const map: Record<string, string> = {}
@@ -19,6 +21,7 @@ export async function GET() {
 const patchSchema = z.record(z.string(), z.string())
 
 export async function PATCH(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = patchSchema.parse(json)

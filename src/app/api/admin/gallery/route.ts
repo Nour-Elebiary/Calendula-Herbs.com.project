@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import slugify from 'slugify'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const createGallerySchema = z.object({
   name: z.string().min(1),
@@ -9,6 +10,7 @@ const createGallerySchema = z.object({
 })
 
 export async function GET() {
+  try { await requireAdmin() } catch { return unauthorized() }
   const galleries = await db.gallery.findMany({
     orderBy: { order: 'asc' },
     include: { _count: { select: { items: true } } },
@@ -17,6 +19,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const { name, description } = createGallerySchema.parse(json)
@@ -41,6 +44,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   // Reorder: expects { ids: string[] } in display order
   try {
     const { ids } = await req.json()

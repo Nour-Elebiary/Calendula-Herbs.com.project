@@ -75,6 +75,17 @@ export const CONTACT_TYPE_ICONS: Record<string, string> = {
   WHATSAPP:  'FaWhatsapp',
   FACEBOOK:  'FaFacebookF',
   INSTAGRAM: 'FaInstagram',
+  TELEGRAM:  'FaTelegram',
+  VIBER:     'FaViber',
+  WECHAT:    'FaWeixin',
+  SIGNAL:    'FaSignalMessenger',
+  MESSENGER: 'FaFacebookMessenger',
+  LINE:      'FaLine',
+  DISCORD:   'FaDiscord',
+  YOUTUBE:   'FaYoutube',
+  TIKTOK:    'FaTiktok',
+  SNAPCHAT:  'FaSnapchat',
+  WEBSITE:   'FaGlobe',
   OTHER:     'Link',
 }
 

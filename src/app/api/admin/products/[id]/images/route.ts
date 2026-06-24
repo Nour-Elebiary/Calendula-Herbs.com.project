@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const addImageSchema = z.object({
   mediaFileId: z.string().min(1),
@@ -9,6 +10,7 @@ const addImageSchema = z.object({
 
 // GET all images for a product
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   const images = await db.productImage.findMany({
     where: { productId: id },
@@ -20,6 +22,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 // POST — add image to product
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   try {
     const { mediaFileId, isPrimary } = addImageSchema.parse(await req.json())
@@ -46,6 +49,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
 // PATCH — reorder images
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params
   const { ids } = await req.json()
   await Promise.all(ids.map((imgId: string, i: number) =>

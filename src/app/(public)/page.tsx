@@ -7,6 +7,7 @@ import { FeaturedProductsSection } from '@/components/public/home/FeaturedProduc
 import { BotanicalAboutSection } from '@/components/public/home/BotanicalAboutSection'
 import { ProcessSection } from '@/components/public/home/ProcessSection'
 import { CertsBanner } from '@/components/public/home/CertsBanner'
+import { ScrollReveal } from '@/components/public/shared/ScrollReveal'
 
 export const metadata = {
   title: 'Home | Calendula Herbs For Import & Export',
@@ -52,8 +53,7 @@ export default async function HomePage() {
       </section>
 
       {/* 5. PRODUCTS — Featured products */}
-      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-      <FeaturedProductsSection products={featuredProducts as any} />
+      <FeaturedProductsSection products={featuredProducts} />
 
       {/* 6. HOW IT WORKS — Process */}
       <ProcessSection />
@@ -62,47 +62,51 @@ export default async function HomePage() {
       <BotanicalAboutSection />
 
       {/* 8. BIOFACH — Expo presence */}
-      <section className="section section--tint">
-        <div className="container max-w-7xl text-center">
-          <div className="card-glass p-12 max-w-3xl mx-auto">
-            <span className="badge badge-calendula mb-4">BIOFACH Participant</span>
-            <h2 className="font-display text-3xl md:text-4xl font-medium" style={{ color: 'var(--color-text-primary)' }}>
-              Exhibiting at BIOFACH for Over 4 Years
-            </h2>
-            <p className="mt-4" style={{ color: 'var(--color-text-secondary)' }}>
-              Meet us at the world&apos;s leading organic trade fair. Connect with our team to discuss partnerships, sample our products, and experience our quality firsthand.
-            </p>
-            <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
-              <Link href="/contact" className="btn btn-primary">Contact Us for a Meeting</Link>
-              <Link href="/certificates" className="btn btn-secondary">View Our Certificates</Link>
+      <ScrollReveal>
+        <section className="section section--tint">
+          <div className="container max-w-7xl text-center">
+            <div className="card-glass p-12 max-w-3xl mx-auto">
+              <span className="badge badge-calendula mb-4">BIOFACH Participant</span>
+              <h2 className="font-display text-3xl md:text-4xl font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                Exhibiting at BIOFACH for Over 4 Years
+              </h2>
+              <p className="mt-4" style={{ color: 'var(--color-text-secondary)' }}>
+                Meet us at the world&apos;s leading organic trade fair. Connect with our team to discuss partnerships, sample our products, and experience our quality firsthand.
+              </p>
+              <div className="flex items-center justify-center gap-4 mt-8 flex-wrap">
+                <Link href="/contact" className="btn btn-primary">Contact Us for a Meeting</Link>
+                <Link href="/certificates" className="btn btn-secondary">View Our Certificates</Link>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </ScrollReveal>
 
       {/* 10. CONTACT CTA */}
-      <section className="section" style={{ background: 'var(--color-green-800)' }}>
-        <div className="container max-w-7xl text-center">
-          <h2 className="font-display text-4xl md:text-5xl font-medium" style={{ color: 'var(--color-text-inverse)' }}>
-            Ready to Source Premium Egyptian Herbs?
-          </h2>
-          <p className="mt-4 text-lg max-w-2xl mx-auto" style={{ color: 'rgba(250,250,246,0.75)' }}>
-            Get in touch with our team for bulk quotes, product specifications, and sample requests.
-          </p>
-          <div className="flex items-center justify-center gap-4 mt-10 flex-wrap">
-            <Link href="/contact" className="btn btn-accent btn-lg">Request a Quote</Link>
-            <Link href="/products" className="btn" style={{
-              padding: 'var(--space-4) var(--space-10)',
-              background: 'transparent',
-              color: 'var(--color-text-inverse)',
-              border: '1px solid rgba(250,250,246,0.3)',
-              borderRadius: 'var(--radius-full)'
-            }}>
-              Browse Products
-            </Link>
+      <ScrollReveal>
+        <section className="section" style={{ background: 'var(--color-green-800)' }}>
+          <div className="container max-w-7xl text-center">
+            <h2 className="font-display text-4xl md:text-5xl font-medium" style={{ color: 'var(--color-text-inverse)' }}>
+              Ready to Source Premium Egyptian Herbs?
+            </h2>
+            <p className="mt-4 text-lg max-w-2xl mx-auto" style={{ color: 'rgba(250,250,246,0.75)' }}>
+              Get in touch with our team for bulk quotes, product specifications, and sample requests.
+            </p>
+            <div className="flex items-center justify-center gap-4 mt-10 flex-wrap">
+              <Link href="/contact" className="btn btn-accent btn-lg">Request a Quote</Link>
+              <Link href="/products" className="btn" style={{
+                padding: 'var(--space-4) var(--space-10)',
+                background: 'transparent',
+                color: 'var(--color-text-inverse)',
+                border: '1px solid rgba(250,250,246,0.3)',
+                borderRadius: 'var(--radius-full)'
+              }}>
+                Browse Products
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </ScrollReveal>
     </div>
   )
 }

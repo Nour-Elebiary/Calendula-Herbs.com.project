@@ -1,0 +1,36 @@
+frontend:
+- src/app/(public)/**/*
+- src/components/public/**/*
+- src/lib/animations.ts
+- src/lib/email.ts
+
+backend:
+- src/app/api/**/*
+- src/lib/db.ts
+- src/lib/rate-limit.ts
+- src/lib/sender-meta.ts
+
+admin:
+- src/app/(admin-panel)/**/*
+- src/components/admin/**/*
+- src/lib/admin-auth.ts
+
+auth:
+- src/app/api/auth/**/*
+- src/lib/auth.ts
+- src/proxy.ts
+
+database:
+- prisma/**/*
+
+dependencies:
+- package.json
+- pnpm-lock.yaml
+
+ci:
+- .github/**/*
+
+tests:
+- src/__tests__/**/*
+- src/test/**/*
+- vitest.config.ts

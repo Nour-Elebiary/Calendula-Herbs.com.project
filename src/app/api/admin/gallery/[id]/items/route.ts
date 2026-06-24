@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import { GalleryItemType, GallerySection } from '@prisma/client'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const addItemSchema = z.object({
   type: z.nativeEnum(GalleryItemType),
@@ -13,6 +14,7 @@ const addItemSchema = z.object({
 })
 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params;
   try {
     const json = await req.json()
@@ -62,6 +64,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   const { id } = await params;
   // Reorder items
   try {

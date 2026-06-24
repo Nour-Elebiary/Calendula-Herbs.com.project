@@ -61,6 +61,43 @@ export function generateContactLink(method: ContactMethod): string {
   }
 }
 
+export function generateTeamContactLink(type: string, value: string): { href: string; external: boolean } {
+  switch (type) {
+    case 'EMAIL':
+      return { href: `mailto:${value}`, external: false }
+    case 'PHONE':
+      return { href: `tel:${value.replace(/[^\d+]/g, '')}`, external: false }
+    case 'WHATSAPP':
+      return { href: `https://wa.me/${value.replace(/[^\d]/g, '')}`, external: true }
+    case 'TELEGRAM': {
+      const v = value.replace('@', '')
+      return { href: `https://t.me/${encodeURIComponent(v)}`, external: true }
+    }
+    case 'VIBER':
+      return { href: `viber://chat?number=${encodeURIComponent(value)}`, external: true }
+    case 'SIGNAL':
+      return { href: `https://signal.me/#p/${encodeURIComponent(value)}`, external: true }
+    case 'MESSENGER':
+      return { href: `https://m.me/${value.replace('@', '')}`, external: true }
+    case 'LINE':
+      return { href: `https://line.me/R/ti/p/~${encodeURIComponent(value)}`, external: true }
+    case 'WECHAT':
+    case 'DISCORD':
+      return { href: '#', external: false }
+    case 'LINKEDIN':
+    case 'TWITTER':
+    case 'FACEBOOK':
+    case 'INSTAGRAM':
+    case 'YOUTUBE':
+    case 'TIKTOK':
+    case 'SNAPCHAT':
+    case 'WEBSITE':
+    case 'OTHER':
+    default:
+      return { href: value, external: true }
+  }
+}
+
 export function getDisplayValue(method: ContactMethod): string {
   return method.value
 }

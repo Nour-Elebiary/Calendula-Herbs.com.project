@@ -15,8 +15,7 @@ export default async function ProfilePage() {
 
   if (!admin) redirect('/admin/login')
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const currentTokenHash = (session.user as any).sessionId
+  const currentTokenHash = (session.user as { sessionId?: string }).sessionId
 
   const activeSessions = await db.adminSession.findMany({
     where: { adminId: admin.id, revokedAt: null },

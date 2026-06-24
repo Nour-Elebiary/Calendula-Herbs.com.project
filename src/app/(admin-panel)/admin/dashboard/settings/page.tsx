@@ -580,15 +580,14 @@ function PluginsTab() {
   const [formPosition, setFormPosition] = useState<Plugin['position']>('HEAD')
   const [formSaving, setFormSaving] = useState(false)
 
-  const fetchPlugins = useCallback(async () => {
+  const fetchPlugins = async () => {
     const res = await fetch('/api/admin/plugins')
     const data = await res.json()
     setPlugins(data.plugins || [])
     setLoading(false)
-  }, [])
+  }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchPlugins() }, [fetchPlugins])
+  useEffect(() => { Promise.resolve().then(fetchPlugins) }, [])
 
   const openCreate = () => {
     setEditingPlugin(null)

@@ -29,7 +29,7 @@ type MemberData = TeamMember & {
   contacts: Contact[]
 }
 
-const CONTACT_TYPES: ContactType[] = ['EMAIL', 'PHONE', 'LINKEDIN', 'TWITTER', 'WHATSAPP', 'FACEBOOK', 'INSTAGRAM', 'OTHER']
+const CONTACT_TYPES: ContactType[] = ['EMAIL', 'PHONE', 'LINKEDIN', 'TWITTER', 'WHATSAPP', 'FACEBOOK', 'INSTAGRAM', 'TELEGRAM', 'VIBER', 'WECHAT', 'SIGNAL', 'MESSENGER', 'LINE', 'DISCORD', 'YOUTUBE', 'TIKTOK', 'SNAPCHAT', 'WEBSITE', 'OTHER']
 
 export default function EditTeamMemberPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -255,8 +255,7 @@ export default function EditTeamMemberPage({ params }: { params: Promise<{ id: s
           open={showMediaPicker}
           onOpenChange={setShowMediaPicker}
           onSelect={(file) => {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            setMember({ ...member, photoId: file.id, photo: file as any })
+            setMember(prev => prev ? { ...prev, photoId: file.id, photo: file } : prev)
             setShowMediaPicker(false)
           }} 
         />

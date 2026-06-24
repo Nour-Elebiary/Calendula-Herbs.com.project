@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { X, Leaf, CheckCircle2, Package, Award, Scissors, FlaskConical, ChevronRight, Loader2 } from 'lucide-react'
+import { X, Leaf, CheckCircle2, Package, Award, Scissors, ChevronRight, Loader2 } from 'lucide-react'
 import { ProductActions } from './ProductActions'
 import DOMPurify from 'isomorphic-dompurify'
 
@@ -32,19 +32,17 @@ const CERTIFICATIONS = ['EU Organic', 'USDA Organic', 'ISO 22000', 'HACCP', 'GMP
 
 export function ProductDetailModal({ slug, onClose }: Props) {
   const [product, setProduct] = useState<ProductFull | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!slug) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setProduct(null)
-      return
-    }
-     
-    setLoading(true)
-    setError(null)
+    if (!slug) return
+
+    Promise.resolve().then(() => {
+      setLoading(true)
+      setError(null)
+    })
     fetch(`/api/public/products/${slug}`)
       .then(r => r.json())
       .then(data => {
@@ -62,19 +60,22 @@ export function ProductDetailModal({ slug, onClose }: Props) {
   if (!slug) return null
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto" role="dialog" aria-modal="true" aria-label="Product details">
       <div
         className="fixed inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
         onKeyDown={(e) => { if (e.key === 'Escape') onClose() }}
+        aria-hidden="true"
       />
-      <div className="relative w-full max-w-5xl my-8 mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden animate-fadeIn">
+      <div className="relative w-full max-w-5xl my-8 mx-4 bg-white rounded-2xl shadow-2xl overflow-hidden">
         {/* Close button */}
         <button
           onClick={onClose}
+          aria-label="Close"
+          autoFocus
           className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-colors"
         >
-          <X className="w-5 h-5 text-neutral-700" />
+          <X className="w-5 h-5 text-neutral-700" aria-hidden="true" />
         </button>
 
         {loading ? (

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const reorderSchema = z.array(z.object({
   id: z.string(),
@@ -8,6 +9,7 @@ const reorderSchema = z.array(z.object({
 }))
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = reorderSchema.parse(json)

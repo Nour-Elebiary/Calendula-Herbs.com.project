@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
     }
 
-    const inquiry = await db.cartInquiry.create({
+    await db.cartInquiry.create({
       data: {
         name: data.name,
         email: data.email,
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 
     const items = data.items.map(i => ({ productName: i.productName, quantity: i.quantity }))
 
-    Promise.allSettled([
+    await Promise.allSettled([
       sendCartConfirmation(data.email, data.name, items),
       contactSetting?.managingEmails?.length
         ? sendCartNotification(contactSetting.managingEmails, data, items, meta)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import { verifyPassword, hashPassword, validatePasswordStrength } from '@/lib/security'
@@ -10,12 +10,10 @@ const schema = z.object({
 })
 
 export async function POST(req: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  let adminId: string
+  try { adminId = await requireAdmin() } catch { return unauthorized() }
 
+  try {
     const json = await req.json()
     const parsed = schema.safeParse(json)
     if (!parsed.success) {
@@ -25,7 +23,7 @@ export async function POST(req: NextRequest) {
     const { currentPassword, newPassword } = parsed.data
 
     const admin = await db.admin.findUnique({
-      where: { id: session.user.id },
+      where: { id: adminId },
     })
 
     if (!admin) {

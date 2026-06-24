@@ -102,6 +102,7 @@ function SortableImage({
 export default function ProductEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const router = useRouter()
+  const isNew = id === 'new'
   const [product, setProduct] = useState<ProductDetail | null>(null)
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
@@ -123,6 +124,17 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
   const [images, setImages] = useState<ProductImage[]>([])
 
   const sensors = useSensors(useSensor(PointerSensor))
+
+  useEffect(() => {
+    if (isNew) {
+      fetch('/api/admin/categories')
+        .then(r => r.json())
+        .then(d => setCategories(d.categories || []))
+        .finally(() => setLoading(false))
+      return
+    }
+    fetchProduct()
+  }, [id])
 
   const fetchProduct = async () => {
     try {
@@ -164,14 +176,15 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
     }
   }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchProduct() }, [id])
+  useEffect(() => { Promise.resolve().then(fetchProduct) }, [id])
 
   const handleSave = async () => {
     setSaving(true)
     try {
-      const res = await fetch(`/api/admin/products/${id}`, {
-        method: 'PATCH',
+      const method = isNew ? 'POST' : 'PATCH'
+      const url = isNew ? '/api/admin/products' : `/api/admin/products/${id}`
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: name.trim(),
@@ -189,8 +202,13 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
         }),
       })
       if (res.ok) {
-        toast.success('Product saved')
-        fetchProduct()
+        toast.success(isNew ? 'Product created' : 'Product saved')
+        if (isNew) {
+          const { product } = await res.json()
+          router.push(`/admin/dashboard/products/${product.id}`)
+        } else {
+          fetchProduct()
+        }
       } else {
         const data = await res.json()
         toast.error(data.error || 'Save failed')
@@ -254,7 +272,9 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
     )
   }
 
-  if (!product) {
+  if (isNew) {
+    // Render empty create form below
+  } else if (!product) {
     return (
       <div className="p-6 text-center text-neutral-500">
         <ShoppingBag className="h-12 w-12 mx-auto mb-4 opacity-30" />
@@ -271,8 +291,8 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
           <ArrowLeft className="h-4 w-4 mr-1" /> Products
         </Button>
         <div className="flex-1">
-          <h1 className="text-2xl font-bold font-heading truncate">{product.name}</h1>
-          <p className="text-xs text-neutral-400 mt-0.5">/{product.slug}</p>
+          <h1 className="text-2xl font-bold font-heading truncate">{isNew ? 'New Product' : product!.name}</h1>
+          {!isNew && <p className="text-xs text-neutral-400 mt-0.5">/{product!.slug}</p>}
         </div>
         <div className="flex items-center gap-2">
           <Badge variant={isActive ? 'default' : 'secondary'}>{isActive ? 'Active' : 'Draft'}</Badge>
@@ -330,11 +350,18 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
           <div className="bg-white border rounded-xl p-5 space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="font-semibold text-neutral-800">Product Images</h2>
-              <Button size="sm" variant="outline" onClick={() => setMediaPicker(true)}>
-                <Plus className="h-3.5 w-3.5 mr-1" /> Add Image
-              </Button>
+              {!isNew && (
+                <Button size="sm" variant="outline" onClick={() => setMediaPicker(true)}>
+                  <Plus className="h-3.5 w-3.5 mr-1" /> Add Image
+                </Button>
+              )}
             </div>
-            {images.length === 0 ? (
+            {isNew ? (
+              <div className="border-2 border-dashed border-neutral-200 rounded-lg p-8 text-center text-neutral-400">
+                <ShoppingBag className="h-8 w-8 mx-auto mb-2 opacity-40" />
+                <p className="text-sm">Save the product first, then add images</p>
+              </div>
+            ) : images.length === 0 ? (
               <div
                 className="border-2 border-dashed border-neutral-200 rounded-lg p-8 text-center text-neutral-400 cursor-pointer hover:border-primary/40 hover:text-primary/60 transition-colors"
                 onClick={() => setMediaPicker(true)}
@@ -366,7 +393,7 @@ export default function ProductEditPage({ params }: { params: Promise<{ id: stri
                 </SortableContext>
               </DndContext>
             )}
-            <p className="text-xs text-neutral-400">Drag to reorder · ★ star to set primary · hover to delete</p>
+            {!isNew && <p className="text-xs text-neutral-400">Drag to reorder · ★ star to set primary · hover to delete</p>}
           </div>
 
           {/* Trade Details */}

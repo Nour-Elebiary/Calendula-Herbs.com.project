@@ -84,8 +84,15 @@ export function MediaUploader({ onUploadSuccess }: MediaUploaderProps) {
           xhr.send(formData)
         })
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const cloudinaryRes = await uploadPromise as any
+        const cloudinaryRes = await uploadPromise as {
+          secure_url: string
+          public_id: string
+          width: number
+          height: number
+          duration?: number
+          format: string
+          bytes: number
+        }
 
         // 3. Save to DB
         const dbRes = await fetch('/api/admin/media', {

@@ -322,6 +322,7 @@
   letter-spacing: var(--tracking-widest);
   text-transform: uppercase;
   color:          var(--color-text-tertiary);
+  text-wrap:      pretty;
 }
 
 .card-product__name {
@@ -502,6 +503,23 @@
   border-color:  var(--color-border-accent);
 }
 
+.cart-badge {
+  position:       absolute;
+  top:           -4px;
+  right:         -4px;
+  width:         20px;
+  height:        20px;
+  background:    var(--color-calendula-500);
+  color:         #FAFAF6;
+  font-size:     11px;
+  font-weight:   700;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  border-radius: 9999px;
+  border:        2px solid var(--color-bg-void);
+}
+
 .btn-sm { padding: var(--space-2) var(--space-4); font-size: var(--text-xs); min-height: 36px; }
 .btn-lg { padding: var(--space-4) var(--space-10); font-size: var(--text-base); min-height: 48px; }
 
@@ -631,6 +649,7 @@
   letter-spacing: var(--tracking-tight);
   color:          var(--color-text-inverse);
   margin-bottom:  var(--space-6);
+  text-wrap:      balance;
 }
 
 .hero-atmospheric__headline em {
@@ -644,6 +663,7 @@
   line-height:   var(--leading-loose);
   max-width:     480px;
   margin-bottom: var(--space-8);
+  text-wrap:     pretty;
 }
 
 .hero-atmospheric__actions {
@@ -700,6 +720,7 @@
   font-weight:    500;
   color:          var(--color-text-primary);
   margin-bottom:  var(--space-4);
+  text-wrap:      balance;
 }
 
 .footer-tagline {
@@ -717,6 +738,7 @@
   text-transform: uppercase;
   color:          var(--color-text-tertiary);
   margin-bottom:  var(--space-5);
+  text-wrap:      balance;
 }
 
 .footer-links {
@@ -1114,6 +1136,24 @@
     outline:        2px solid var(--color-focus-ring);
     outline-offset: 2px;
   }
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  z-index: 9999;
+  padding: 8px 16px;
+  background: var(--color-green-600);
+  color: var(--color-text-inverse);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: top 0.2s;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* ─── Utility Classes for Better UX ────────────────────────────────────────── */

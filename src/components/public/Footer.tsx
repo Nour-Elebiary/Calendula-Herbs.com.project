@@ -1,6 +1,7 @@
 'use client'
 
 import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { MapPin, Phone, Mail, Clock, Globe } from 'lucide-react'
 import { generateContactLink, isClickableLink, CONTACT_METHOD_META, type ContactMethod } from '@/lib/contact-links'
@@ -42,8 +43,14 @@ export function Footer({ settings, contact }: FooterProps) {
           {/* Brand */}
           <div>
             <div className="footer-brand">
-              <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }} className="hover:opacity-80 transition-opacity">
-                {siteName}
+              <Link href="/" className="no-underline hover:opacity-80 transition-opacity inline-block">
+                <Image
+                  src="https://res.cloudinary.com/dcukpuftg/image/upload/v1782266932/calendula-herbs/brand/logo.png"
+                  alt="Calendula Herbs"
+                  width={148}
+                  height={80}
+                  className="object-contain"
+                />
               </Link>
             </div>
             <p className="footer-tagline leading-relaxed">
@@ -88,13 +95,13 @@ export function Footer({ settings, contact }: FooterProps) {
             {contact?.mapAddress && (
               <div className="flex items-start gap-3 mb-4">
                 <MapPin className="w-4 h-4 shrink-0 mt-1 text-[var(--color-calendula-500)]" />
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }} className="leading-snug">{contact.mapAddress}</span>
+                <span className="text-sm leading-snug text-[var(--color-text-secondary)]">{contact.mapAddress}</span>
               </div>
             )}
             {contact?.phones && contact.phones.length > 0 && (
               <div className="flex items-start gap-3 mb-4">
                 <Phone className="w-4 h-4 shrink-0 mt-1 text-[var(--color-calendula-500)]" />
-                <div style={{ fontSize: 'var(--text-sm)' }}>
+                <div className="text-sm">
                   {contact.phones.map((phone, i) => (
                     <div key={i} className="mb-1 last:mb-0">
                       <a href={`tel:${phone.replace(/[^\d+]/g, '')}`} className="footer-link">{phone}</a>
@@ -106,7 +113,7 @@ export function Footer({ settings, contact }: FooterProps) {
             {contact?.publicEmails && contact.publicEmails.length > 0 && (
               <div className="flex items-start gap-3 mb-4">
                 <Mail className="w-4 h-4 shrink-0 mt-1 text-[var(--color-calendula-500)]" />
-                <div style={{ fontSize: 'var(--text-sm)' }}>
+                <div className="text-sm">
                   {contact.publicEmails.map((email, i) => (
                     <div key={i} className="mb-1 last:mb-0">
                       <a href={`mailto:${email}`} className="footer-link">{email}</a>
@@ -149,18 +156,18 @@ export function Footer({ settings, contact }: FooterProps) {
           <div>
             <h4 className="footer-heading">Business Hours</h4>
             {Object.keys(hours).length > 0 ? (
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+              <ul className="list-none p-0 m-0">
                 {Object.entries(hours).map(([days, time]) => (
-                  <li key={days} className="flex items-center justify-between py-2 text-sm" style={{ borderBottom: '1px solid var(--color-border-subtle)' }}>
-                    <span style={{ color: 'var(--color-text-tertiary)' }}>{days}</span>
-                    <span style={{ color: 'var(--color-text-primary)', fontWeight: 500 }}>{time}</span>
+                  <li key={days} className="flex items-center justify-between py-2 text-sm border-b border-[var(--color-border-subtle)]">
+                    <span className="text-[var(--color-text-tertiary)]">{days}</span>
+                    <span className="text-[var(--color-text-primary)] font-medium">{time}</span>
                   </li>
                 ))}
               </ul>
             ) : (
               <div className="flex items-start gap-3">
                 <Clock className="w-4 h-4 shrink-0 mt-1 text-[var(--color-calendula-500)]" />
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }} className="leading-snug">Contact us anytime for inquiries.</span>
+                <span className="text-sm leading-snug text-[var(--color-text-secondary)]">Contact us anytime for inquiries.</span>
               </div>
             )}
           </div>

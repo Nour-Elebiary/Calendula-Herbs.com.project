@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const updateSchema = z.object({
   name: z.string().optional(),
@@ -11,7 +12,7 @@ const updateSchema = z.object({
   memberType: z.enum(['TEAM', 'BOARD']).optional(),
   contacts: z.array(z.object({
     id: z.string().optional(),
-    type: z.enum(['EMAIL', 'PHONE', 'LINKEDIN', 'TWITTER', 'WHATSAPP', 'FACEBOOK', 'INSTAGRAM', 'OTHER']),
+    type: z.enum(['EMAIL', 'PHONE', 'LINKEDIN', 'TWITTER', 'WHATSAPP', 'FACEBOOK', 'INSTAGRAM', 'TELEGRAM', 'VIBER', 'WECHAT', 'SIGNAL', 'MESSENGER', 'LINE', 'DISCORD', 'YOUTUBE', 'TIKTOK', 'SNAPCHAT', 'WEBSITE', 'OTHER']),
     label: z.string().nullable().optional(),
     value: z.string(),
     icon: z.string().nullable().optional()
@@ -19,6 +20,7 @@ const updateSchema = z.object({
 })
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { id } = await params
     const member = await db.teamMember.findUnique({
@@ -37,6 +39,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 }
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { id } = await params
     const json = await req.json()
@@ -76,6 +79,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const { id } = await params
     await db.teamMember.delete({ where: { id } })

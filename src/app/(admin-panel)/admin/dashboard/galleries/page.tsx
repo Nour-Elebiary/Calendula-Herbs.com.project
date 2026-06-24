@@ -80,8 +80,7 @@ export default function GalleriesPage() {
     setLoading(false)
   }
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetch_() }, [])
+  useEffect(() => { Promise.resolve().then(fetch_) }, [])
 
   const handleCreate = async () => {
     if (!newName.trim()) return

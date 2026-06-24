@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 import { CertType } from '@prisma/client'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 
 const certSchema = z.object({
   title: z.string().min(1),
@@ -11,6 +12,7 @@ const certSchema = z.object({
 })
 
 export async function GET() {
+  try { await requireAdmin() } catch { return unauthorized() }
   const certs = await db.certificate.findMany({
     orderBy: { order: 'asc' },
     include: { file: { select: { url: true, thumbnailUrl: true, type: true } } },
@@ -19,6 +21,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   try {
     const json = await req.json()
     const data = certSchema.parse(json)
@@ -33,6 +36,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
+  try { await requireAdmin() } catch { return unauthorized() }
   // Reorder
   const { ids } = await req.json()
   await Promise.all(ids.map((id: string, i: number) => db.certificate.update({ where: { id }, data: { order: i } })))

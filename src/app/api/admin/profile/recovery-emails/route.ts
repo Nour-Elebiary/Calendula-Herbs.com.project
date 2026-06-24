@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { requireAdmin, unauthorized } from '@/lib/admin-auth'
 import { db } from '@/lib/db'
 import { z } from 'zod'
 
@@ -8,12 +8,10 @@ const schema = z.object({
 })
 
 export async function PATCH(req: NextRequest) {
-  try {
-    const session = await auth()
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-    }
+  let adminId: string
+  try { adminId = await requireAdmin() } catch { return unauthorized() }
 
+  try {
     const json = await req.json()
     const parsed = schema.safeParse(json)
     if (!parsed.success) {
@@ -23,7 +21,7 @@ export async function PATCH(req: NextRequest) {
     const { recoveryEmails } = parsed.data
 
     await db.admin.update({
-      where: { id: session.user.id },
+      where: { id: adminId },
       data: { recoveryEmails },
     })
 
