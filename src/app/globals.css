@@ -581,37 +581,17 @@
   position:   absolute;
   inset:      0;
   z-index:    0;
-}
-
-.hero-atmospheric__bg img {
-  width:       100%;
-  height:      100%;
-  object-fit:  cover;
-  object-position: center;
-  filter:      saturate(1.05) brightness(0.72);
-}
-
-.hero-atmospheric__video {
-  width:       100%;
-  height:      100%;
-  object-fit:  cover;
-  object-position: center;
-  filter:      saturate(1.05) brightness(0.72);
-}
-
-.hero-atmospheric__fallback {
-  display:    none;
-  position:   absolute;
-  inset:      0;
-  background-size: cover;
-  background-position: center;
-  background-color: var(--color-green-950);
-  filter:     saturate(1.05) brightness(0.72);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-atmospheric__video { display: none; }
-  .hero-atmospheric__fallback { display: block; }
+  background: linear-gradient(
+    180deg,
+    #1A3520 0%,
+    #274D2E 15%,
+    #3A5B40 35%,
+    #4A6350 50%,
+    #6E5B30 65%,
+    #8C540A 78%,
+    #C47820 88%,
+    #DC7E18 100%
+  );
 }
 
 .hero-atmospheric__vignette {

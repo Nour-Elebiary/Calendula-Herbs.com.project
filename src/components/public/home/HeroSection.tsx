@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useCallback, useState, useEffect, type ComponentType } from 'react'
+import { useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import DOMPurify from 'isomorphic-dompurify'
+import { HeroFieldScene } from '@/components/public/hero/HeroFieldScene'
 import { heroStagger, heroChild } from '@/lib/animations'
 
 function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
@@ -25,19 +26,6 @@ function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: num
       }}
     />
   )
-}
-
-function Lazy3D({ name }: { name: 'Hero3DCanvas' | 'HeroParticles' }) {
-  const [Loaded, setLoaded] = useState<ComponentType | null>(null)
-
-  useEffect(() => {
-    import(`@/components/public/hero/${name}`).then((m) => {
-      setLoaded(() => m[name])
-    })
-  }, [name])
-
-  if (!Loaded) return null
-  return <Loaded />
 }
 
 export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
@@ -70,26 +58,10 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
   return (
     <section ref={sectionRef} className="hero-atmospheric" onMouseMove={handleMouseMove}>
       <motion.div className="hero-atmospheric__bg" style={{ y: backgroundY }}>
-        <div className="hero-atmospheric__fallback" aria-hidden="true" />
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          preload="auto"
-          className="hero-atmospheric__video"
-        >
-          <source
-            src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298696/calendula-herbs/videos/hero-homepage.mp4"
-            type="video/mp4"
-          />
-        </video>
+        <HeroFieldScene />
       </motion.div>
       <div className="hero-atmospheric__vignette" />
       <motion.div className="hero-atmospheric__fade-bottom" style={{ opacity: fadeOpacity }} />
-
-      <Lazy3D name="Hero3DCanvas" />
-      <Lazy3D name="HeroParticles" />
 
       <FloatingLeaf
         className="absolute top-32 left-[8%] w-6 h-12 rounded-full bg-[var(--color-calendula-400)] blur-sm"
