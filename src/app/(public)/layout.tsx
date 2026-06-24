@@ -8,15 +8,27 @@ import { CartDrawer } from '@/components/public/CartDrawer'
 import { CookieConsent } from '@/components/public/CookieConsent'
 import DOMPurify from 'isomorphic-dompurify'
 import type { ContactMethod } from '@/lib/contact-links'
+import type { ContactSetting } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
 export default async function PublicLayout({ children }: { children: React.ReactNode }) {
-  const [siteSettings, contactSetting, activePlugins] = await Promise.all([
-    db.siteSetting.findMany(),
-    db.contactSetting.findUnique({ where: { id: 'main' } }),
-    db.plugin.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } })
-  ])
+  let siteSettings: { key: string; value: string }[] = []
+  let contactSetting: ContactSetting | null = null
+  let activePlugins: { id: string; code: string; position: string; order: number }[] = []
+
+  try {
+    const [ss, cs, ap] = await Promise.all([
+      db.siteSetting.findMany(),
+      db.contactSetting.findUnique({ where: { id: 'main' } }),
+      db.plugin.findMany({ where: { isActive: true }, orderBy: { order: 'asc' } })
+    ])
+    siteSettings = ss
+    contactSetting = cs
+    activePlugins = ap
+  } catch (err) {
+    console.error('PublicLayout: DB fetch failed, rendering with defaults:', err)
+  }
 
   const settings: Record<string, string> = {}
   siteSettings.forEach(s => { settings[s.key] = s.value })

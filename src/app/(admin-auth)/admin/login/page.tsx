@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useState, useTransition } from 'react'
+import { Suspense, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
@@ -21,7 +21,7 @@ function LoginFormInner() {
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard'
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isPending, startTransition] = useTransition()
+  const [isSigningIn, setIsSigningIn] = useState(false)
 
   const {
     register,
@@ -31,35 +31,35 @@ function LoginFormInner() {
     resolver: zodResolver(loginSchema),
   })
 
-  const isLoading = isSubmitting || isPending
+  const isLoading = isSubmitting || isSigningIn
 
   async function onSubmit(data: LoginForm) {
     setError(null)
-    startTransition(async () => {
-      try {
-        const result = await signIn('credentials', {
-          email: data.email,
-          password: data.password,
-          redirect: false,
-        })
+    setIsSigningIn(true)
+    try {
+      const result = await signIn('credentials', {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      })
 
-        if (result?.error) {
-          if (result.error === 'LOCKED') {
-            setError('Account locked due to too many failed attempts. Please try again in 15 minutes.')
-          } else {
-            setError('Invalid email or password. Please try again.')
-          }
-          return
+      if (result?.error) {
+        setIsSigningIn(false)
+        if (result.error === 'LOCKED') {
+          setError('Account locked due to too many failed attempts. Please try again in 15 minutes.')
+        } else {
+          setError('Invalid email or password. Please try again.')
         }
-
-        if (result?.ok) {
-          router.push(callbackUrl)
-          router.refresh()
-        }
-      } catch {
-        setError('An unexpected error occurred. Please try again.')
+        return
       }
-    })
+
+      if (result?.ok) {
+        router.push(callbackUrl)
+      }
+    } catch {
+      setIsSigningIn(false)
+      setError('An unexpected error occurred. Please try again.')
+    }
   }
 
   return (
