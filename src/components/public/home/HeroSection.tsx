@@ -1,24 +1,11 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
+import { useRef, useCallback, useState, useEffect, type ComponentType } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
-import dynamic from 'next/dynamic'
 import { ChevronDown } from 'lucide-react'
 import DOMPurify from 'isomorphic-dompurify'
 import { heroStagger, heroChild } from '@/lib/animations'
-
-const Hero3DCanvas = dynamic(
-  () => import('@/components/public/hero/Hero3DCanvas').then(m => ({ default: m.Hero3DCanvas })),
-  { ssr: false },
-)
-
-const HeroParticles = dynamic(
-  () => import('@/components/public/hero/HeroParticles').then(m => ({ default: m.HeroParticles })),
-  { ssr: false },
-)
-
-const FALLBACK_IMAGE = 'https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp'
 
 function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
@@ -38,6 +25,19 @@ function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: num
       }}
     />
   )
+}
+
+function Lazy3D({ name }: { name: 'Hero3DCanvas' | 'HeroParticles' }) {
+  const [Loaded, setLoaded] = useState<ComponentType | null>(null)
+
+  useEffect(() => {
+    import(`@/components/public/hero/${name}`).then((m) => {
+      setLoaded(() => m[name])
+    })
+  }, [name])
+
+  if (!Loaded) return null
+  return <Loaded />
 }
 
 export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
@@ -70,20 +70,13 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
   return (
     <section ref={sectionRef} className="hero-atmospheric" onMouseMove={handleMouseMove}>
       <motion.div className="hero-atmospheric__bg" style={{ y: backgroundY }}>
-        <div
-          className="hero-atmospheric__fallback"
-          aria-hidden="true"
-          style={{
-            backgroundImage: `url(${FALLBACK_IMAGE})`,
-          }}
-        />
+        <div className="hero-atmospheric__fallback" aria-hidden="true" />
         <video
           autoPlay
           loop
           muted
           playsInline
           preload="auto"
-          poster={FALLBACK_IMAGE}
           className="hero-atmospheric__video"
         >
           <source
@@ -95,12 +88,8 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
       <div className="hero-atmospheric__vignette" />
       <motion.div className="hero-atmospheric__fade-bottom" style={{ opacity: fadeOpacity }} />
 
-      {prefersReducedMotion ? null : (
-        <>
-          <Hero3DCanvas />
-          <HeroParticles />
-        </>
-      )}
+      <Lazy3D name="Hero3DCanvas" />
+      <Lazy3D name="HeroParticles" />
 
       <FloatingLeaf
         className="absolute top-32 left-[8%] w-6 h-12 rounded-full bg-[var(--color-calendula-400)] blur-sm"

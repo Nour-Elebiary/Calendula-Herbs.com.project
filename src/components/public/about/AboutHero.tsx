@@ -1,30 +1,15 @@
 'use client'
 
-import { useReducedMotion } from 'framer-motion'
-
-const FALLBACK_IMAGE = 'https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp'
-
 export function AboutHero() {
-  const prefersReducedMotion = useReducedMotion()
-
   return (
     <section className="about-hero relative overflow-hidden">
-      <div
-        className="about-hero__fallback"
-        aria-hidden="true"
-        style={{
-          backgroundImage: `url(${FALLBACK_IMAGE})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      />
+      <div className="about-hero__fallback" aria-hidden="true" />
       <video
         autoPlay
         loop
         muted
         playsInline
         preload="auto"
-        poster={FALLBACK_IMAGE}
         className="about-hero__video"
       >
         <source

@@ -77,7 +77,7 @@ export default function RootLayout({
       <head>
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#FAFAF6" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icon" />
       </head>
       <body className="min-h-full flex flex-col antialiased bg-[var(--color-bg-void)] text-[var(--color-text-primary)]">
         <a href="#main-content" className="skip-link">

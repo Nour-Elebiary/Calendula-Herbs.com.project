@@ -605,6 +605,7 @@
   inset:      0;
   background-size: cover;
   background-position: center;
+  background-color: var(--color-green-950);
   filter:     saturate(1.05) brightness(0.72);
 }
 
@@ -722,6 +723,7 @@
   inset:      0;
   background-size: cover;
   background-position: center;
+  background-color: var(--color-green-950);
   filter:     saturate(1.05) brightness(0.55);
 }
 
