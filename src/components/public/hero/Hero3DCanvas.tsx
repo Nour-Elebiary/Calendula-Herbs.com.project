@@ -98,11 +98,12 @@ function CalendulaFlower() {
 
 export function Hero3DCanvas() {
   return (
-    <div className="absolute inset-0 z-[2] pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 z-[2] pointer-events-none" aria-hidden="true" style={{ width: '100%', height: '100%' }}>
       <Canvas
         camera={{ position: [0, 0, 2.8], fov: 30 }}
         dpr={[1, 1.5]}
         gl={{ antialias: true, alpha: true }}
+        style={{ width: '100%', height: '100%' }}
       >
         <ambientLight intensity={0.5} />
         <directionalLight position={[5, 5, 5]} intensity={0.8} color="#FFE4B5" />
