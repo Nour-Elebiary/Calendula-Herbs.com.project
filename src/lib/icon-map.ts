@@ -16,7 +16,7 @@ import {
   FaEnvelope, FaPhone, FaGlobe, FaUsers
 } from 'react-icons/fa6'
 
-export const ICON_MAP: Record<string, React.ElementType> = {
+export const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   // Brand icons
   FaLinkedinIn, FaXTwitter, FaFacebookF, FaInstagram, FaYoutube,
   FaWhatsapp, FaTelegram, FaViber, FaSkype, FaWeixin,
@@ -102,15 +102,15 @@ export const CONTACT_METHOD_ICONS: Record<string, string> = {
   other:     'Link',
 }
 
-export function getIconComponent(name: string | null | undefined, fallback: React.ElementType = Link): React.ElementType {
+export function getIconComponent(name: string | null | undefined, fallback: React.ComponentType<{ className?: string }> = Link): React.ComponentType<{ className?: string }> {
   if (!name) return fallback
   return ICON_MAP[name] || fallback
 }
 
-export function getContactTypeIcon(type: string): React.ElementType {
+export function getContactTypeIcon(type: string): React.ComponentType<{ className?: string }> {
   return getIconComponent(CONTACT_TYPE_ICONS[type], Link)
 }
 
-export function getContactMethodIcon(type: string): React.ElementType {
+export function getContactMethodIcon(type: string): React.ComponentType<{ className?: string }> {
   return getIconComponent(CONTACT_METHOD_ICONS[type], Link)
 }

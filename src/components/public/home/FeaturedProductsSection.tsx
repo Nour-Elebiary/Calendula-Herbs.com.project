@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { ShoppingCart, Leaf } from 'lucide-react'
 import { fadeInUp, staggerContainer, cardVariant } from '@/lib/animations'
 import { SectionLabel } from '../shared/SectionLabel'
+import { Card3D } from '@/components/public/Card3D'
 
 type ProductImage = {
   mediaFile: { url: string }
@@ -84,6 +85,7 @@ export function FeaturedProductsSection({ products }: { products: Product[] }) {
               : 'Whole, Cut & Sifted'
             return (
               <motion.div key={product.id} variants={cardVariant}>
+                <Card3D>
                 <Link href={`/products?product=${product.slug}`} className="card-glass card-product group block no-underline">
                   <div className="card-product__stage">
                     {mainImage ? (
@@ -135,6 +137,7 @@ export function FeaturedProductsSection({ products }: { products: Product[] }) {
                     </div>
                   </div>
                 </Link>
+                </Card3D>
               </motion.div>
             )
           })}

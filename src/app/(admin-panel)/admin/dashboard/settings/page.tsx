@@ -858,7 +858,7 @@ function FaqTab() {
 
 type TabId = 'general' | 'contact' | 'plugins' | 'faq'
 
-const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
+const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'general', label: 'General', icon: Settings },
   { id: 'contact', label: 'Contact', icon: Phone },
   { id: 'plugins', label: 'Plugins', icon: Code },

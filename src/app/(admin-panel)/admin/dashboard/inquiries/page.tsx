@@ -600,7 +600,7 @@ function ProductRequestsTab() {
 
 type TabId = 'contact' | 'cart' | 'samples' | 'product-requests'
 
-const TABS: { id: TabId; label: string; icon: React.ElementType }[] = [
+const TABS: { id: TabId; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'contact', label: 'Contact Submissions', icon: MessageSquare },
   { id: 'cart', label: 'Cart Inquiries', icon: ShoppingCart },
   { id: 'samples', label: 'Sample Requests', icon: Leaf },

@@ -1,11 +1,13 @@
 'use client'
 
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useRef, useCallback } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
 import { ChevronDown } from 'lucide-react'
 import DOMPurify from 'isomorphic-dompurify'
 import { heroStagger, heroChild } from '@/lib/animations'
+import { Hero3DCanvas } from '@/components/public/hero/Hero3DCanvas'
+import { HeroParticles } from '@/components/public/hero/HeroParticles'
 
 function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
@@ -29,29 +31,69 @@ function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: num
 
 export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
   const sectionRef = useRef<HTMLDivElement>(null)
+  const prefersReducedMotion = useReducedMotion()
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
   })
 
+  const mouseX = useMotionValue(0.5)
+  const mouseY = useMotionValue(0.5)
+  const contentX = useTransform(mouseX, [0, 1], [12, -12])
+  const contentY = useTransform(mouseY, [0, 1], [8, -8])
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (prefersReducedMotion) return
+      const rect = sectionRef.current?.getBoundingClientRect()
+      if (!rect) return
+      mouseX.set((e.clientX - rect.left) / rect.width)
+      mouseY.set((e.clientY - rect.top) / rect.height)
+    },
+    [prefersReducedMotion, mouseX, mouseY],
+  )
+
   const backgroundY = useTransform(scrollYProgress, [0, 1], [0, -100])
   const fadeOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
 
   return (
-    <section ref={sectionRef} className="hero-atmospheric">
+    <section ref={sectionRef} className="hero-atmospheric" onMouseMove={handleMouseMove}>
       <motion.div className="hero-atmospheric__bg" style={{ y: backgroundY }}>
-        <div
-          className="w-full h-full bg-[var(--color-green-800)]"
-          style={{
-            backgroundImage: 'url(https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            filter: 'saturate(1.05) brightness(0.72)',
-          }}
-        />
+        {prefersReducedMotion ? (
+          <div
+            className="w-full h-full bg-[var(--color-green-800)]"
+            style={{
+              backgroundImage: 'url(https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'saturate(1.05) brightness(0.72)',
+            }}
+          />
+        ) : (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            poster="https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp"
+            className="hero-atmospheric__video"
+          >
+            <source
+              src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298696/calendula-herbs/videos/hero-homepage.mp4"
+              type="video/mp4"
+            />
+          </video>
+        )}
       </motion.div>
       <div className="hero-atmospheric__vignette" />
       <motion.div className="hero-atmospheric__fade-bottom" style={{ opacity: fadeOpacity }} />
+
+      {prefersReducedMotion ? null : (
+        <>
+          <Hero3DCanvas />
+          <HeroParticles />
+        </>
+      )}
 
       <FloatingLeaf
         className="absolute top-32 left-[8%] w-6 h-12 rounded-full bg-[var(--color-calendula-400)] blur-sm"
@@ -67,6 +109,7 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
         variants={heroStagger}
         initial="hidden"
         animate="visible"
+        style={{ x: prefersReducedMotion ? 0 : contentX, y: prefersReducedMotion ? 0 : contentY }}
       >
         <motion.div variants={heroChild} className="hero-atmospheric__eyebrow">
           Premium Export Quality Since {founded || '2005'}

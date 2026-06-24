@@ -591,6 +591,14 @@
   filter:      saturate(1.05) brightness(0.72);
 }
 
+.hero-atmospheric__video {
+  width:       100%;
+  height:      100%;
+  object-fit:  cover;
+  object-position: center;
+  filter:      saturate(1.05) brightness(0.72);
+}
+
 .hero-atmospheric__vignette {
   position:   absolute;
   inset:      0;
@@ -670,6 +678,70 @@
   display:  flex;
   gap:      var(--space-4);
   flex-wrap: wrap;
+}
+
+/* ─── About Hero ──────────────────────────────────────────────────────────── */
+.about-hero {
+  position:        relative;
+  min-height:      60svh;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  overflow:        hidden;
+}
+
+.about-hero__video {
+  position:   absolute;
+  inset:      0;
+  width:      100%;
+  height:     100%;
+  object-fit: cover;
+  object-position: center;
+  filter:     saturate(1.05) brightness(0.55);
+}
+
+.about-hero__fallback {
+  position:   absolute;
+  inset:      0;
+  background: linear-gradient(135deg, var(--color-green-800) 0%, var(--color-green-900) 100%);
+}
+
+.about-hero__overlay {
+  position:   absolute;
+  inset:      0;
+  z-index:    1;
+  background: linear-gradient(
+    to bottom,
+    rgba(20,35,22,0.60) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(20,35,22,0.70) 100%
+  );
+}
+
+.about-hero__content {
+  position:   relative;
+  z-index:    2;
+  max-width:  720px;
+  padding:    var(--section-y) var(--section-x);
+  text-align: center;
+}
+
+.about-hero__title {
+  font-family:     var(--font-display);
+  font-size:       clamp(var(--text-4xl), 6vw, var(--text-5xl));
+  font-weight:     700;
+  color:           var(--color-text-inverse);
+  margin-bottom:   var(--space-6);
+  text-wrap:       balance;
+}
+
+.about-hero__description {
+  font-size:     var(--text-xl);
+  color:         rgba(250, 250, 246, 0.80);
+  font-weight:   300;
+  line-height:   var(--leading-relaxed);
+  text-wrap:     pretty;
 }
 
 /* ─── Header Nav ──────────────────────────────────────────────────────────── */

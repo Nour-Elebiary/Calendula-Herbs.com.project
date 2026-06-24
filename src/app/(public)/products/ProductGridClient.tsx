@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Leaf, Package } from 'lucide-react'
 import { ProductDetailModal } from '@/components/public/ProductDetailModal'
+import { Card3D } from '@/components/public/Card3D'
 
 type ProductCard = {
   id: string
@@ -48,11 +49,11 @@ export function ProductGridClient({ products }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => {
           return (
-            <button
-              key={product.id}
-              onClick={() => openProduct(product.slug)}
-              className="card-glass card-product group text-left w-full"
-            >
+            <Card3D key={product.id}>
+              <button
+                onClick={() => openProduct(product.slug)}
+                className="card-glass card-product group text-left w-full"
+              >
               <div className="card-product__stage">
                 {product.mainImage ? (
                   <Image 
@@ -102,6 +103,7 @@ export function ProductGridClient({ products }: Props) {
                 </div>
               </div>
             </button>
+            </Card3D>
           )
         })}
       </div>

@@ -5,6 +5,7 @@ import { db } from '@/lib/db'
 import { Leaf, Sprout, Factory, Globe, Award, ArrowRight } from 'lucide-react'
 import { getContactTypeIcon } from '@/lib/icon-map'
 import { generateTeamContactLink } from '@/lib/contact-links'
+import { AboutHero } from '@/components/public/about/AboutHero'
 
 export const metadata = {
   title: 'About Us | Calendula Herbs For Import & Export',
@@ -26,14 +27,7 @@ export default async function AboutPage() {
       <div className="page-content">
         
         {/* Hero */}
-        <section className="section section--tint text-center relative overflow-hidden">
-          <div className="max-w-3xl mx-auto space-y-6">
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-[var(--color-text-primary)]">About Calendula Herbs</h1>
-            <p className="text-xl text-[var(--color-text-secondary)] font-light leading-relaxed">
-              Cultivating purity and delivering excellence for over four decades. We are dedicated to providing the world with the finest organic herbs, rooted in generations of agricultural expertise.
-            </p>
-          </div>
-        </section>
+        <AboutHero />
 
         {/* Heritage Stats */}
         <section className="section">
