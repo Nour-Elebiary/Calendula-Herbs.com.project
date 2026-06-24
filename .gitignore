@@ -43,3 +43,8 @@ next-env.d.ts
 
 # secrets
 secrets.json
+
+# generated reports & logs
+E2E_TEST_REPORT.md
+implementation_plan*.md
+devserver.log

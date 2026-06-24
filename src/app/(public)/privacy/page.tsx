@@ -59,7 +59,7 @@ export default function PrivacyPage() {
               <li><strong>Cloudinary</strong> — image and media hosting</li>
               <li><strong>Resend</strong> — transactional email delivery</li>
               <li><strong>Supabase</strong> — database hosting</li>
-              <li><strong>Vercel</strong> — website hosting and analytics</li>
+              <li><strong>Railway</strong> — website hosting</li>
             </ul>
 
             <h2 className="font-display text-2xl font-medium" style={{ color: 'var(--color-text-primary)' }}>8. Cookies</h2>

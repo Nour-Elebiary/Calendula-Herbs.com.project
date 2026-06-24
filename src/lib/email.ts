@@ -1,9 +1,19 @@
 import { Resend } from 'resend'
 import type { SenderMeta } from '@/lib/sender-meta'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = process.env.RESEND_FROM_EMAIL || 'noreply@calendula-herbs.com'
 const COMPANY = 'Calendula Herbs'
+
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY)
+  return _resend
+}
+
+let _from: string | null = null
+function getFromEmail(): string {
+  if (!_from) _from = process.env.RESEND_FROM_EMAIL || 'noreply@calendula-herbs.com'
+  return _from
+}
 
 function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
   return Promise.race([
@@ -42,8 +52,8 @@ export async function sendOtpEmail(to: string, code: string) {
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to,
     subject: `${code} — Your ${COMPANY} Admin Verification Code`,
     html,
@@ -76,8 +86,8 @@ export async function sendContactConfirmation(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to,
     subject: `We received your message — ${COMPANY}`,
     html,
@@ -117,8 +127,8 @@ export async function sendContactNotification(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to: managingEmails,
     subject: `🌿 New Contact Inquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
     html,
@@ -164,8 +174,8 @@ export async function sendCartNotification(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to: managingEmails,
     subject: `🛒 New Product Inquiry from ${data.name}${data.company ? ` (${data.company})` : ''}`,
     html,
@@ -203,8 +213,8 @@ export async function sendCartConfirmation(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to,
     subject: `Your inquiry to ${COMPANY} — Products Requested`,
     html,
@@ -235,8 +245,8 @@ export async function sendSampleConfirmation(to: string, name: string, productNa
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to,
     subject: `Sample Request Received — ${COMPANY}`,
     html,
@@ -274,8 +284,8 @@ export async function sendSampleNotification(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to: managingEmails,
     subject: `📦 New Sample Request: ${data.productName} from ${data.name}`,
     html,
@@ -306,8 +316,8 @@ export async function sendProductRequestConfirmation(to: string, name: string, p
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to,
     subject: `Product Request Received — ${COMPANY}`,
     html,
@@ -348,8 +358,8 @@ export async function sendProductRequestNotification(
 </body>
 </html>`
 
-  return withTimeout(resend.emails.send({
-    from: FROM,
+  return withTimeout(getResend().emails.send({
+    from: getFromEmail(),
     to: managingEmails,
     subject: `🔍 New Product Request: ${data.productName} from ${data.name}`,
     html,

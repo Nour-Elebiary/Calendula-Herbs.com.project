@@ -19,14 +19,14 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       process.env.NODE_ENV === "development"
-        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://tawk.to https://embed.tawk.to https://va.vercel-scripts.com"
-        : "script-src 'self' 'unsafe-inline' https://tawk.to https://embed.tawk.to https://va.vercel-scripts.com",
+        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://tawk.to https://embed.tawk.to"
+        : "script-src 'self' 'unsafe-inline' https://tawk.to https://embed.tawk.to",
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https://res.cloudinary.com https://*.supabase.co https://img.youtube.com https://i.ytimg.com",
       "media-src 'self' blob: https://res.cloudinary.com https://www.youtube.com",
       "frame-src https://www.youtube.com https://www.youtube-nocookie.com https://www.google.com https://drive.google.com https://www.facebook.com",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://*.supabase.co https://api.resend.com https://api.cloudinary.com https://*.upstash.io https://ip-api.com https://vitals.vercel-insights.com",
+      "connect-src 'self' https://*.supabase.co https://api.resend.com https://api.cloudinary.com https://*.upstash.io https://ip-api.com",
       "worker-src blob:",
       "form-action 'self'",
       "base-uri 'self'",
