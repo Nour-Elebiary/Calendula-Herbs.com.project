@@ -90,17 +90,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
         }
 
-        // Sync admin email with ADMIN_EMAIL env var
-        const adminEmailEnv = process.env.ADMIN_EMAIL
-        let adminEmail = admin.email
-        if (adminEmailEnv && admin.email !== adminEmailEnv) {
-          await db.admin.update({
-            where: { id: admin.id },
-            data: { email: adminEmailEnv },
-          })
-          adminEmail = adminEmailEnv
-        }
-
         // Successful login — reset failed attempts and update last login info
         await db.admin.update({
           where: { id: admin.id },
@@ -129,7 +118,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return {
           id: admin.id,
           name: admin.name,
-          email: adminEmail,
+          email: admin.email,
           sessionId, // pass sessionId to the JWT callback
         }
       },

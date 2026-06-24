@@ -1,9 +1,10 @@
 import { auth } from '@/lib/auth'
 import { db } from '@/lib/db'
 import { redirect } from 'next/navigation'
-import { Shield, User, MonitorSmartphone, Globe, Clock, AlertTriangle } from 'lucide-react'
+import { Shield, User, MonitorSmartphone, Globe, Clock, AlertTriangle, Pencil } from 'lucide-react'
 import { revokeSession, revokeAllOtherSessions } from './actions'
 import { ProfileSecurity } from './ProfileSecurity'
+import { ChangeEmailButton } from './ChangeEmailButton'
 
 export default async function ProfilePage() {
   const session = await auth()
@@ -48,7 +49,10 @@ export default async function ProfilePage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-[var(--color-text-tertiary)] mb-1">Email Address</label>
-              <div className="text-sm text-[var(--color-text-primary)]">{admin.email}</div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-[var(--color-text-primary)]">{admin.email}</span>
+                <ChangeEmailButton currentEmail={admin.email} />
+              </div>
             </div>
           </div>
         </div>

@@ -11,7 +11,8 @@ export default auth((req) => {
   const isAuthPage =
     nextUrl.pathname === '/admin/login' ||
     nextUrl.pathname.startsWith('/admin/forgot-password') ||
-    nextUrl.pathname.startsWith('/admin/otp')
+    nextUrl.pathname.startsWith('/admin/otp') ||
+    nextUrl.pathname === '/admin/email-changed'
 
   // Protected admin API routes
   const isAdminApi = nextUrl.pathname.startsWith('/api/admin')
