@@ -78,7 +78,7 @@ export function HeroParticles() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 z-[2] pointer-events-none"
+      className="absolute inset-0 z-[3] pointer-events-none"
       aria-hidden="true"
       style={{ width: '100%', height: '100%' }}
     />
