@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback } from 'react'
 import { motion, useScroll, useTransform, useReducedMotion, useMotionValue } from 'framer-motion'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -17,6 +17,8 @@ const HeroParticles = dynamic(
   () => import('@/components/public/hero/HeroParticles').then(m => ({ default: m.HeroParticles })),
   { ssr: false },
 )
+
+const FALLBACK_IMAGE = 'https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp'
 
 function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: number }) {
   return (
@@ -40,18 +42,7 @@ function FloatingLeaf({ className, delay = 0 }: { className: string; delay?: num
 
 export function HeroSection({ tagline, founded }: { tagline: string; founded: string }) {
   const sectionRef = useRef<HTMLDivElement>(null)
-  const videoRef = useRef<HTMLVideoElement>(null)
   const prefersReducedMotion = useReducedMotion()
-
-  useEffect(() => {
-    if (prefersReducedMotion) return
-    const video = videoRef.current
-    if (!video) return
-    const play = async () => {
-      try { await video.play() } catch { /* autoplay blocked */ }
-    }
-    play()
-  }, [prefersReducedMotion])
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ['start start', 'end start'],
@@ -79,33 +70,27 @@ export function HeroSection({ tagline, founded }: { tagline: string; founded: st
   return (
     <section ref={sectionRef} className="hero-atmospheric" onMouseMove={handleMouseMove}>
       <motion.div className="hero-atmospheric__bg" style={{ y: backgroundY }}>
-        {prefersReducedMotion ? (
-          <div
-            className="w-full h-full bg-[var(--color-green-800)]"
-            style={{
-              backgroundImage: 'url(https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'saturate(1.05) brightness(0.72)',
-            }}
+        <div
+          className="hero-atmospheric__fallback"
+          aria-hidden="true"
+          style={{
+            backgroundImage: `url(${FALLBACK_IMAGE})`,
+          }}
+        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster={FALLBACK_IMAGE}
+          className="hero-atmospheric__video"
+        >
+          <source
+            src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298696/calendula-herbs/videos/hero-homepage.mp4"
+            type="video/mp4"
           />
-        ) : (
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp"
-            className="hero-atmospheric__video"
-          >
-            <source
-              src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298696/calendula-herbs/videos/hero-homepage.mp4"
-              type="video/mp4"
-            />
-          </video>
-        )}
+        </video>
       </motion.div>
       <div className="hero-atmospheric__vignette" />
       <motion.div className="hero-atmospheric__fade-bottom" style={{ opacity: fadeOpacity }} />

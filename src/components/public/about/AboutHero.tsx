@@ -1,46 +1,38 @@
 'use client'
 
-import { useRef, useEffect } from 'react'
 import { useReducedMotion } from 'framer-motion'
+
+const FALLBACK_IMAGE = 'https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp'
 
 export function AboutHero() {
   const prefersReducedMotion = useReducedMotion()
-  const videoRef = useRef<HTMLVideoElement>(null)
-
-  useEffect(() => {
-    if (prefersReducedMotion) return
-    const video = videoRef.current
-    if (!video) return
-    const play = async () => {
-      try { await video.play() } catch { /* autoplay blocked */ }
-    }
-    play()
-  }, [prefersReducedMotion])
 
   return (
     <section className="about-hero relative overflow-hidden">
-      {prefersReducedMotion ? (
-        <div className="about-hero__fallback" />
-      ) : (
-        <>
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="https://res.cloudinary.com/dkz99j6vt/image/upload/v1746600000/calendula-hero-fields_qy8t0p.webp"
-            className="about-hero__video"
-          >
-            <source
-              src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298734/calendula-herbs/videos/hero-about.mp4"
-              type="video/mp4"
-            />
-          </video>
-          <div className="about-hero__overlay" />
-        </>
-      )}
+      <div
+        className="about-hero__fallback"
+        aria-hidden="true"
+        style={{
+          backgroundImage: `url(${FALLBACK_IMAGE})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+        poster={FALLBACK_IMAGE}
+        className="about-hero__video"
+      >
+        <source
+          src="https://res.cloudinary.com/dcukpuftg/video/upload/v1782298734/calendula-herbs/videos/hero-about.mp4"
+          type="video/mp4"
+        />
+      </video>
+      <div className="about-hero__overlay" />
       <div className="about-hero__content">
         <h1 className="about-hero__title">About Calendula Herbs</h1>
         <p className="about-hero__description">
