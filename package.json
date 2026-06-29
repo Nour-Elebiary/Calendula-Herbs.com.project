@@ -43,7 +43,7 @@
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
-    "framer-motion": "^12.40.0",
+    "framer-motion": "^12.42.0",
     "isomorphic-dompurify": "^3.16.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.17.0",
